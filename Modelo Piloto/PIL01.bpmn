@@ -19,14 +19,14 @@
       <bpmn:lane id="PIL01_rol2" name="Recepción, estación y pase">
         <bpmn:flowNodeRef>PIL01_ack</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>PIL01_work</bpmn:flowNodeRef>
-      </bpmn:lane>
+      <bpmn:flowNodeRef>PIL01_work_merge</bpmn:flowNodeRef></bpmn:lane>
       <bpmn:lane id="PIL01_rol3" name="Capitán y Gerencia">
         <bpmn:flowNodeRef>PIL01_setup</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>PIL01_verify</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>PIL01_recover</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>PIL01_paper</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>PIL01_pe</bpmn:flowNodeRef>
-      </bpmn:lane>
+      <bpmn:flowNodeRef>PIL01_verify_merge</bpmn:flowNodeRef><bpmn:flowNodeRef>PIL01_paper_merge</bpmn:flowNodeRef></bpmn:lane>
     </bpmn:laneSet>
     <bpmn:startEvent id="PIL01_s" name="Pedido a la carta">
       <bpmn:outgoing>PIL01_f0</bpmn:outgoing>
@@ -70,8 +70,7 @@
       <bpmn:outgoing>PIL01_f11</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:userTask id="PIL01_verify" name="Capitán: verificar acuse a los 2 min sin reenviar como nuevo">
-      <bpmn:incoming>PIL01_plazoAcuse_f</bpmn:incoming><bpmn:incoming>PIL01_f11</bpmn:incoming>
-      <bpmn:outgoing>PIL01_f12</bpmn:outgoing>
+      <bpmn:incoming>PIL01_verify_merge_out</bpmn:incoming><bpmn:outgoing>PIL01_f12</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:exclusiveGateway id="PIL01_recover" name="¿Estado digital verificable?" default="PIL01_f14">
       <bpmn:incoming>PIL01_f12</bpmn:incoming>
@@ -82,9 +81,7 @@
       <bpmn:extensionElements>
         <zeebe:calledElement processId="PIL02"/>
       </bpmn:extensionElements>
-      <bpmn:incoming>PIL01_f10</bpmn:incoming>
-      <bpmn:incoming>PIL01_f13</bpmn:incoming>
-      <bpmn:outgoing>PIL01_f16</bpmn:outgoing>
+      <bpmn:incoming>PIL01_work_merge_out</bpmn:incoming><bpmn:outgoing>PIL01_f16</bpmn:outgoing>
       <bpmn:multiInstanceLoopCharacteristics isSequential="false"/>
     </bpmn:callActivity>
     <bpmn:endEvent id="PIL01_e" name="Pedido entregado o resuelto">
@@ -94,9 +91,7 @@
       <bpmn:extensionElements>
         <zeebe:calledElement processId="PIL04"/>
       </bpmn:extensionElements>
-      <bpmn:incoming>PIL01_f4</bpmn:incoming>
-      <bpmn:incoming>PIL01_f14</bpmn:incoming>
-      <bpmn:outgoing>PIL01_f15</bpmn:outgoing>
+      <bpmn:incoming>PIL01_paper_merge_out</bpmn:incoming><bpmn:outgoing>PIL01_f15</bpmn:outgoing>
     </bpmn:callActivity>
     <bpmn:endEvent id="PIL01_pe" name="Servicio en contingencia documentado">
       <bpmn:incoming>PIL01_f15</bpmn:incoming>
@@ -107,24 +102,24 @@
     <bpmn:sequenceFlow id="PIL01_f3" sourceRef="PIL01_channel" targetRef="PIL01_capture" name="Sí">
       <bpmn:conditionExpression>Sí</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="PIL01_f4" sourceRef="PIL01_channel" targetRef="PIL01_paper" name="No"/>
+    <bpmn:sequenceFlow id="PIL01_f4" sourceRef="PIL01_channel" targetRef="PIL01_paper_merge" name="No"/>
     <bpmn:sequenceFlow id="PIL01_f5" sourceRef="PIL01_capture" targetRef="PIL01_confirm"/>
     <bpmn:sequenceFlow id="PIL01_f6" sourceRef="PIL01_confirm" targetRef="PIL01_send"/>
     <bpmn:sequenceFlow id="PIL01_f7" sourceRef="PIL01_send" targetRef="PIL01_t4"/>
     <bpmn:sequenceFlow id="PIL01_f8" sourceRef="PIL01_t4" targetRef="PIL01_ack"/>
     <bpmn:sequenceFlow id="PIL01_f9" sourceRef="PIL01_ack" targetRef="PIL01_ok"/>
-    <bpmn:sequenceFlow id="PIL01_f10" sourceRef="PIL01_ok" targetRef="PIL01_work" name="Sí">
+    <bpmn:sequenceFlow id="PIL01_f10" sourceRef="PIL01_ok" targetRef="PIL01_work_merge" name="Sí">
       <bpmn:conditionExpression>Sí</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="PIL01_f11" sourceRef="PIL01_ok" targetRef="PIL01_verify" name="No"/>
+    <bpmn:sequenceFlow id="PIL01_f11" sourceRef="PIL01_ok" targetRef="PIL01_verify_merge" name="No"/>
     <bpmn:sequenceFlow id="PIL01_f12" sourceRef="PIL01_verify" targetRef="PIL01_recover"/>
-    <bpmn:sequenceFlow id="PIL01_f13" sourceRef="PIL01_recover" targetRef="PIL01_work" name="Sí">
+    <bpmn:sequenceFlow id="PIL01_f13" sourceRef="PIL01_recover" targetRef="PIL01_work_merge" name="Sí">
       <bpmn:conditionExpression>Sí</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="PIL01_f14" sourceRef="PIL01_recover" targetRef="PIL01_paper" name="No"/>
+    <bpmn:sequenceFlow id="PIL01_f14" sourceRef="PIL01_recover" targetRef="PIL01_paper_merge" name="No"/>
     <bpmn:sequenceFlow id="PIL01_f15" sourceRef="PIL01_paper" targetRef="PIL01_pe"/>
     <bpmn:sequenceFlow id="PIL01_f16" sourceRef="PIL01_work" targetRef="PIL01_e"/>
-  <bpmn:boundaryEvent id="PIL01_plazoAcuse" name="2 min sin acuse · umbral propuesto" attachedToRef="PIL01_ack" cancelActivity="true"><bpmn:outgoing>PIL01_plazoAcuse_f</bpmn:outgoing><bpmn:timerEventDefinition><bpmn:timeDuration>PT2M</bpmn:timeDuration></bpmn:timerEventDefinition></bpmn:boundaryEvent><bpmn:sequenceFlow id="PIL01_plazoAcuse_f" sourceRef="PIL01_plazoAcuse" targetRef="PIL01_verify"/></bpmn:process>
+  <bpmn:boundaryEvent id="PIL01_plazoAcuse" name="2 min sin acuse · umbral propuesto" attachedToRef="PIL01_ack" cancelActivity="true"><bpmn:outgoing>PIL01_plazoAcuse_f</bpmn:outgoing><bpmn:timerEventDefinition><bpmn:timeDuration>PT2M</bpmn:timeDuration></bpmn:timerEventDefinition></bpmn:boundaryEvent><bpmn:sequenceFlow id="PIL01_plazoAcuse_f" sourceRef="PIL01_plazoAcuse" targetRef="PIL01_verify_merge"/><bpmn:exclusiveGateway id="PIL01_verify_merge" gatewayDirection="Converging"><bpmn:incoming>PIL01_f11</bpmn:incoming><bpmn:incoming>PIL01_plazoAcuse_f</bpmn:incoming><bpmn:outgoing>PIL01_verify_merge_out</bpmn:outgoing></bpmn:exclusiveGateway><bpmn:sequenceFlow id="PIL01_verify_merge_out" sourceRef="PIL01_verify_merge" targetRef="PIL01_verify"/><bpmn:exclusiveGateway id="PIL01_work_merge" gatewayDirection="Converging"><bpmn:incoming>PIL01_f10</bpmn:incoming><bpmn:incoming>PIL01_f13</bpmn:incoming><bpmn:outgoing>PIL01_work_merge_out</bpmn:outgoing></bpmn:exclusiveGateway><bpmn:sequenceFlow id="PIL01_work_merge_out" sourceRef="PIL01_work_merge" targetRef="PIL01_work"/><bpmn:exclusiveGateway id="PIL01_paper_merge" gatewayDirection="Converging"><bpmn:incoming>PIL01_f4</bpmn:incoming><bpmn:incoming>PIL01_f14</bpmn:incoming><bpmn:outgoing>PIL01_paper_merge_out</bpmn:outgoing></bpmn:exclusiveGateway><bpmn:sequenceFlow id="PIL01_paper_merge_out" sourceRef="PIL01_paper_merge" targetRef="PIL01_paper"/></bpmn:process>
   <bpmndi:BPMNDiagram id="DG_PIL01">
     <bpmndi:BPMNPlane id="PL_PIL01" bpmnElement="PIL01">
       <bpmndi:BPMNShape id="DI_PIL01_rol0" bpmnElement="PIL01_rol0" isHorizontal="true">
@@ -212,10 +207,7 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="DI_PIL01_f4" bpmnElement="PIL01_f4">
         <di:waypoint x="810.0" y="113"/>
-        <di:waypoint x="1721.25" y="113"/>
-        <di:waypoint x="1721.25" y="563"/>
-        <di:waypoint x="2632.5" y="563"/>
-        <bpmndi:BPMNLabel>
+        <di:waypoint x="810.0" y="610"/><di:waypoint x="2580" y="610"/><di:waypoint x="2580" y="586"/><bpmndi:BPMNLabel>
           <dc:Bounds x="1247.625" y="93.0" width="36" height="16"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
@@ -247,19 +239,13 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="DI_PIL01_f10" bpmnElement="PIL01_f10">
         <di:waypoint x="2100.0" y="113"/>
-        <di:waypoint x="2366.25" y="113"/>
-        <di:waypoint x="2366.25" y="413"/>
-        <di:waypoint x="2632.5" y="413"/>
-        <bpmndi:BPMNLabel>
+        <di:waypoint x="2100.0" y="366"/><di:waypoint x="2580" y="366"/><di:waypoint x="2580" y="390"/><bpmndi:BPMNLabel>
           <dc:Bounds x="2215.125" y="93.0" width="36" height="16"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="DI_PIL01_f11" bpmnElement="PIL01_f11">
         <di:waypoint x="2100.0" y="113"/>
-        <di:waypoint x="2151.25" y="113"/>
-        <di:waypoint x="2151.25" y="563"/>
-        <di:waypoint x="2202.5" y="563"/>
-        <bpmndi:BPMNLabel>
+        <di:waypoint x="2100.0" y="516"/><di:waypoint x="2155" y="516"/><di:waypoint x="2155" y="540"/><bpmndi:BPMNLabel>
           <dc:Bounds x="2107.625" y="93.0" width="36" height="16"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
@@ -269,17 +255,13 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="DI_PIL01_f13" bpmnElement="PIL01_f13">
         <di:waypoint x="2530.0" y="563"/>
-        <di:waypoint x="2581.25" y="563"/>
-        <di:waypoint x="2581.25" y="413"/>
-        <di:waypoint x="2632.5" y="413"/>
-        <bpmndi:BPMNLabel>
+        <di:waypoint x="2525" y="563.0"/><di:waypoint x="2525" y="413"/><di:waypoint x="2557" y="413"/><bpmndi:BPMNLabel>
           <dc:Bounds x="2537.625" y="543.0" width="36" height="16"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="DI_PIL01_f14" bpmnElement="PIL01_f14">
         <di:waypoint x="2530.0" y="563"/>
-        <di:waypoint x="2632.5" y="563"/>
-        <bpmndi:BPMNLabel>
+        <di:waypoint x="2557" y="563"/><bpmndi:BPMNLabel>
           <dc:Bounds x="2563.25" y="543.0" width="36" height="16"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
@@ -293,6 +275,6 @@
         <di:waypoint x="2862.25" y="113"/>
         <di:waypoint x="2917.0" y="113"/>
       </bpmndi:BPMNEdge>
-    <bpmndi:BPMNShape id="DI_PIL01_plazoAcuse" bpmnElement="PIL01_plazoAcuse"><dc:Bounds x="1903.5" y="434.0" width="32" height="32"/></bpmndi:BPMNShape><bpmndi:BPMNEdge id="DI_PIL01_plazoAcuse_f" bpmnElement="PIL01_plazoAcuse_f"><di:waypoint x="1919.5" y="466.0"/><di:waypoint x="1919.5" y="563.0"/><di:waypoint x="2202.5" y="563.0"/></bpmndi:BPMNEdge></bpmndi:BPMNPlane>
+    <bpmndi:BPMNShape id="DI_PIL01_plazoAcuse" bpmnElement="PIL01_plazoAcuse"><dc:Bounds x="1903.5" y="434.0" width="32" height="32"/></bpmndi:BPMNShape><bpmndi:BPMNEdge id="DI_PIL01_plazoAcuse_f" bpmnElement="PIL01_plazoAcuse_f"><di:waypoint x="1919.5" y="466.0"/><di:waypoint x="1919.5" y="610"/><di:waypoint x="2155" y="610"/><di:waypoint x="2155" y="586"/></bpmndi:BPMNEdge><bpmndi:BPMNShape id="DI_PIL01_verify_merge" bpmnElement="PIL01_verify_merge" isMarkerVisible="true"><dc:Bounds x="2132" y="540" width="46" height="46"/></bpmndi:BPMNShape><bpmndi:BPMNEdge id="DI_PIL01_verify_merge_out" bpmnElement="PIL01_verify_merge_out"><di:waypoint x="2178" y="563"/><di:waypoint x="2202.5" y="563"/></bpmndi:BPMNEdge><bpmndi:BPMNShape id="DI_PIL01_work_merge" bpmnElement="PIL01_work_merge" isMarkerVisible="true"><dc:Bounds x="2557" y="390" width="46" height="46"/></bpmndi:BPMNShape><bpmndi:BPMNEdge id="DI_PIL01_work_merge_out" bpmnElement="PIL01_work_merge_out"><di:waypoint x="2603" y="413"/><di:waypoint x="2632.5" y="413"/></bpmndi:BPMNEdge><bpmndi:BPMNShape id="DI_PIL01_paper_merge" bpmnElement="PIL01_paper_merge" isMarkerVisible="true"><dc:Bounds x="2557" y="540" width="46" height="46"/></bpmndi:BPMNShape><bpmndi:BPMNEdge id="DI_PIL01_paper_merge_out" bpmnElement="PIL01_paper_merge_out"><di:waypoint x="2603" y="563"/><di:waypoint x="2632.5" y="563"/></bpmndi:BPMNEdge></bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>
