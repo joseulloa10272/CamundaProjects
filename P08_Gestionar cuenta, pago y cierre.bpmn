@@ -2,53 +2,53 @@
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_Maderos" targetNamespace="https://maderos.example/bpmn/PR-SERV-001" exporter="Camunda Web Modeler" exporterVersion="27cc6be" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.9.0">
   <bpmn:escalation id="Esc_Cancelacion" name="Cancelación total" escalationCode="CANCELAR_SERVICIO" />
   <bpmn:process id="P01" name="01 · Servicio al comensal · Vista general" isExecutable="false">
-    <bpmn:documentation>Una instancia corresponde a la visita de un grupo. Los detalles de cada actividad llamada se desarrollan en las láminas 02-10. Modelo descriptivo no ejecutable; versión de revisión v0.2. Estado: revisión, pendiente de validación con persona del proceso.</bpmn:documentation>
+    <bpmn:documentation>Una instancia corresponde a la visita de un grupo. Los detalles de cada actividad llamada se desarrollan en las láminas 02-10. Modelo descriptivo no ejecutable; versión de revisión v0.3. Estado: revisión, pendiente de validación con persona del proceso.</bpmn:documentation>
     <bpmn:startEvent id="P01_s" name="Cliente llega">
-      <bpmn:documentation>Fuente: U2. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:outgoing>P01_f1</bpmn:outgoing>
     </bpmn:startEvent>
     <bpmn:callActivity id="P01_r" name="Recibir y ubicar al cliente" calledElement="P02">
-      <bpmn:documentation>Fuente: U2. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P01_f1</bpmn:incoming>
       <bpmn:outgoing>P01_f2</bpmn:outgoing>
     </bpmn:callActivity>
     <bpmn:exclusiveGateway id="P01_g" name="¿Cliente ubicado?">
-      <bpmn:documentation>Fuente: U2. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P01_f2</bpmn:incoming>
       <bpmn:outgoing>P01_f3</bpmn:outgoing>
       <bpmn:outgoing>P01_f4</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:callActivity id="P01_svc" name="Atender servicio en mesa" calledElement="P03">
-      <bpmn:documentation>Fuente: U2. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P01_f3</bpmn:incoming>
       <bpmn:outgoing>P01_f5</bpmn:outgoing>
     </bpmn:callActivity>
     <bpmn:task id="P01_cuenta" name="Generar y verificar cuenta">
-      <bpmn:documentation>Fuente: U2. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P01_f5</bpmn:incoming>
       <bpmn:outgoing>P01_f6</bpmn:outgoing>
     </bpmn:task>
     <bpmn:callActivity id="P01_caja" name="Facturar y cobrar consumo" calledElement="P08">
-      <bpmn:documentation>Fuente: U2. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P01_f6</bpmn:incoming>
       <bpmn:outgoing>P01_f7</bpmn:outgoing>
     </bpmn:callActivity>
     <bpmn:task id="P01_desp" name="Despedir al cliente">
-      <bpmn:documentation>Fuente: U2. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P01_f7</bpmn:incoming>
       <bpmn:outgoing>P01_f8</bpmn:outgoing>
     </bpmn:task>
     <bpmn:callActivity id="P01_mesa" name="Acondicionar mesa" calledElement="P10">
-      <bpmn:documentation>Fuente: U2. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P01_f8</bpmn:incoming>
       <bpmn:outgoing>P01_f9</bpmn:outgoing>
     </bpmn:callActivity>
     <bpmn:endEvent id="P01_fin" name="Servicio finalizado; mesa preparada">
-      <bpmn:documentation>Fuente: U2. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P01_f9</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:endEvent id="P01_retiro" name="Cliente retirado durante la espera">
-      <bpmn:documentation>Fuente: U2. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P01_f4</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="P01_f1" sourceRef="P01_s" targetRef="P01_r" />
@@ -76,6 +76,7 @@
         <bpmn:flowNodeRef>P02_s</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>P02_rec</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>P02_disp</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>P02_inf</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>P02_g</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>P02_lista</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>P02_cap</bpmn:flowNodeRef>
@@ -91,103 +92,109 @@
       </bpmn:lane>
     </bpmn:laneSet>
     <bpmn:startEvent id="P02_s" name="Cliente recibido para atención">
-      <bpmn:documentation>Fuente: U2. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:outgoing>P02_f1</bpmn:outgoing>
     </bpmn:startEvent>
-    <bpmn:task id="P02_rec" name="Recibir al cliente">
-      <bpmn:documentation>Fuente: U2. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+    <bpmn:task id="P02_rec" name="Recibir al cliente y consultar cantidad de personas">
+      <bpmn:documentation>Fuente: U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P02_f1</bpmn:incoming>
       <bpmn:outgoing>P02_f2</bpmn:outgoing>
     </bpmn:task>
     <bpmn:task id="P02_disp" name="Verificar disponibilidad de mesas">
-      <bpmn:documentation>Fuente: U2. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P02_f2</bpmn:incoming>
       <bpmn:outgoing>P02_f3</bpmn:outgoing>
     </bpmn:task>
-    <bpmn:exclusiveGateway id="P02_g" name="¿Hay mesa disponible?">
-      <bpmn:documentation>Fuente: U2. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+    <bpmn:task id="P02_inf" name="Informar al cliente sobre la disponibilidad">
+      <bpmn:documentation>Fuente: U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P02_f3</bpmn:incoming>
       <bpmn:outgoing>P02_f4</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="P02_g" name="¿Hay mesa disponible?">
+      <bpmn:documentation>Fuente: U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:incoming>P02_f4</bpmn:incoming>
       <bpmn:outgoing>P02_f5</bpmn:outgoing>
+      <bpmn:outgoing>P02_f6</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:task id="P02_lista" name="Registrar datos en lista de espera">
-      <bpmn:documentation>Fuente: U2. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
-      <bpmn:incoming>P02_f5</bpmn:incoming>
-      <bpmn:outgoing>P02_f6</bpmn:outgoing>
-    </bpmn:task>
-    <bpmn:task id="P02_cap" name="Informar al capitán">
-      <bpmn:documentation>Fuente: U2. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P02_f6</bpmn:incoming>
       <bpmn:outgoing>P02_f7</bpmn:outgoing>
     </bpmn:task>
-    <bpmn:eventBasedGateway id="P02_ev" name="Esperar un acontecimiento">
-      <bpmn:documentation>Fuente: U2. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+    <bpmn:task id="P02_cap" name="Informar al capitán">
+      <bpmn:documentation>Fuente: U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P02_f7</bpmn:incoming>
       <bpmn:outgoing>P02_f8</bpmn:outgoing>
-      <bpmn:outgoing>P02_f14</bpmn:outgoing>
-    </bpmn:eventBasedGateway>
-    <bpmn:intermediateCatchEvent id="P02_mesa" name="Mesa disponible">
-      <bpmn:documentation>Fuente: U2. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+    </bpmn:task>
+    <bpmn:eventBasedGateway id="P02_ev" name="Esperar un acontecimiento">
+      <bpmn:documentation>Fuente: U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P02_f8</bpmn:incoming>
       <bpmn:outgoing>P02_f9</bpmn:outgoing>
+      <bpmn:outgoing>P02_f15</bpmn:outgoing>
+    </bpmn:eventBasedGateway>
+    <bpmn:intermediateCatchEvent id="P02_mesa" name="Mesa disponible">
+      <bpmn:documentation>Fuente: U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:incoming>P02_f9</bpmn:incoming>
+      <bpmn:outgoing>P02_f10</bpmn:outgoing>
       <bpmn:conditionalEventDefinition>
         <bpmn:condition xsi:type="bpmn:tFormalExpression">mesaDisponible</bpmn:condition>
       </bpmn:conditionalEventDefinition>
     </bpmn:intermediateCatchEvent>
     <bpmn:task id="P02_contact" name="Contactar al cliente">
-      <bpmn:documentation>Fuente: U2. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
-      <bpmn:incoming>P02_f9</bpmn:incoming>
-      <bpmn:outgoing>P02_f10</bpmn:outgoing>
-    </bpmn:task>
-    <bpmn:exclusiveGateway id="P02_join" name="Continuar ubicación">
-      <bpmn:documentation>Fuente: U2. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
-      <bpmn:incoming>P02_f4</bpmn:incoming>
+      <bpmn:documentation>Fuente: U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P02_f10</bpmn:incoming>
       <bpmn:outgoing>P02_f11</bpmn:outgoing>
-    </bpmn:exclusiveGateway>
-    <bpmn:task id="P02_asig" name="Asignar mesa">
-      <bpmn:documentation>Fuente: U2. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="P02_join" name="Continuar ubicación">
+      <bpmn:documentation>Fuente: U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:incoming>P02_f5</bpmn:incoming>
       <bpmn:incoming>P02_f11</bpmn:incoming>
       <bpmn:outgoing>P02_f12</bpmn:outgoing>
-    </bpmn:task>
-    <bpmn:task id="P02_acom" name="Acompañar al cliente">
-      <bpmn:documentation>Fuente: U2. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="P02_asig" name="Asignar mesa">
+      <bpmn:documentation>Fuente: U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P02_f12</bpmn:incoming>
       <bpmn:outgoing>P02_f13</bpmn:outgoing>
     </bpmn:task>
-    <bpmn:endEvent id="P02_fin" name="Cliente ubicado">
-      <bpmn:documentation>Fuente: U2. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+    <bpmn:task id="P02_acom" name="Acompañar al cliente">
+      <bpmn:documentation>Fuente: U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P02_f13</bpmn:incoming>
+      <bpmn:outgoing>P02_f14</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="P02_fin" name="Cliente ubicado">
+      <bpmn:documentation>Fuente: U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:incoming>P02_f14</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:intermediateCatchEvent id="P02_ret" name="Cliente comunica retiro">
-      <bpmn:documentation>Fuente: U2. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
-      <bpmn:incoming>P02_f14</bpmn:incoming>
-      <bpmn:outgoing>P02_f15</bpmn:outgoing>
+      <bpmn:documentation>Fuente: U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:incoming>P02_f15</bpmn:incoming>
+      <bpmn:outgoing>P02_f16</bpmn:outgoing>
       <bpmn:messageEventDefinition messageRef="Msg_P02_ret" />
     </bpmn:intermediateCatchEvent>
+    <bpmn:endEvent id="P02_fr" name="Atención finalizada sin mesa">
+      <bpmn:documentation>Fuente: U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:incoming>P02_f16</bpmn:incoming>
+    </bpmn:endEvent>
     <bpmn:sequenceFlow id="P02_f1" sourceRef="P02_s" targetRef="P02_rec" />
     <bpmn:sequenceFlow id="P02_f2" sourceRef="P02_rec" targetRef="P02_disp" />
-    <bpmn:sequenceFlow id="P02_f3" sourceRef="P02_disp" targetRef="P02_g" />
-    <bpmn:sequenceFlow id="P02_f4" name="Sí" sourceRef="P02_g" targetRef="P02_join">
+    <bpmn:sequenceFlow id="P02_f3" sourceRef="P02_disp" targetRef="P02_inf" />
+    <bpmn:sequenceFlow id="P02_f4" sourceRef="P02_inf" targetRef="P02_g" />
+    <bpmn:sequenceFlow id="P02_f5" name="Sí" sourceRef="P02_g" targetRef="P02_join">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">Sí</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="P02_f5" name="No" sourceRef="P02_g" targetRef="P02_lista">
+    <bpmn:sequenceFlow id="P02_f6" name="No" sourceRef="P02_g" targetRef="P02_lista">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">No</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="P02_f6" sourceRef="P02_lista" targetRef="P02_cap" />
-    <bpmn:sequenceFlow id="P02_f7" sourceRef="P02_cap" targetRef="P02_ev" />
-    <bpmn:sequenceFlow id="P02_f8" sourceRef="P02_ev" targetRef="P02_mesa" />
-    <bpmn:sequenceFlow id="P02_f14" sourceRef="P02_ev" targetRef="P02_ret" />
-    <bpmn:sequenceFlow id="P02_f9" sourceRef="P02_mesa" targetRef="P02_contact" />
-    <bpmn:sequenceFlow id="P02_f10" sourceRef="P02_contact" targetRef="P02_join" />
-    <bpmn:sequenceFlow id="P02_f11" sourceRef="P02_join" targetRef="P02_asig" />
-    <bpmn:sequenceFlow id="P02_f12" sourceRef="P02_asig" targetRef="P02_acom" />
-    <bpmn:sequenceFlow id="P02_f13" sourceRef="P02_acom" targetRef="P02_fin" />
-    <bpmn:sequenceFlow id="P02_f15" sourceRef="P02_ret" targetRef="P02_fr" />
-    <bpmn:endEvent id="P02_fr" name="Atención finalizada sin mesa">
-      <bpmn:documentation>Fuente: U2. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
-      <bpmn:incoming>P02_f15</bpmn:incoming>
-    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="P02_f7" sourceRef="P02_lista" targetRef="P02_cap" />
+    <bpmn:sequenceFlow id="P02_f8" sourceRef="P02_cap" targetRef="P02_ev" />
+    <bpmn:sequenceFlow id="P02_f9" sourceRef="P02_ev" targetRef="P02_mesa" />
+    <bpmn:sequenceFlow id="P02_f10" sourceRef="P02_mesa" targetRef="P02_contact" />
+    <bpmn:sequenceFlow id="P02_f11" sourceRef="P02_contact" targetRef="P02_join" />
+    <bpmn:sequenceFlow id="P02_f12" sourceRef="P02_join" targetRef="P02_asig" />
+    <bpmn:sequenceFlow id="P02_f13" sourceRef="P02_asig" targetRef="P02_acom" />
+    <bpmn:sequenceFlow id="P02_f14" sourceRef="P02_acom" targetRef="P02_fin" />
+    <bpmn:sequenceFlow id="P02_f15" sourceRef="P02_ev" targetRef="P02_ret" />
+    <bpmn:sequenceFlow id="P02_f16" sourceRef="P02_ret" targetRef="P02_fr" />
   </bpmn:process>
   <bpmn:collaboration id="P02_collab">
     <bpmn:participant id="P02_restaurant" name="Restaurante Maderos" processRef="P02" />
@@ -220,17 +227,17 @@
     </bpmn:laneSet>
     <bpmn:subProcess id="P03_group_ad" name="Solicitud adicional" triggeredByEvent="true">
       <bpmn:startEvent id="P03_ads" name="Solicitud adicional" isInterrupting="false">
-        <bpmn:documentation>Fuente: U1;U2. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+        <bpmn:documentation>Fuente: U1;U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
         <bpmn:outgoing>P03_f9</bpmn:outgoing>
         <bpmn:messageEventDefinition messageRef="Msg_P03_ads" />
       </bpmn:startEvent>
       <bpmn:callActivity id="P03_adt" name="Atender pedido adicional" calledElement="P04">
-        <bpmn:documentation>Fuente: U1;U2. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+        <bpmn:documentation>Fuente: U1;U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
         <bpmn:incoming>P03_f9</bpmn:incoming>
         <bpmn:outgoing>P03_f10</bpmn:outgoing>
       </bpmn:callActivity>
       <bpmn:endEvent id="P03_ade" name="Atención complementaria finalizada">
-        <bpmn:documentation>Fuente: U1;U2. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+        <bpmn:documentation>Fuente: U1;U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
         <bpmn:incoming>P03_f10</bpmn:incoming>
       </bpmn:endEvent>
       <bpmn:sequenceFlow id="P03_f9" sourceRef="P03_ads" targetRef="P03_adt" />
@@ -238,17 +245,17 @@
     </bpmn:subProcess>
     <bpmn:subProcess id="P03_group_inc" name="Inconformidad durante el servicio" triggeredByEvent="true">
       <bpmn:startEvent id="P03_incs" name="Inconformidad durante el servicio" isInterrupting="false">
-        <bpmn:documentation>Fuente: U1;U2. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+        <bpmn:documentation>Fuente: U1;U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
         <bpmn:outgoing>P03_f11</bpmn:outgoing>
         <bpmn:messageEventDefinition messageRef="Msg_P03_incs" />
       </bpmn:startEvent>
       <bpmn:callActivity id="P03_inct" name="Resolver inconformidad" calledElement="P07">
-        <bpmn:documentation>Fuente: U1;U2. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+        <bpmn:documentation>Fuente: U1;U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
         <bpmn:incoming>P03_f11</bpmn:incoming>
         <bpmn:outgoing>P03_f12</bpmn:outgoing>
       </bpmn:callActivity>
       <bpmn:endEvent id="P03_ince" name="Atención complementaria finalizada">
-        <bpmn:documentation>Fuente: U1;U2. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+        <bpmn:documentation>Fuente: U1;U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
         <bpmn:incoming>P03_f12</bpmn:incoming>
       </bpmn:endEvent>
       <bpmn:sequenceFlow id="P03_f11" sourceRef="P03_incs" targetRef="P03_inct" />
@@ -256,19 +263,19 @@
     </bpmn:subProcess>
     <bpmn:subProcess id="P03_group_sat" name="Consulta al retirar utensilios" triggeredByEvent="true">
       <bpmn:startEvent id="P03_sats" name="Consulta al retirar utensilios" isInterrupting="false">
-        <bpmn:documentation>Fuente: U1;U2. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+        <bpmn:documentation>Fuente: U1;U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
         <bpmn:outgoing>P03_f13</bpmn:outgoing>
         <bpmn:conditionalEventDefinition>
           <bpmn:condition xsi:type="bpmn:tFormalExpression">retiroUtensiliosDuranteServicio</bpmn:condition>
         </bpmn:conditionalEventDefinition>
       </bpmn:startEvent>
       <bpmn:task id="P03_satt" name="Consultar satisfacción">
-        <bpmn:documentation>Fuente: U1;U2. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+        <bpmn:documentation>Fuente: U1;U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
         <bpmn:incoming>P03_f13</bpmn:incoming>
         <bpmn:outgoing>P03_f14</bpmn:outgoing>
       </bpmn:task>
       <bpmn:endEvent id="P03_sate" name="Atención complementaria finalizada">
-        <bpmn:documentation>Fuente: U1;U2. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+        <bpmn:documentation>Fuente: U1;U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
         <bpmn:incoming>P03_f14</bpmn:incoming>
       </bpmn:endEvent>
       <bpmn:sequenceFlow id="P03_f13" sourceRef="P03_sats" targetRef="P03_satt" />
@@ -276,21 +283,21 @@
     </bpmn:subProcess>
     <bpmn:subProcess id="P03_group_can" name="Cancelación total comunicada por el cliente" triggeredByEvent="true">
       <bpmn:startEvent id="P03_cans" name="Cancelación total comunicada por el cliente">
-        <bpmn:documentation>Fuente: U1;U2. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+        <bpmn:documentation>Fuente: U1;U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
         <bpmn:outgoing>P03_f15</bpmn:outgoing>
         <bpmn:messageEventDefinition messageRef="Msg_P03_cans" />
       </bpmn:startEvent>
       <bpmn:task id="P03_cant" name="Ajustar cuenta a lo consumido">
-        <bpmn:documentation>Fuente: U1;U2. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+        <bpmn:documentation>Fuente: U1;U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
         <bpmn:incoming>P03_f15</bpmn:incoming>
         <bpmn:outgoing>P03_f16</bpmn:outgoing>
       </bpmn:task>
       <bpmn:endEvent id="P03_cane" name="Servicio cancelado; consumo conservado">
-        <bpmn:documentation>Fuente: U1;U2. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+        <bpmn:documentation>Fuente: U1;U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
         <bpmn:incoming>P03_f17</bpmn:incoming>
       </bpmn:endEvent>
       <bpmn:task id="P03_cann" name="Comunicar cancelación a las áreas">
-        <bpmn:documentation>Fuente: U2-4. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+        <bpmn:documentation>Fuente: U2-4. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
         <bpmn:incoming>P03_f16</bpmn:incoming>
         <bpmn:outgoing>P03_f17</bpmn:outgoing>
       </bpmn:task>
@@ -300,21 +307,21 @@
     </bpmn:subProcess>
     <bpmn:subProcess id="P03_group_esc" name="Cancelación total desde una alternativa rechazada" triggeredByEvent="true">
       <bpmn:startEvent id="P03_escs" name="Cancelación total desde una alternativa rechazada">
-        <bpmn:documentation>Fuente: U1;U2. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+        <bpmn:documentation>Fuente: U1;U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
         <bpmn:outgoing>P03_f18</bpmn:outgoing>
         <bpmn:escalationEventDefinition escalationRef="Esc_Cancelacion" />
       </bpmn:startEvent>
       <bpmn:task id="P03_esct" name="Ajustar cuenta a lo consumido">
-        <bpmn:documentation>Fuente: U1;U2. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+        <bpmn:documentation>Fuente: U1;U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
         <bpmn:incoming>P03_f18</bpmn:incoming>
         <bpmn:outgoing>P03_f19</bpmn:outgoing>
       </bpmn:task>
       <bpmn:endEvent id="P03_esce" name="Servicio cancelado; consumo conservado">
-        <bpmn:documentation>Fuente: U1;U2. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+        <bpmn:documentation>Fuente: U1;U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
         <bpmn:incoming>P03_f20</bpmn:incoming>
       </bpmn:endEvent>
       <bpmn:task id="P03_escn" name="Comunicar cancelación a las áreas">
-        <bpmn:documentation>Fuente: U2-4. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+        <bpmn:documentation>Fuente: U2-4. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
         <bpmn:incoming>P03_f19</bpmn:incoming>
         <bpmn:outgoing>P03_f20</bpmn:outgoing>
       </bpmn:task>
@@ -323,44 +330,44 @@
       <bpmn:sequenceFlow id="P03_f20" sourceRef="P03_escn" targetRef="P03_esce" />
     </bpmn:subProcess>
     <bpmn:startEvent id="P03_s" name="Cliente ubicado">
-      <bpmn:documentation>Fuente: U1. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: U1. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:outgoing>P03_f1</bpmn:outgoing>
     </bpmn:startEvent>
     <bpmn:task id="P03_menu" name="Entregar menú">
-      <bpmn:documentation>Fuente: U1. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: U1. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P03_f1</bpmn:incoming>
       <bpmn:outgoing>P03_f2</bpmn:outgoing>
     </bpmn:task>
     <bpmn:exclusiveGateway id="P03_g" name="¿Hay consultas?">
-      <bpmn:documentation>Fuente: U1. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: U1. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P03_f2</bpmn:incoming>
       <bpmn:outgoing>P03_f3</bpmn:outgoing>
       <bpmn:outgoing>P03_f4</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:task id="P03_consult" name="Atender consultas">
-      <bpmn:documentation>Fuente: U1. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: U1. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P03_f4</bpmn:incoming>
       <bpmn:outgoing>P03_f5</bpmn:outgoing>
     </bpmn:task>
     <bpmn:exclusiveGateway id="P03_join" name="Continuar atención">
-      <bpmn:documentation>Fuente: U1. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: U1. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P03_f3</bpmn:incoming>
       <bpmn:incoming>P03_f5</bpmn:incoming>
       <bpmn:outgoing>P03_f6</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:callActivity id="P03_pedido" name="Tomar y atender pedido inicial" calledElement="P04">
-      <bpmn:documentation>Fuente: U1. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: U1. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P03_f6</bpmn:incoming>
       <bpmn:outgoing>P03_f7</bpmn:outgoing>
     </bpmn:callActivity>
     <bpmn:intermediateCatchEvent id="P03_cuenta" name="Solicitud de cuenta recibida">
-      <bpmn:documentation>Fuente: U1. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: U1. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P03_f7</bpmn:incoming>
       <bpmn:outgoing>P03_f8</bpmn:outgoing>
       <bpmn:messageEventDefinition messageRef="Msg_P03_cuenta" />
     </bpmn:intermediateCatchEvent>
     <bpmn:endEvent id="P03_fin" name="Servicio listo para liquidación">
-      <bpmn:documentation>Fuente: U1. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: U1. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P03_f8</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="P03_f1" sourceRef="P03_s" targetRef="P03_menu" />
@@ -407,58 +414,58 @@
       </bpmn:lane>
     </bpmn:laneSet>
     <bpmn:startEvent id="P04_s" name="Pedido inicial o adicional">
-      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U1;U2. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U1;U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:outgoing>P04_f1</bpmn:outgoing>
     </bpmn:startEvent>
     <bpmn:task id="P04_tomar" name="Recibir pedido del cliente">
-      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U1;U2. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U1;U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P04_f1</bpmn:incoming>
       <bpmn:outgoing>P04_f2</bpmn:outgoing>
     </bpmn:task>
     <bpmn:task id="P04_papel" name="Registrar pedido en papel">
-      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U1;U2. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U1;U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P04_f2</bpmn:incoming>
       <bpmn:outgoing>P04_f3</bpmn:outgoing>
     </bpmn:task>
     <bpmn:task id="P04_confirm" name="Confirmar pedido con el cliente">
-      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U1;U2. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U1;U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P04_f3</bpmn:incoming>
       <bpmn:outgoing>P04_f4</bpmn:outgoing>
     </bpmn:task>
     <bpmn:task id="P04_llevar" name="Llevar pedido escrito a cocina">
-      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U1;U2. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U1;U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P04_f4</bpmn:incoming>
       <bpmn:outgoing>P04_f5</bpmn:outgoing>
     </bpmn:task>
     <bpmn:task id="P04_recibir" name="Recibir y revisar pedido escrito">
-      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U1;U2. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U1;U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P04_f5</bpmn:incoming>
       <bpmn:outgoing>P04_f6</bpmn:outgoing>
     </bpmn:task>
     <bpmn:task id="P04_ver" name="Verificar disponibilidad de productos">
-      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U1;U2. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U1;U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P04_f14</bpmn:incoming>
       <bpmn:outgoing>P04_f7</bpmn:outgoing>
     </bpmn:task>
     <bpmn:exclusiveGateway id="P04_g" name="¿Productos disponibles?">
-      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U1;U2. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U1;U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P04_f7</bpmn:incoming>
       <bpmn:outgoing>P04_f8</bpmn:outgoing>
       <bpmn:outgoing>P04_f9</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:callActivity id="P04_falt" name="Resolver producto no disponible" calledElement="P06">
-      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U1;U2. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U1;U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P04_f9</bpmn:incoming>
       <bpmn:outgoing>P04_f10</bpmn:outgoing>
     </bpmn:callActivity>
     <bpmn:exclusiveGateway id="P04_rest" name="¿Quedan productos por preparar?">
-      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U1;U2. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U1;U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P04_f10</bpmn:incoming>
       <bpmn:outgoing>P04_f11</bpmn:outgoing>
       <bpmn:outgoing>P04_f12</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:callActivity id="P04_prep" name="Preparar y entregar cada lote" calledElement="P05">
-      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U1;U2. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U1;U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P04_f8</bpmn:incoming>
       <bpmn:outgoing>P04_f13</bpmn:outgoing>
       <bpmn:multiInstanceLoopCharacteristics>
@@ -466,15 +473,15 @@
       </bpmn:multiInstanceLoopCharacteristics>
     </bpmn:callActivity>
     <bpmn:endEvent id="P04_fin" name="Pedido atendido">
-      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U1;U2. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U1;U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P04_f13</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:endEvent id="P04_elim" name="Pedido sin productos pendientes">
-      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U1;U2. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U1;U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P04_f12</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:exclusiveGateway id="P04_merge_explicit" name="Continuar recorrido">
-      <bpmn:documentation>Fuente: Normalización BPMN de rutas exclusivas confirmadas. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: Normalización BPMN de rutas exclusivas confirmadas. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P04_f6</bpmn:incoming>
       <bpmn:incoming>P04_f11</bpmn:incoming>
       <bpmn:outgoing>P04_f14</bpmn:outgoing>
@@ -522,6 +529,7 @@
         <bpmn:flowNodeRef>P05_s</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>P05_split</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>P05_join</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>P05_verify</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>P05_rec</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>P05_tras</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>P05_ent</bpmn:flowNodeRef>
@@ -529,59 +537,64 @@
       </bpmn:lane>
     </bpmn:laneSet>
     <bpmn:startEvent id="P05_s" name="Lote por atender">
-      <bpmn:documentation>Fuente: U1-11;U1-12;U2-2. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: U1-7;U1-11;U1-12;U2-2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:outgoing>P05_f1</bpmn:outgoing>
     </bpmn:startEvent>
     <bpmn:inclusiveGateway id="P05_split" name="Preparación según contenido">
-      <bpmn:documentation>Fuente: U1-11;U1-12;U2-2. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: U1-7;U1-11;U1-12;U2-2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P05_f1</bpmn:incoming>
       <bpmn:outgoing>P05_f2</bpmn:outgoing>
       <bpmn:outgoing>P05_f3</bpmn:outgoing>
     </bpmn:inclusiveGateway>
     <bpmn:task id="P05_food" name="Preparar alimentos solicitados">
-      <bpmn:documentation>Fuente: U1-11;U1-12;U2-2. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: U1-7;U1-11;U1-12;U2-2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P05_f2</bpmn:incoming>
       <bpmn:outgoing>P05_f4</bpmn:outgoing>
     </bpmn:task>
     <bpmn:task id="P05_avf" name="Avisar productos listos">
-      <bpmn:documentation>Fuente: U1-11;U1-12;U2-2. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: U1-7;U1-11;U1-12;U2-2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P05_f4</bpmn:incoming>
       <bpmn:outgoing>P05_f6</bpmn:outgoing>
     </bpmn:task>
     <bpmn:task id="P05_drink" name="Preparar bebidas solicitadas">
-      <bpmn:documentation>Fuente: U1-11;U1-12;U2-2. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: U1-7;U1-11;U1-12;U2-2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P05_f3</bpmn:incoming>
       <bpmn:outgoing>P05_f5</bpmn:outgoing>
     </bpmn:task>
     <bpmn:task id="P05_avb" name="Avisar bebidas listas">
-      <bpmn:documentation>Fuente: U1-11;U1-12;U2-2. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: U1-7;U1-11;U1-12;U2-2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P05_f5</bpmn:incoming>
       <bpmn:outgoing>P05_f7</bpmn:outgoing>
     </bpmn:task>
     <bpmn:inclusiveGateway id="P05_join" name="Productos del lote listos">
-      <bpmn:documentation>Fuente: U1-11;U1-12;U2-2. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: U1-7;U1-11;U1-12;U2-2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P05_f6</bpmn:incoming>
       <bpmn:incoming>P05_f7</bpmn:incoming>
       <bpmn:outgoing>P05_f8</bpmn:outgoing>
     </bpmn:inclusiveGateway>
-    <bpmn:task id="P05_rec" name="Recoger productos preparados">
-      <bpmn:documentation>Fuente: U1-11;U1-12;U2-2. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+    <bpmn:task id="P05_verify" name="Verificar productos contra el pedido escrito">
+      <bpmn:documentation>Fuente: U1-7;U1-11;U1-12;U2-2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P05_f8</bpmn:incoming>
       <bpmn:outgoing>P05_f9</bpmn:outgoing>
     </bpmn:task>
-    <bpmn:task id="P05_tras" name="Trasladar productos a la mesa">
-      <bpmn:documentation>Fuente: U1-11;U1-12;U2-2. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+    <bpmn:task id="P05_rec" name="Recoger productos preparados">
+      <bpmn:documentation>Fuente: U1-7;U1-11;U1-12;U2-2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P05_f9</bpmn:incoming>
       <bpmn:outgoing>P05_f10</bpmn:outgoing>
     </bpmn:task>
-    <bpmn:task id="P05_ent" name="Entregar productos al cliente">
-      <bpmn:documentation>Fuente: U1-11;U1-12;U2-2. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+    <bpmn:task id="P05_tras" name="Trasladar productos a la mesa">
+      <bpmn:documentation>Fuente: U1-7;U1-11;U1-12;U2-2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P05_f10</bpmn:incoming>
       <bpmn:outgoing>P05_f11</bpmn:outgoing>
     </bpmn:task>
-    <bpmn:endEvent id="P05_fin" name="Lote entregado">
-      <bpmn:documentation>Fuente: U1-11;U1-12;U2-2. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+    <bpmn:task id="P05_ent" name="Entregar productos al cliente">
+      <bpmn:documentation>Fuente: U1-7;U1-11;U1-12;U2-2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P05_f11</bpmn:incoming>
+      <bpmn:outgoing>P05_f12</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="P05_fin" name="Lote entregado">
+      <bpmn:documentation>Fuente: U1-7;U1-11;U1-12;U2-2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:incoming>P05_f12</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="P05_f1" sourceRef="P05_s" targetRef="P05_split" />
     <bpmn:sequenceFlow id="P05_f2" name="Incluye alimentos" sourceRef="P05_split" targetRef="P05_food">
@@ -594,10 +607,11 @@
     <bpmn:sequenceFlow id="P05_f5" sourceRef="P05_drink" targetRef="P05_avb" />
     <bpmn:sequenceFlow id="P05_f6" sourceRef="P05_avf" targetRef="P05_join" />
     <bpmn:sequenceFlow id="P05_f7" sourceRef="P05_avb" targetRef="P05_join" />
-    <bpmn:sequenceFlow id="P05_f8" sourceRef="P05_join" targetRef="P05_rec" />
-    <bpmn:sequenceFlow id="P05_f9" sourceRef="P05_rec" targetRef="P05_tras" />
-    <bpmn:sequenceFlow id="P05_f10" sourceRef="P05_tras" targetRef="P05_ent" />
-    <bpmn:sequenceFlow id="P05_f11" sourceRef="P05_ent" targetRef="P05_fin" />
+    <bpmn:sequenceFlow id="P05_f8" sourceRef="P05_join" targetRef="P05_verify" />
+    <bpmn:sequenceFlow id="P05_f9" sourceRef="P05_verify" targetRef="P05_rec" />
+    <bpmn:sequenceFlow id="P05_f10" sourceRef="P05_rec" targetRef="P05_tras" />
+    <bpmn:sequenceFlow id="P05_f11" sourceRef="P05_tras" targetRef="P05_ent" />
+    <bpmn:sequenceFlow id="P05_f12" sourceRef="P05_ent" targetRef="P05_fin" />
   </bpmn:process>
   <bpmn:collaboration id="P05_collab">
     <bpmn:participant id="P05_restaurant" name="Restaurante Maderos" processRef="P05" />
@@ -619,51 +633,51 @@
       </bpmn:lane>
     </bpmn:laneSet>
     <bpmn:startEvent id="P06_s" name="Faltante identificado">
-      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U2-4;U2-5. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U2-4;U2-5. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:outgoing>P06_f1</bpmn:outgoing>
     </bpmn:startEvent>
     <bpmn:task id="P06_inf" name="Informar producto no disponible">
-      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U2-4;U2-5. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U2-4;U2-5. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P06_f1</bpmn:incoming>
       <bpmn:outgoing>P06_f2</bpmn:outgoing>
     </bpmn:task>
     <bpmn:task id="P06_alt" name="Solicitar alternativa al cliente">
-      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U2-4;U2-5. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U2-4;U2-5. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P06_f2</bpmn:incoming>
       <bpmn:outgoing>P06_f3</bpmn:outgoing>
     </bpmn:task>
     <bpmn:exclusiveGateway id="P06_g" name="¿Qué decide el cliente?">
-      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U2-4;U2-5. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U2-4;U2-5. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P06_f3</bpmn:incoming>
       <bpmn:outgoing>P06_f4</bpmn:outgoing>
       <bpmn:outgoing>P06_f7</bpmn:outgoing>
       <bpmn:outgoing>P06_f9</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:task id="P06_upd" name="Actualizar pedido escrito">
-      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U2-4;U2-5. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U2-4;U2-5. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P06_f4</bpmn:incoming>
       <bpmn:outgoing>P06_f5</bpmn:outgoing>
     </bpmn:task>
     <bpmn:task id="P06_llevar" name="Llevar modificación a cocina">
-      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U2-4;U2-5. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U2-4;U2-5. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P06_f5</bpmn:incoming>
       <bpmn:outgoing>P06_f6</bpmn:outgoing>
     </bpmn:task>
     <bpmn:endEvent id="P06_fin" name="Pedido actualizado">
-      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U2-4;U2-5. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U2-4;U2-5. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P06_f6</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:task id="P06_del" name="Eliminar producto del pedido escrito">
-      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U2-4;U2-5. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U2-4;U2-5. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P06_f7</bpmn:incoming>
       <bpmn:outgoing>P06_f8</bpmn:outgoing>
     </bpmn:task>
     <bpmn:endEvent id="P06_fe" name="Producto eliminado">
-      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U2-4;U2-5. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U2-4;U2-5. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P06_f8</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:endEvent id="P06_can" name="Cancelación total solicitada">
-      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U2-4;U2-5. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U2-4;U2-5. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P06_f9</bpmn:incoming>
       <bpmn:escalationEventDefinition escalationRef="Esc_Cancelacion" />
     </bpmn:endEvent>
@@ -708,49 +722,49 @@
       </bpmn:lane>
     </bpmn:laneSet>
     <bpmn:startEvent id="P07_s" name="Inconformidad recibida">
-      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U1-14;U2-5;U2-6. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U1-14;U2-5;U2-6. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:outgoing>P07_f1</bpmn:outgoing>
     </bpmn:startEvent>
     <bpmn:task id="P07_aten" name="Atender inconformidad con el cliente">
-      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U1-14;U2-5;U2-6. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U1-14;U2-5;U2-6. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P07_f1</bpmn:incoming>
       <bpmn:outgoing>P07_f2</bpmn:outgoing>
     </bpmn:task>
     <bpmn:exclusiveGateway id="P07_g" name="¿Se resuelve en salón?">
-      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U1-14;U2-5;U2-6. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U1-14;U2-5;U2-6. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P07_f2</bpmn:incoming>
       <bpmn:outgoing>P07_f3</bpmn:outgoing>
       <bpmn:outgoing>P07_f4</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:task id="P07_ger" name="Acordar y aplicar solución con el cliente">
-      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U1-14;U2-5;U2-6. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U1-14;U2-5;U2-6. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P07_f4</bpmn:incoming>
       <bpmn:outgoing>P07_f5</bpmn:outgoing>
     </bpmn:task>
     <bpmn:exclusiveGateway id="P07_join" name="Continuar con la solución">
-      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U1-14;U2-5;U2-6. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U1-14;U2-5;U2-6. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P07_f3</bpmn:incoming>
       <bpmn:incoming>P07_f5</bpmn:incoming>
       <bpmn:outgoing>P07_f6</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:exclusiveGateway id="P07_cambio" name="¿Requiere corregir el pedido?">
-      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U1-14;U2-5;U2-6. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U1-14;U2-5;U2-6. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P07_f6</bpmn:incoming>
       <bpmn:outgoing>P07_f7</bpmn:outgoing>
       <bpmn:outgoing>P07_f8</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:task id="P07_upd" name="Anotar corrección en papel">
-      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U1-14;U2-5;U2-6. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U1-14;U2-5;U2-6. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P07_f8</bpmn:incoming>
       <bpmn:outgoing>P07_f9</bpmn:outgoing>
     </bpmn:task>
     <bpmn:task id="P07_llevar" name="Llevar corrección a cocina">
-      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U1-14;U2-5;U2-6. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U1-14;U2-5;U2-6. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P07_f9</bpmn:incoming>
       <bpmn:outgoing>P07_f10</bpmn:outgoing>
     </bpmn:task>
     <bpmn:callActivity id="P07_prep" name="Preparar y entregar corrección" calledElement="P05">
-      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U1-14;U2-5;U2-6. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U1-14;U2-5;U2-6. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P07_f10</bpmn:incoming>
       <bpmn:outgoing>P07_f11</bpmn:outgoing>
       <bpmn:multiInstanceLoopCharacteristics>
@@ -758,11 +772,11 @@
       </bpmn:multiInstanceLoopCharacteristics>
     </bpmn:callActivity>
     <bpmn:endEvent id="P07_fin" name="Inconformidad atendida">
-      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U1-14;U2-5;U2-6. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U1-14;U2-5;U2-6. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P07_f12</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:exclusiveGateway id="P07_merge_explicit" name="Continuar recorrido">
-      <bpmn:documentation>Fuente: Normalización BPMN de rutas exclusivas confirmadas. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: Normalización BPMN de rutas exclusivas confirmadas. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P07_f7</bpmn:incoming>
       <bpmn:incoming>P07_f11</bpmn:incoming>
       <bpmn:outgoing>P07_f12</bpmn:outgoing>
@@ -792,137 +806,93 @@
     <bpmn:participant id="P07_restaurant" name="Restaurante Maderos" processRef="P07" />
   </bpmn:collaboration>
   <bpmn:process id="P08" name="08 · Revisión de cuenta, factura y cierre" isExecutable="false">
-    <bpmn:documentation>El salonero genera previamente la cuenta. Caja corrige diferencias con respaldo de la información de cocina. La factura se emite en Sufacturafácil después de completar el pago; no se presume integración con Aldelo. Estado: revisión, pendiente de validación con persona del proceso.</bpmn:documentation>
+    <bpmn:documentation>El salonero genera previamente la cuenta. Caja corrige diferencias con respaldo de la información de cocina. La factura se emite en SuFacturaFácil después de completar el pago; no se presume integración con Aldelo. Estado: revisión, pendiente de validación con persona del proceso.</bpmn:documentation>
     <bpmn:laneSet id="P08_lanes">
       <bpmn:lane id="P08_lane_0" name="Personal de caja">
         <bpmn:flowNodeRef>P08_s</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>P08_rev</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>P08_g</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_1wz7tyu</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>P08_corr</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>P08_join</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>P08_saldo</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>P08_g</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>P08_pago</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>P08_fact</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_0qhyoc3</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>P08_close</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>P08_rec</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>P08_ent</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_14bt4lz</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>P08_fin</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>P08_zero</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>P08_fz</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>P08_merge_explicit</bpmn:flowNodeRef>
       </bpmn:lane>
     </bpmn:laneSet>
-    <bpmn:startEvent id="P08_s" name="Cuenta presentada">
-      <bpmn:documentation>Fuente: U1-16;U2-6;U4. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+    <bpmn:startEvent id="P08_s" name="Solicitud de cuenta recibida">
+      <bpmn:documentation>Fuente: U1-16;U2-6;U4. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:outgoing>P08_f1</bpmn:outgoing>
     </bpmn:startEvent>
-    <bpmn:task id="P08_rev" name="Revisar cuenta y consultar satisfacción">
-      <bpmn:documentation>Fuente: U1-16;U2-6;U4. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
-      <bpmn:incoming>P08_f1</bpmn:incoming>
-      <bpmn:outgoing>P08_f2</bpmn:outgoing>
-    </bpmn:task>
-    <bpmn:exclusiveGateway id="P08_g" name="¿Hay diferencias en la cuenta?">
-      <bpmn:documentation>Fuente: U1-16;U2-6;U4. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
-      <bpmn:incoming>P08_f2</bpmn:incoming>
-      <bpmn:outgoing>P08_f3</bpmn:outgoing>
-      <bpmn:outgoing>P08_f4</bpmn:outgoing>
-    </bpmn:exclusiveGateway>
-    <bpmn:task id="P08_corr" name="Corregir cuenta según consumo">
-      <bpmn:documentation>Fuente: U1-16;U2-6;U4. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
-      <bpmn:incoming>P08_f3</bpmn:incoming>
-      <bpmn:outgoing>P08_f5</bpmn:outgoing>
-    </bpmn:task>
-    <bpmn:exclusiveGateway id="P08_join" name="Cuenta revisada">
-      <bpmn:documentation>Fuente: U1-16;U2-6;U4. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
-      <bpmn:incoming>P08_f4</bpmn:incoming>
-      <bpmn:incoming>P08_f5</bpmn:incoming>
-      <bpmn:outgoing>P08_f6</bpmn:outgoing>
-    </bpmn:exclusiveGateway>
-    <bpmn:exclusiveGateway id="P08_saldo" name="¿Existe saldo por cobrar?">
-      <bpmn:documentation>Fuente: U1-16;U2-6;U4. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
-      <bpmn:incoming>P08_f6</bpmn:incoming>
-      <bpmn:outgoing>P08_f7</bpmn:outgoing>
-      <bpmn:outgoing>P08_f14</bpmn:outgoing>
-    </bpmn:exclusiveGateway>
-    <bpmn:callActivity id="P08_pago" name="Completar y confirmar pago" calledElement="P09">
-      <bpmn:documentation>Fuente: U1-16;U2-6;U4. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
-      <bpmn:incoming>P08_f7</bpmn:incoming>
-      <bpmn:outgoing>P08_f8</bpmn:outgoing>
-    </bpmn:callActivity>
-    <bpmn:task id="P08_fact" name="Emitir factura en Sufacturafácil">
-      <bpmn:documentation>Fuente: U1-16;U2-6;U4. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
-      <bpmn:incoming>P08_f8</bpmn:incoming>
-      <bpmn:outgoing>P08_f9</bpmn:outgoing>
-    </bpmn:task>
-    <bpmn:task id="P08_close" name="Cerrar cuenta en el sistema">
-      <bpmn:documentation>Fuente: U1-16;U2-6;U4. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
-      <bpmn:incoming>P08_f9</bpmn:incoming>
-      <bpmn:outgoing>P08_f10</bpmn:outgoing>
-    </bpmn:task>
-    <bpmn:exclusiveGateway id="P08_rec" name="¿Desea recibir comprobante?">
-      <bpmn:documentation>Fuente: U1-16;U2-6;U4. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
-      <bpmn:incoming>P08_f10</bpmn:incoming>
-      <bpmn:outgoing>P08_f11</bpmn:outgoing>
-      <bpmn:outgoing>P08_f13</bpmn:outgoing>
-    </bpmn:exclusiveGateway>
-    <bpmn:task id="P08_ent" name="Entregar o compartir comprobante">
-      <bpmn:documentation>Fuente: U1-16;U2-6;U4. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
-      <bpmn:incoming>P08_f11</bpmn:incoming>
-      <bpmn:outgoing>P08_f12</bpmn:outgoing>
-    </bpmn:task>
-    <bpmn:endEvent id="P08_fin" name="Cuenta liquidada">
-      <bpmn:documentation>Fuente: U1-16;U2-6;U4. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
-      <bpmn:incoming>P08_f16</bpmn:incoming>
-    </bpmn:endEvent>
-    <bpmn:task id="P08_zero" name="Resolver cuenta sin cobro">
-      <bpmn:documentation>Fuente: U1-16;U2-6;U4. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
-      <bpmn:incoming>P08_f14</bpmn:incoming>
-      <bpmn:outgoing>P08_f15</bpmn:outgoing>
-    </bpmn:task>
-    <bpmn:endEvent id="P08_fz" name="Cuenta resuelta sin cobro">
-      <bpmn:documentation>Fuente: U1-16;U2-6;U4. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
-      <bpmn:incoming>P08_f15</bpmn:incoming>
-    </bpmn:endEvent>
-    <bpmn:exclusiveGateway id="P08_merge_explicit" name="Continuar recorrido">
-      <bpmn:documentation>Fuente: Normalización BPMN de rutas exclusivas confirmadas. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
-      <bpmn:incoming>P08_f12</bpmn:incoming>
-      <bpmn:incoming>P08_f13</bpmn:incoming>
-      <bpmn:outgoing>P08_f16</bpmn:outgoing>
-    </bpmn:exclusiveGateway>
-    <bpmn:sequenceFlow id="P08_f1" sourceRef="P08_s" targetRef="P08_rev" />
-    <bpmn:sequenceFlow id="P08_f2" sourceRef="P08_rev" targetRef="P08_g" />
     <bpmn:sequenceFlow id="P08_f3" name="Sí" sourceRef="P08_g" targetRef="P08_corr">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">Sí</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="P08_f4" name="No" sourceRef="P08_g" targetRef="P08_join">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">No</bpmn:conditionExpression>
-    </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="P08_f5" sourceRef="P08_corr" targetRef="P08_join" />
-    <bpmn:sequenceFlow id="P08_f6" sourceRef="P08_join" targetRef="P08_saldo" />
-    <bpmn:sequenceFlow id="P08_f7" name="Sí" sourceRef="P08_saldo" targetRef="P08_pago">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">Sí</bpmn:conditionExpression>
-    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_12ioj8t" sourceRef="Activity_1wz7tyu" targetRef="P08_g" />
+    <bpmn:sequenceFlow id="Flow_0rzhugl" sourceRef="P08_g" targetRef="P08_pago" />
+    <bpmn:sequenceFlow id="P08_f2" sourceRef="P08_rev" targetRef="Activity_1wz7tyu" />
+    <bpmn:sequenceFlow id="P08_f1" sourceRef="P08_s" targetRef="P08_rev" />
     <bpmn:sequenceFlow id="P08_f8" sourceRef="P08_pago" targetRef="P08_fact" />
-    <bpmn:sequenceFlow id="P08_f9" sourceRef="P08_fact" targetRef="P08_close" />
-    <bpmn:sequenceFlow id="P08_f10" sourceRef="P08_close" targetRef="P08_rec" />
-    <bpmn:sequenceFlow id="P08_f11" name="Sí" sourceRef="P08_rec" targetRef="P08_ent">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">Sí</bpmn:conditionExpression>
-    </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="P08_f12" sourceRef="P08_ent" targetRef="P08_merge_explicit" />
-    <bpmn:sequenceFlow id="P08_f13" name="No" sourceRef="P08_rec" targetRef="P08_merge_explicit">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">No</bpmn:conditionExpression>
-    </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="P08_f14" name="No" sourceRef="P08_saldo" targetRef="P08_zero">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">No</bpmn:conditionExpression>
-    </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="P08_f15" sourceRef="P08_zero" targetRef="P08_fz" />
-    <bpmn:sequenceFlow id="P08_f16" sourceRef="P08_merge_explicit" targetRef="P08_fin" />
+    <bpmn:sequenceFlow id="P08_f9" sourceRef="P08_fact" targetRef="Activity_0qhyoc3" />
+    <bpmn:sequenceFlow id="Flow_1rijcr1" sourceRef="Activity_0qhyoc3" targetRef="P08_close" />
+    <bpmn:sequenceFlow id="Flow_03dfylq" sourceRef="P08_close" targetRef="Activity_14bt4lz" />
+    <bpmn:sequenceFlow id="Flow_0a8q3hv" sourceRef="Activity_14bt4lz" targetRef="P08_fin" />
+    <bpmn:sequenceFlow id="Flow_0bi9vhe" sourceRef="P08_corr" targetRef="P08_pago" />
+    <bpmn:task id="P08_rev" name="Preparar y verificar la cuenta según los productos consumidos">
+      <bpmn:documentation>Fuente: U1-16;U2-6;U4. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:incoming>P08_f1</bpmn:incoming>
+      <bpmn:outgoing>P08_f2</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Activity_1wz7tyu" name="Preparar la cuenta al cliente">
+      <bpmn:incoming>P08_f2</bpmn:incoming>
+      <bpmn:outgoing>Flow_12ioj8t</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="P08_corr" name="Corregir cuenta según consumo">
+      <bpmn:documentation>Fuente: U1-16;U2-6;U4. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:incoming>P08_f3</bpmn:incoming>
+      <bpmn:outgoing>Flow_0bi9vhe</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="P08_g" name="¿Hay diferencias en la cuenta?">
+      <bpmn:documentation>Fuente: U1-16;U2-6;U4. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:incoming>Flow_12ioj8t</bpmn:incoming>
+      <bpmn:outgoing>P08_f3</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0rzhugl</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:callActivity id="P08_pago" name="Procesar pago y medios alternativos" calledElement="P09">
+      <bpmn:documentation>Fuente: U1-16;U2-6;U4. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:incoming>Flow_0rzhugl</bpmn:incoming>
+      <bpmn:incoming>Flow_0bi9vhe</bpmn:incoming>
+      <bpmn:outgoing>P08_f8</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:task id="P08_fact" name="Emitir factura en SuFacturaFácil">
+      <bpmn:documentation>Fuente: U1-16;U2-6;U4. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:incoming>P08_f8</bpmn:incoming>
+      <bpmn:outgoing>P08_f9</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Activity_0qhyoc3" name="Entregar comprobante al cliente">
+      <bpmn:incoming>P08_f9</bpmn:incoming>
+      <bpmn:outgoing>Flow_1rijcr1</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="P08_close" name="Cerrar cuenta">
+      <bpmn:documentation>Fuente: U1-16;U2-6;U4. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:incoming>Flow_1rijcr1</bpmn:incoming>
+      <bpmn:outgoing>Flow_03dfylq</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Activity_14bt4lz" name="Despedir al cliente">
+      <bpmn:incoming>Flow_03dfylq</bpmn:incoming>
+      <bpmn:outgoing>Flow_0a8q3hv</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="P08_fin" name="Cuenta liquidada">
+      <bpmn:documentation>Fuente: U1-16;U2-6;U4. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:incoming>Flow_0a8q3hv</bpmn:incoming>
+    </bpmn:endEvent>
   </bpmn:process>
   <bpmn:collaboration id="P08_collab">
     <bpmn:participant id="P08_restaurant" name="Restaurante Maderos" processRef="P08" />
     <bpmn:participant id="P08_client" name="Cliente / comensal" />
-    <bpmn:messageFlow id="P08_msg_0" name="Revisión del consumo" sourceRef="P08_client" targetRef="P08_rev" />
-    <bpmn:messageFlow id="P08_msg_1" name="Comprobante" sourceRef="P08_ent" targetRef="P08_client" />
+    <bpmn:messageFlow id="P08_msg_0" name="Cuenta presentada al cliente" sourceRef="P08_client" targetRef="Activity_1wz7tyu" />
+    <bpmn:messageFlow id="Flow_1d04kws" name="Comprobante entregado al cliente" sourceRef="Activity_0qhyoc3" targetRef="P08_client" />
   </bpmn:collaboration>
   <bpmn:process id="P09" name="09 · Pago y alternativas" isExecutable="false">
     <bpmn:documentation>El cliente permanece hasta completar el pago. Se admiten alternativas como SINPE, efectivo o tarjeta. Una cuenta pendiente no produce cierre exitoso ni emisión anticipada de factura. Estado: revisión, pendiente de validación con persona del proceso.</bpmn:documentation>
@@ -940,46 +910,46 @@
       </bpmn:lane>
     </bpmn:laneSet>
     <bpmn:startEvent id="P09_s" name="Saldo por cobrar">
-      <bpmn:documentation>Fuente: U2-8;U4. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: U2-8;U4. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:outgoing>P09_f1</bpmn:outgoing>
     </bpmn:startEvent>
     <bpmn:receiveTask id="P09_medio" name="Recibir medio de pago">
-      <bpmn:documentation>Fuente: U2-8;U4. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: U2-8;U4. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P09_f1</bpmn:incoming>
       <bpmn:outgoing>P09_f2</bpmn:outgoing>
     </bpmn:receiveTask>
     <bpmn:task id="P09_pagar" name="Procesar pago">
-      <bpmn:documentation>Fuente: U2-8;U4. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: U2-8;U4. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P09_f9</bpmn:incoming>
       <bpmn:outgoing>P09_f3</bpmn:outgoing>
     </bpmn:task>
     <bpmn:exclusiveGateway id="P09_g" name="¿Pago completado?">
-      <bpmn:documentation>Fuente: U2-8;U4. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: U2-8;U4. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P09_f3</bpmn:incoming>
       <bpmn:outgoing>P09_f4</bpmn:outgoing>
       <bpmn:outgoing>P09_f6</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:task id="P09_confirm" name="Registrar confirmación del pago">
-      <bpmn:documentation>Fuente: U2-8;U4. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: U2-8;U4. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P09_f4</bpmn:incoming>
       <bpmn:outgoing>P09_f5</bpmn:outgoing>
     </bpmn:task>
     <bpmn:endEvent id="P09_fin" name="Pago confirmado">
-      <bpmn:documentation>Fuente: U2-8;U4. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: U2-8;U4. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P09_f5</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:task id="P09_info" name="Informar pago rechazado">
-      <bpmn:documentation>Fuente: U2-8;U4. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: U2-8;U4. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P09_f6</bpmn:incoming>
       <bpmn:outgoing>P09_f7</bpmn:outgoing>
     </bpmn:task>
     <bpmn:receiveTask id="P09_alt" name="Recibir otro intento o medio alternativo">
-      <bpmn:documentation>Fuente: U2-8;U4. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: U2-8;U4. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P09_f7</bpmn:incoming>
       <bpmn:outgoing>P09_f8</bpmn:outgoing>
     </bpmn:receiveTask>
     <bpmn:exclusiveGateway id="P09_merge_explicit" name="Continuar recorrido">
-      <bpmn:documentation>Fuente: Normalización BPMN de rutas exclusivas confirmadas. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: Normalización BPMN de rutas exclusivas confirmadas. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P09_f2</bpmn:incoming>
       <bpmn:incoming>P09_f8</bpmn:incoming>
       <bpmn:outgoing>P09_f9</bpmn:outgoing>
@@ -1016,26 +986,26 @@
       </bpmn:lane>
     </bpmn:laneSet>
     <bpmn:startEvent id="P10_s" name="Cliente se ha retirado">
-      <bpmn:documentation>Fuente: U1-1;U2-9. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: U1-1;U2-9. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:outgoing>P10_f1</bpmn:outgoing>
     </bpmn:startEvent>
     <bpmn:task id="P10_ret" name="Retirar vajilla y utensilios">
-      <bpmn:documentation>Fuente: U1-1;U2-9. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: U1-1;U2-9. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P10_f1</bpmn:incoming>
       <bpmn:outgoing>P10_f2</bpmn:outgoing>
     </bpmn:task>
     <bpmn:task id="P10_lim" name="Limpiar mesa">
-      <bpmn:documentation>Fuente: U1-1;U2-9. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: U1-1;U2-9. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P10_f2</bpmn:incoming>
       <bpmn:outgoing>P10_f3</bpmn:outgoing>
     </bpmn:task>
     <bpmn:task id="P10_prep" name="Preparar mesa para nuevo servicio">
-      <bpmn:documentation>Fuente: U1-1;U2-9. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: U1-1;U2-9. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P10_f3</bpmn:incoming>
       <bpmn:outgoing>P10_f4</bpmn:outgoing>
     </bpmn:task>
     <bpmn:endEvent id="P10_fin" name="Mesa disponible">
-      <bpmn:documentation>Fuente: U1-1;U2-9. Información aportada por usuario o perfil; validación del modelo completo pendiente.</bpmn:documentation>
+      <bpmn:documentation>Fuente: U1-1;U2-9. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
       <bpmn:incoming>P10_f4</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="P10_f1" sourceRef="P10_s" targetRef="P10_ret" />
@@ -1046,168 +1016,125 @@
   <bpmn:collaboration id="P10_collab">
     <bpmn:participant id="P10_restaurant" name="Restaurante Maderos" processRef="P10" />
   </bpmn:collaboration>
-  <bpmndi:BPMNDiagram id="P02_diagram" name="02 · Recepción y lista de espera">
-    <bpmndi:BPMNPlane id="P02_plane" bpmnElement="P02_collab">
-      <bpmndi:BPMNShape id="P02_restaurant_di" bpmnElement="P02_restaurant" isHorizontal="true">
-        <dc:Bounds x="155" y="90" width="3220" height="740" />
+  <bpmndi:BPMNDiagram id="P08_diagram" name="08 · Revisión de cuenta, factura y cierre">
+    <bpmndi:BPMNPlane id="P08_plane" bpmnElement="P08_collab">
+      <bpmndi:BPMNShape id="P08_restaurant_di" bpmnElement="P08_restaurant" isHorizontal="true">
+        <dc:Bounds x="160" y="80" width="2180" height="580" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="P02_lane_0_di" bpmnElement="P02_lane_0" isHorizontal="true">
-        <dc:Bounds x="185" y="90" width="3190" height="740" />
+      <bpmndi:BPMNShape id="P08_lane_0_di" bpmnElement="P08_lane_0" isHorizontal="true">
+        <dc:Bounds x="190" y="80" width="2150" height="580" />
+        <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="P02_s_di" bpmnElement="P02_s">
-        <dc:Bounds x="305" y="190" width="40" height="40" />
+      <bpmndi:BPMNShape id="P08_s_di" bpmnElement="P08_s">
+        <dc:Bounds x="300" y="325" width="40" height="40" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="252" y="275" width="146" height="14" />
+          <dc:Bounds x="274" y="410" width="93" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="P02_rec_di" bpmnElement="P02_rec">
-        <dc:Bounds x="465" y="170" width="190" height="90" />
+      <bpmndi:BPMNShape id="P08_rev_di" bpmnElement="P08_rev">
+        <dc:Bounds x="405" y="305" width="190" height="90" />
+        <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="P02_disp_di" bpmnElement="P02_disp">
-        <dc:Bounds x="705" y="170" width="190" height="90" />
+      <bpmndi:BPMNShape id="Activity_1wz7tyu_di" bpmnElement="Activity_1wz7tyu">
+        <dc:Bounds x="670" y="305" width="100" height="80" />
+        <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="P02_g_di" bpmnElement="P02_g" isMarkerVisible="true">
-        <dc:Bounds x="1025" y="190" width="50" height="50" />
+      <bpmndi:BPMNShape id="P08_corr_di" bpmnElement="P08_corr">
+        <dc:Bounds x="825" y="460" width="190" height="90" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P08_g_di" bpmnElement="P08_g" isMarkerVisible="true">
+        <dc:Bounds x="895" y="315" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="988" y="143" width="115" height="14" />
+          <dc:Bounds x="849" y="283" width="152" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="P02_lista_di" bpmnElement="P02_lista">
-        <dc:Bounds x="1185" y="370" width="190" height="90" />
+      <bpmndi:BPMNShape id="P08_pago_di" bpmnElement="P08_pago">
+        <dc:Bounds x="1105" y="307" width="190" height="90" />
+        <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="P02_cap_di" bpmnElement="P02_cap">
-        <dc:Bounds x="1425" y="370" width="190" height="90" />
+      <bpmndi:BPMNShape id="P08_fact_di" bpmnElement="P08_fact">
+        <dc:Bounds x="1385" y="307" width="190" height="90" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="P02_ev_di" bpmnElement="P02_ev">
-        <dc:Bounds x="1745" y="390" width="50" height="50" />
+      <bpmndi:BPMNShape id="Activity_0qhyoc3_di" bpmnElement="Activity_0qhyoc3">
+        <dc:Bounds x="1660" y="312" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P08_close_di" bpmnElement="P08_close">
+        <dc:Bounds x="1825" y="307" width="190" height="90" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_14bt4lz_di" bpmnElement="Activity_14bt4lz">
+        <dc:Bounds x="2070" y="312" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P08_fin_di" bpmnElement="P08_fin">
+        <dc:Bounds x="2250" y="332" width="40" height="40" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1700" y="290" width="131" height="14" />
+          <dc:Bounds x="2229" y="417" width="83" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="P02_mesa_di" bpmnElement="P02_mesa">
-        <dc:Bounds x="1985" y="390" width="40" height="40" />
+      <bpmndi:BPMNEdge id="P08_f3_di" bpmnElement="P08_f3">
+        <di:waypoint x="920" y="365" />
+        <di:waypoint x="920" y="460" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1965" y="475" width="80" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="P02_contact_di" bpmnElement="P02_contact">
-        <dc:Bounds x="2145" y="370" width="190" height="90" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="P02_join_di" bpmnElement="P02_join" isMarkerVisible="true">
-        <dc:Bounds x="2465" y="190" width="50" height="50" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="2436" y="153" width="98" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="P02_asig_di" bpmnElement="P02_asig">
-        <dc:Bounds x="2625" y="170" width="190" height="90" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="P02_acom_di" bpmnElement="P02_acom">
-        <dc:Bounds x="2865" y="170" width="190" height="90" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="P02_fin_di" bpmnElement="P02_fin">
-        <dc:Bounds x="3185" y="190" width="40" height="40" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="3167" y="275" width="76" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="P02_ret_di" bpmnElement="P02_ret">
-        <dc:Bounds x="1745" y="590" width="40" height="40" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1621.5" y="603" width="113" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="P02_fr_di" bpmnElement="P02_fr">
-        <dc:Bounds x="1960" y="590" width="40" height="40" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1910" y="675" width="140" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="P02_f1_di" bpmnElement="P02_f1">
-        <di:waypoint x="345" y="210" />
-        <di:waypoint x="465" y="210" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="P02_f2_di" bpmnElement="P02_f2">
-        <di:waypoint x="655" y="210" />
-        <di:waypoint x="705" y="210" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="P02_f3_di" bpmnElement="P02_f3">
-        <di:waypoint x="895" y="210" />
-        <di:waypoint x="1025" y="210" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="P02_f4_di" bpmnElement="P02_f4">
-        <di:waypoint x="1075" y="210" />
-        <di:waypoint x="2465" y="210" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1765" y="185" width="11" height="14" />
+          <dc:Bounds x="929" y="420" width="11" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="P02_f5_di" bpmnElement="P02_f5">
-        <di:waypoint x="1045" y="240" />
-        <di:waypoint x="1045" y="340" />
-        <di:waypoint x="1285" y="340" />
-        <di:waypoint x="1285" y="370" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1158" y="315" width="15" height="14" />
-        </bpmndi:BPMNLabel>
+      <bpmndi:BPMNEdge id="Flow_12ioj8t_di" bpmnElement="Flow_12ioj8t">
+        <di:waypoint x="770" y="340" />
+        <di:waypoint x="895" y="340" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="P02_f6_di" bpmnElement="P02_f6">
-        <di:waypoint x="1375" y="410" />
-        <di:waypoint x="1425" y="410" />
+      <bpmndi:BPMNEdge id="Flow_0rzhugl_di" bpmnElement="Flow_0rzhugl">
+        <di:waypoint x="945" y="340" />
+        <di:waypoint x="1105" y="340" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="P02_f7_di" bpmnElement="P02_f7">
-        <di:waypoint x="1615" y="410" />
-        <di:waypoint x="1745" y="410" />
+      <bpmndi:BPMNEdge id="P08_f2_di" bpmnElement="P08_f2">
+        <di:waypoint x="595" y="345" />
+        <di:waypoint x="670" y="345" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="P02_f8_di" bpmnElement="P02_f8">
-        <di:waypoint x="1795" y="410" />
-        <di:waypoint x="1985" y="410" />
+      <bpmndi:BPMNEdge id="P08_f1_di" bpmnElement="P08_f1">
+        <di:waypoint x="340" y="345" />
+        <di:waypoint x="405" y="345" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="P02_f14_di" bpmnElement="P02_f14">
-        <di:waypoint x="1765" y="440" />
-        <di:waypoint x="1765" y="590" />
+      <bpmndi:BPMNEdge id="P08_f8_di" bpmnElement="P08_f8">
+        <di:waypoint x="1295" y="347" />
+        <di:waypoint x="1385" y="347" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="P02_f9_di" bpmnElement="P02_f9">
-        <di:waypoint x="2025" y="410" />
-        <di:waypoint x="2145" y="410" />
+      <bpmndi:BPMNEdge id="P08_f9_di" bpmnElement="P08_f9">
+        <di:waypoint x="1575" y="347" />
+        <di:waypoint x="1660" y="347" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="P02_f10_di" bpmnElement="P02_f10">
-        <di:waypoint x="2245" y="370" />
-        <di:waypoint x="2245" y="270" />
-        <di:waypoint x="2485" y="270" />
-        <di:waypoint x="2485" y="240" />
+      <bpmndi:BPMNEdge id="Flow_1rijcr1_di" bpmnElement="Flow_1rijcr1">
+        <di:waypoint x="1760" y="352" />
+        <di:waypoint x="1825" y="352" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="P02_f11_di" bpmnElement="P02_f11">
-        <di:waypoint x="2515" y="210" />
-        <di:waypoint x="2625" y="210" />
+      <bpmndi:BPMNEdge id="Flow_03dfylq_di" bpmnElement="Flow_03dfylq">
+        <di:waypoint x="2015" y="352" />
+        <di:waypoint x="2070" y="352" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="P02_f12_di" bpmnElement="P02_f12">
-        <di:waypoint x="2815" y="210" />
-        <di:waypoint x="2865" y="210" />
+      <bpmndi:BPMNEdge id="Flow_0a8q3hv_di" bpmnElement="Flow_0a8q3hv">
+        <di:waypoint x="2170" y="352" />
+        <di:waypoint x="2250" y="352" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="P02_f13_di" bpmnElement="P02_f13">
-        <di:waypoint x="3055" y="210" />
-        <di:waypoint x="3185" y="210" />
+      <bpmndi:BPMNEdge id="Flow_0bi9vhe_di" bpmnElement="Flow_0bi9vhe">
+        <di:waypoint x="1015" y="505" />
+        <di:waypoint x="1210" y="505" />
+        <di:waypoint x="1210" y="397" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="P02_f15_di" bpmnElement="P02_f15">
-        <di:waypoint x="1785" y="610" />
-        <di:waypoint x="1960" y="610" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="P02_client_di" bpmnElement="P02_client" isHorizontal="true">
-        <dc:Bounds x="170" y="950" width="3220" height="80" />
+      <bpmndi:BPMNShape id="P08_client_di" bpmnElement="P08_client" isHorizontal="true">
+        <dc:Bounds x="160" y="770" width="2180" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="P02_msg_0_di" bpmnElement="P02_msg_0">
-        <di:waypoint x="1765" y="950" />
-        <di:waypoint x="1765" y="630" />
+      <bpmndi:BPMNEdge id="P08_msg_0_di" bpmnElement="P08_msg_0">
+        <di:waypoint x="720" y="770" />
+        <di:waypoint x="720" y="385" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1714" y="883" width="101" height="14" />
+          <dc:Bounds x="727" y="730" width="106" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="P02_msg_1_di" bpmnElement="P02_msg_1">
-        <di:waypoint x="2240" y="460" />
-        <di:waypoint x="2240" y="950" />
+      <bpmndi:BPMNEdge id="Flow_1d04kws_di" bpmnElement="Flow_1d04kws">
+        <di:waypoint x="1710" y="392" />
+        <di:waypoint x="1710" y="770" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="2178" y="893" width="125" height="14" />
+          <dc:Bounds x="1746" y="700" width="67" height="40" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
