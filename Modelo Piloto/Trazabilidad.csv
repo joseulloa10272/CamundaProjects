@@ -16,6 +16,6 @@ Actividad del perfil,As-Is,ID BPMN To-Be,Cambio
 23,P05,PIL02_serve,Entregar y guardar T5 de referencia
 24,P03,PIL06_Extra_work,Tramitar adicional como pedido nuevo concurrente
 25–29,P03 / P07,PIL06_Queja_assess / PIL06_Queja_fix / PIL03_reconcile,Atender y documentar corrección vinculada
-30–34,P08 / P09,PIL06_review / PIL05_manual / PIL05_close,Revisar pendientes y conciliar siempre con el procedimiento vigente
+30–34,P08 / P09,PIL06_review / PIL05_manual / PIL08_pay / PIL05_close,Revisar pendientes y conciliar siempre con el procedimiento vigente
 N1,P04 / P05,PIL01_confirm / PIL01_t4 / PIL02_serve,Registrar hitos e IDs sin sustituir horas originales
 N2,P07,PIL03_rec / PIL03_reconcile,Vincular motivo del reproceso y conciliar clasificación

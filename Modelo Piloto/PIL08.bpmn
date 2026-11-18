@@ -1,0 +1,107 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" id="Defs_PIL08" targetNamespace="https://maderos.example/bpmn/piloto">
+  <bpmn:process id="PIL08" name="Procesar pago y medios alternativos" isExecutable="false">
+    <bpmn:documentation>Conserva el mecanismo habitual de cobro. La facturación continúa en PIL05 tras confirmar el pago.</bpmn:documentation>
+    <bpmn:laneSet id="PIL08_roles">
+      <bpmn:lane id="PIL08_rol4" name="Caja">
+        <bpmn:flowNodeRef>PIL08_s</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL08_receive</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL08_pay</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL08_ok</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL08_retry</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL08_e</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="PIL08_s" name="Saldo confirmado">
+      <bpmn:outgoing>PIL08_f0</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:userTask id="PIL08_receive" name="Recibir medio de pago">
+      <bpmn:incoming>PIL08_f0</bpmn:incoming>
+      <bpmn:incoming>PIL08_f5</bpmn:incoming>
+      <bpmn:outgoing>PIL08_f1</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="PIL08_pay" name="Procesar pago">
+      <bpmn:incoming>PIL08_f1</bpmn:incoming>
+      <bpmn:outgoing>PIL08_f2</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="PIL08_ok" name="¿Pago aprobado?" default="PIL08_f4">
+      <bpmn:incoming>PIL08_f2</bpmn:incoming>
+      <bpmn:outgoing>PIL08_f3</bpmn:outgoing>
+      <bpmn:outgoing>PIL08_f4</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="PIL08_retry" name="Informar rechazo y solicitar otro intento o medio">
+      <bpmn:incoming>PIL08_f4</bpmn:incoming>
+      <bpmn:outgoing>PIL08_f5</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="PIL08_e" name="Pago confirmado">
+      <bpmn:incoming>PIL08_f3</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="PIL08_f0" sourceRef="PIL08_s" targetRef="PIL08_receive"/>
+    <bpmn:sequenceFlow id="PIL08_f1" sourceRef="PIL08_receive" targetRef="PIL08_pay"/>
+    <bpmn:sequenceFlow id="PIL08_f2" sourceRef="PIL08_pay" targetRef="PIL08_ok"/>
+    <bpmn:sequenceFlow id="PIL08_f3" sourceRef="PIL08_ok" targetRef="PIL08_e" name="Sí">
+      <bpmn:conditionExpression>Sí</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="PIL08_f4" sourceRef="PIL08_ok" targetRef="PIL08_retry" name="No"/>
+    <bpmn:sequenceFlow id="PIL08_f5" sourceRef="PIL08_retry" targetRef="PIL08_receive"/>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="DG_PIL08">
+    <bpmndi:BPMNPlane id="PL_PIL08" bpmnElement="PIL08">
+      <bpmndi:BPMNShape id="DI_PIL08_rol4" bpmnElement="PIL08_rol4" isHorizontal="true">
+        <dc:Bounds x="30" y="40" width="1320" height="150"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL08_s" bpmnElement="PIL08_s">
+        <dc:Bounds x="122.0" y="95.0" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL08_receive" bpmnElement="PIL08_receive">
+        <dc:Bounds x="267.5" y="76.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL08_pay" bpmnElement="PIL08_pay">
+        <dc:Bounds x="482.5" y="76.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL08_ok" bpmnElement="PIL08_ok">
+        <dc:Bounds x="760.0" y="88.0" width="50" height="50"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL08_retry" bpmnElement="PIL08_retry">
+        <dc:Bounds x="912.5" y="76.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL08_e" bpmnElement="PIL08_e">
+        <dc:Bounds x="1197.0" y="95.0" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="DI_PIL08_f0" bpmnElement="PIL08_f0">
+        <di:waypoint x="158.0" y="113"/>
+        <di:waypoint x="267.5" y="113"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL08_f1" bpmnElement="PIL08_f1">
+        <di:waypoint x="442.5" y="113"/>
+        <di:waypoint x="482.5" y="113"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL08_f2" bpmnElement="PIL08_f2">
+        <di:waypoint x="657.5" y="113"/>
+        <di:waypoint x="760.0" y="113"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL08_f3" bpmnElement="PIL08_f3">
+        <di:waypoint x="785" y="88.0"/>
+        <di:waypoint x="785" y="50"/>
+        <di:waypoint x="1215" y="50"/>
+        <di:waypoint x="1215" y="95.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="767.0" y="49.0" width="36" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL08_f4" bpmnElement="PIL08_f4">
+        <di:waypoint x="810.0" y="113"/>
+        <di:waypoint x="912.5" y="113"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="843.25" y="93.0" width="36" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL08_f5" bpmnElement="PIL08_f5">
+        <di:waypoint x="1000" y="76.0"/>
+        <di:waypoint x="1000" y="45"/>
+        <di:waypoint x="355" y="45"/>
+        <di:waypoint x="355" y="76.0"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

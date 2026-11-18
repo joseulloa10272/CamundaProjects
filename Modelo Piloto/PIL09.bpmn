@@ -1,0 +1,75 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" id="Defs_PIL09" targetNamespace="https://maderos.example/bpmn/piloto">
+  <bpmn:process id="PIL09" name="Acondicionar mesa" isExecutable="false">
+    <bpmn:documentation>Se activa desde el modelo general después de verificar el retiro del cliente.</bpmn:documentation>
+    <bpmn:laneSet id="PIL09_roles">
+      <bpmn:lane id="PIL09_rol5" name="Personal de apoyo">
+        <bpmn:flowNodeRef>PIL09_s</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL09_clear</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL09_clean</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL09_ready</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL09_e</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="PIL09_s" name="Retiro del cliente confirmado">
+      <bpmn:outgoing>PIL09_f0</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:userTask id="PIL09_clear" name="Retirar vajilla y utensilios">
+      <bpmn:incoming>PIL09_f0</bpmn:incoming>
+      <bpmn:outgoing>PIL09_f1</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="PIL09_clean" name="Limpiar mesa">
+      <bpmn:incoming>PIL09_f1</bpmn:incoming>
+      <bpmn:outgoing>PIL09_f2</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="PIL09_ready" name="Preparar mesa para el nuevo servicio">
+      <bpmn:incoming>PIL09_f2</bpmn:incoming>
+      <bpmn:outgoing>PIL09_f3</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="PIL09_e" name="Mesa disponible">
+      <bpmn:incoming>PIL09_f3</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="PIL09_f0" sourceRef="PIL09_s" targetRef="PIL09_clear"/>
+    <bpmn:sequenceFlow id="PIL09_f1" sourceRef="PIL09_clear" targetRef="PIL09_clean"/>
+    <bpmn:sequenceFlow id="PIL09_f2" sourceRef="PIL09_clean" targetRef="PIL09_ready"/>
+    <bpmn:sequenceFlow id="PIL09_f3" sourceRef="PIL09_ready" targetRef="PIL09_e"/>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="DG_PIL09">
+    <bpmndi:BPMNPlane id="PL_PIL09" bpmnElement="PIL09">
+      <bpmndi:BPMNShape id="DI_PIL09_rol5" bpmnElement="PIL09_rol5" isHorizontal="true">
+        <dc:Bounds x="30" y="40" width="1105" height="150"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL09_s" bpmnElement="PIL09_s">
+        <dc:Bounds x="122.0" y="95.0" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL09_clear" bpmnElement="PIL09_clear">
+        <dc:Bounds x="267.5" y="76.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL09_clean" bpmnElement="PIL09_clean">
+        <dc:Bounds x="482.5" y="76.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL09_ready" bpmnElement="PIL09_ready">
+        <dc:Bounds x="697.5" y="76.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL09_e" bpmnElement="PIL09_e">
+        <dc:Bounds x="982.0" y="95.0" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="DI_PIL09_f0" bpmnElement="PIL09_f0">
+        <di:waypoint x="158.0" y="113"/>
+        <di:waypoint x="267.5" y="113"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL09_f1" bpmnElement="PIL09_f1">
+        <di:waypoint x="442.5" y="113"/>
+        <di:waypoint x="482.5" y="113"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL09_f2" bpmnElement="PIL09_f2">
+        <di:waypoint x="657.5" y="113"/>
+        <di:waypoint x="697.5" y="113"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL09_f3" bpmnElement="PIL09_f3">
+        <di:waypoint x="872.5" y="113"/>
+        <di:waypoint x="982.0" y="113"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

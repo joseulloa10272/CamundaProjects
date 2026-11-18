@@ -52,10 +52,13 @@
       <bpmn:incoming>PIL00_f5</bpmn:incoming>
       <bpmn:outgoing>PIL00_f6</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:userTask id="PIL00_reset" name="Acondicionar mesa para nuevo servicio">
+    <bpmn:callActivity id="PIL00_reset" name="Acondicionar mesa para nuevo servicio" calledElement="PIL09">
+      <bpmn:extensionElements>
+        <zeebe:calledElement processId="PIL09"/>
+      </bpmn:extensionElements>
       <bpmn:incoming>PIL00_f6</bpmn:incoming>
       <bpmn:outgoing>PIL00_f7</bpmn:outgoing>
-    </bpmn:userTask>
+    </bpmn:callActivity>
     <bpmn:endEvent id="PIL00_e" name="Servicio finalizado y mesa disponible">
       <bpmn:incoming>PIL00_f7</bpmn:incoming>
     </bpmn:endEvent>
