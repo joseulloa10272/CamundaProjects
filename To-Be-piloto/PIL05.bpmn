@@ -1,0 +1,144 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" id="Defs_PIL05" targetNamespace="https://maderos.example/bpmn/piloto">
+  <bpmn:process id="PIL05" name="Consulta complementaria para caja" isExecutable="false">
+    <bpmn:documentation>Interfaz opcional y manual. Verificar cambios, anulaciones y adicionales, evitar doble cobro por sustituciones. Mantener Aldelo y SuFacturaFácil como sistemas actuales.</bpmn:documentation>
+    <bpmn:laneSet id="PIL05_roles">
+      <bpmn:lane id="PIL05_rol3" name="Capitán y Gerencia">
+        <bpmn:flowNodeRef>PIL05_resolve</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="PIL05_rol4" name="Caja">
+        <bpmn:flowNodeRef>PIL05_s</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL05_enabled</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL05_check</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL05_diff</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL05_close</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL05_e</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="PIL05_s" name="Solicitud de cuenta">
+      <bpmn:outgoing>PIL05_f0</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:exclusiveGateway id="PIL05_enabled" name="¿Consulta habilitada?" default="PIL05_f2">
+      <bpmn:incoming>PIL05_f0</bpmn:incoming>
+      <bpmn:outgoing>PIL05_f1</bpmn:outgoing>
+      <bpmn:outgoing>PIL05_f2</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="PIL05_check" name="Contrastar consumo por servicio e ítem con Aldelo">
+      <bpmn:incoming>PIL05_f1</bpmn:incoming>
+      <bpmn:outgoing>PIL05_f3</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="PIL05_diff" name="¿Hay diferencias?" default="PIL05_f6">
+      <bpmn:incoming>PIL05_f3</bpmn:incoming>
+      <bpmn:outgoing>PIL05_f4</bpmn:outgoing>
+      <bpmn:outgoing>PIL05_f6</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="PIL05_resolve" name="Resolver diferencia y confirmar cargos autorizados">
+      <bpmn:incoming>PIL05_f4</bpmn:incoming>
+      <bpmn:outgoing>PIL05_f5</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="PIL05_close" name="Continuar cobro habitual y facturar en SuFacturaFácil">
+      <bpmn:incoming>PIL05_f2</bpmn:incoming>
+      <bpmn:incoming>PIL05_f5</bpmn:incoming>
+      <bpmn:incoming>PIL05_f6</bpmn:incoming>
+      <bpmn:outgoing>PIL05_f7</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="PIL05_e" name="Cuenta liquidada">
+      <bpmn:incoming>PIL05_f7</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="PIL05_f0" sourceRef="PIL05_s" targetRef="PIL05_enabled"/>
+    <bpmn:sequenceFlow id="PIL05_f1" sourceRef="PIL05_enabled" targetRef="PIL05_check" name="Sí">
+      <bpmn:conditionExpression>Sí</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="PIL05_f2" sourceRef="PIL05_enabled" targetRef="PIL05_close" name="No"/>
+    <bpmn:sequenceFlow id="PIL05_f3" sourceRef="PIL05_check" targetRef="PIL05_diff"/>
+    <bpmn:sequenceFlow id="PIL05_f4" sourceRef="PIL05_diff" targetRef="PIL05_resolve" name="Sí">
+      <bpmn:conditionExpression>Sí</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="PIL05_f5" sourceRef="PIL05_resolve" targetRef="PIL05_close"/>
+    <bpmn:sequenceFlow id="PIL05_f6" sourceRef="PIL05_diff" targetRef="PIL05_close" name="No"/>
+    <bpmn:sequenceFlow id="PIL05_f7" sourceRef="PIL05_close" targetRef="PIL05_e"/>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="DG_PIL05">
+    <bpmndi:BPMNPlane id="PL_PIL05" bpmnElement="PIL05">
+      <bpmndi:BPMNShape id="DI_PIL05_rol3" bpmnElement="PIL05_rol3" isHorizontal="true">
+        <dc:Bounds x="30" y="40" width="1535" height="150"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL05_rol4" bpmnElement="PIL05_rol4" isHorizontal="true">
+        <dc:Bounds x="30" y="190" width="1535" height="150"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL05_s" bpmnElement="PIL05_s">
+        <dc:Bounds x="122.0" y="245.0" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL05_enabled" bpmnElement="PIL05_enabled">
+        <dc:Bounds x="330.0" y="238.0" width="50" height="50"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL05_check" bpmnElement="PIL05_check">
+        <dc:Bounds x="482.5" y="226.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL05_diff" bpmnElement="PIL05_diff">
+        <dc:Bounds x="760.0" y="238.0" width="50" height="50"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL05_resolve" bpmnElement="PIL05_resolve">
+        <dc:Bounds x="912.5" y="76.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL05_close" bpmnElement="PIL05_close">
+        <dc:Bounds x="1127.5" y="226.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL05_e" bpmnElement="PIL05_e">
+        <dc:Bounds x="1412.0" y="245.0" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="DI_PIL05_f0" bpmnElement="PIL05_f0">
+        <di:waypoint x="158.0" y="263"/>
+        <di:waypoint x="330.0" y="263"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL05_f1" bpmnElement="PIL05_f1">
+        <di:waypoint x="380.0" y="263"/>
+        <di:waypoint x="482.5" y="263"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="413.25" y="243.0" width="36" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL05_f2" bpmnElement="PIL05_f2">
+        <di:waypoint x="355" y="238.0"/>
+        <di:waypoint x="355" y="207"/>
+        <di:waypoint x="1215" y="207"/>
+        <di:waypoint x="1215" y="226.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="337.0" y="202.5" width="36" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL05_f3" bpmnElement="PIL05_f3">
+        <di:waypoint x="657.5" y="263"/>
+        <di:waypoint x="760.0" y="263"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL05_f4" bpmnElement="PIL05_f4">
+        <di:waypoint x="810.0" y="263"/>
+        <di:waypoint x="861.25" y="263"/>
+        <di:waypoint x="861.25" y="113"/>
+        <di:waypoint x="912.5" y="113"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="817.625" y="243.0" width="36" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL05_f5" bpmnElement="PIL05_f5">
+        <di:waypoint x="1087.5" y="113"/>
+        <di:waypoint x="1107.5" y="113"/>
+        <di:waypoint x="1107.5" y="263"/>
+        <di:waypoint x="1127.5" y="263"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL05_f6" bpmnElement="PIL05_f6">
+        <di:waypoint x="785" y="238.0"/>
+        <di:waypoint x="785" y="207"/>
+        <di:waypoint x="1215" y="207"/>
+        <di:waypoint x="1215" y="226.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="767.0" y="202.5" width="36" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL05_f7" bpmnElement="PIL05_f7">
+        <di:waypoint x="1302.5" y="263"/>
+        <di:waypoint x="1412.0" y="263"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

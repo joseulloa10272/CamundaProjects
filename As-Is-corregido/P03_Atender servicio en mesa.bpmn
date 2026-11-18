@@ -1,0 +1,401 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" id="Definitions_Maderos" targetNamespace="https://maderos.example/bpmn/PR-SERV-001" exporter="Camunda Web Modeler" exporterVersion="27cc6be" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.9.0">
+  <bpmn:message id="Msg_P03_cans" name="Cancelación total comunicada por el cliente"/>
+  <bpmn:message id="Msg_P03_incs" name="Inconformidad durante el servicio"/>
+  <bpmn:message id="Msg_P03_ads" name="Solicitud adicional"/>
+  <bpmn:message id="Msg_P03_cuenta" name="Solicitud de cuenta recibida"/>
+  <bpmn:message id="Msg_P02_ret" name="Cliente comunica retiro"/>
+  <bpmn:escalation id="Esc_Cancelacion" name="Cancelación total" escalationCode="CANCELAR_SERVICIO"/>
+  <bpmn:process id="P03" name="03 · Atención en mesa y solicitudes concurrentes" isExecutable="false">
+    <bpmn:documentation>Los subprocesos de evento de adicionales y reclamos no interrumpen la atención. Una cancelación total sí interrumpe el servicio pendiente. El final normal espera a las instancias activas antes de retornar al proceso general. Estado: revisión, pendiente de validación con persona del proceso.</bpmn:documentation>
+    <bpmn:laneSet id="P03_lanes">
+      <bpmn:lane id="P03_lane_0" name="Salonero y responsables de módulos llamados">
+        <bpmn:flowNodeRef>P03_s</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>P03_menu</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>P03_consult</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>P03_join</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>P03_g</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>P03_pedido</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_0dgzw3u</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>P03_fin</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>P03_group_ad</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>P03_group_inc</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>P03_group_can</bpmn:flowNodeRef>
+      <bpmn:flowNodeRef>P03_group_can_esc</bpmn:flowNodeRef><bpmn:flowNodeRef>P03_cuenta</bpmn:flowNodeRef></bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:subProcess id="P03_group_ad" name="Solicitud adicional" triggeredByEvent="true">
+      <bpmn:startEvent id="P03_ads" name="Solicitud adicional" isInterrupting="false">
+        <bpmn:documentation>Fuente: U1;U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+        <bpmn:outgoing>P03_f9</bpmn:outgoing>
+        <bpmn:messageEventDefinition messageRef="Msg_P03_ads"/>
+      </bpmn:startEvent>
+      <bpmn:callActivity id="P03_adt" name="Atender pedido adicional" calledElement="P04">
+        <bpmn:documentation>Fuente: U1;U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+        <bpmn:incoming>P03_f9</bpmn:incoming>
+        <bpmn:outgoing>P03_f10</bpmn:outgoing>
+      </bpmn:callActivity>
+      <bpmn:endEvent id="P03_ade" name="Atención complementaria finalizada">
+        <bpmn:documentation>Fuente: U1;U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+        <bpmn:incoming>P03_f10</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:sequenceFlow id="P03_f9" sourceRef="P03_ads" targetRef="P03_adt"/>
+      <bpmn:sequenceFlow id="P03_f10" sourceRef="P03_adt" targetRef="P03_ade"/>
+    </bpmn:subProcess>
+    <bpmn:subProcess id="P03_group_inc" name="Inconformidad durante el servicio" triggeredByEvent="true">
+      <bpmn:startEvent id="P03_incs" name="Inconformidad durante el servicio" isInterrupting="false">
+        <bpmn:documentation>Fuente: U1;U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+        <bpmn:outgoing>P03_f11</bpmn:outgoing>
+        <bpmn:messageEventDefinition messageRef="Msg_P03_incs"/>
+      </bpmn:startEvent>
+      <bpmn:callActivity id="P03_inct" name="Gestionar inconformidad" calledElement="P07">
+        <bpmn:documentation>Fuente: U1;U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+        <bpmn:extensionElements>
+          <zeebe:calledElement processId="P07"/>
+        </bpmn:extensionElements>
+        <bpmn:incoming>P03_f11</bpmn:incoming>
+        <bpmn:outgoing>P03_f12</bpmn:outgoing>
+      </bpmn:callActivity>
+      <bpmn:endEvent id="P03_ince" name="Atención complementaria finalizada">
+        <bpmn:documentation>Fuente: U1;U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+        <bpmn:incoming>P03_f12</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:sequenceFlow id="P03_f11" sourceRef="P03_incs" targetRef="P03_inct"/>
+      <bpmn:sequenceFlow id="P03_f12" sourceRef="P03_inct" targetRef="P03_ince"/>
+    </bpmn:subProcess>
+    <bpmn:subProcess id="P03_group_can" name="Cancelación total comunicada por el cliente" triggeredByEvent="true">
+      <bpmn:startEvent id="P03_cans" name="Cancelación total comunicada por el cliente">
+        <bpmn:documentation>Fuente: U1;U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+        <bpmn:outgoing>P03_f15</bpmn:outgoing>
+        <bpmn:messageEventDefinition messageRef="Msg_P03_cans"/>
+      </bpmn:startEvent>
+      <bpmn:task id="P03_cant" name="Ajustar cuenta a lo consumido">
+        <bpmn:documentation>Fuente: U1;U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+        <bpmn:incoming>P03_f15</bpmn:incoming>
+        <bpmn:outgoing>P03_f16</bpmn:outgoing>
+      </bpmn:task>
+      <bpmn:endEvent id="P03_cane" name="Servicio cancelado; consumo conservado">
+        <bpmn:documentation>Fuente: U1;U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+        <bpmn:incoming>P03_f17</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:task id="P03_cann" name="Comunicar cancelación a las áreas">
+        <bpmn:documentation>Fuente: U2-4. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+        <bpmn:incoming>P03_f16</bpmn:incoming>
+        <bpmn:outgoing>P03_f17</bpmn:outgoing>
+      </bpmn:task>
+      <bpmn:sequenceFlow id="P03_f15" sourceRef="P03_cans" targetRef="P03_cant"/>
+      <bpmn:sequenceFlow id="P03_f16" sourceRef="P03_cant" targetRef="P03_cann"/>
+      <bpmn:sequenceFlow id="P03_f17" sourceRef="P03_cann" targetRef="P03_cane"/>
+      </bpmn:subProcess>
+    <bpmn:startEvent id="P03_s" name="Cliente ubicado en la mesa">
+      <bpmn:documentation>Fuente: U1. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:outgoing>P03_f1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="P03_menu" name="Entregar el menú">
+      <bpmn:documentation>Fuente: U1. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:incoming>P03_f1</bpmn:incoming>
+      <bpmn:outgoing>P03_f2</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="P03_consult" name="Atender las consultas">
+      <bpmn:documentation>Fuente: U1. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:incoming>P03_f4</bpmn:incoming>
+      <bpmn:outgoing>P03_f5</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="P03_join" name="Continuar atención">
+      <bpmn:documentation>Fuente: U1. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:incoming>P03_f3</bpmn:incoming>
+      <bpmn:incoming>P03_f5</bpmn:incoming>
+      <bpmn:outgoing>P03_f6</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:exclusiveGateway id="P03_g" name="¿Hay consultas?">
+      <bpmn:documentation>Fuente: U1. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:incoming>P03_f2</bpmn:incoming>
+      <bpmn:outgoing>P03_f3</bpmn:outgoing>
+      <bpmn:outgoing>P03_f4</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:callActivity id="P03_pedido" name="Gestionar pedido" calledElement="P04">
+      <bpmn:documentation>Fuente: U1. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:extensionElements>
+        <zeebe:calledElement processId="P04"/>
+      </bpmn:extensionElements>
+      <bpmn:incoming>P03_f6</bpmn:incoming>
+      <bpmn:outgoing>Flow_0f3m2yj</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:task id="Activity_0dgzw3u" name="Consultar satisfacción del cliente">
+      <bpmn:incoming>Flow_0f3m2yj</bpmn:incoming>
+      <bpmn:outgoing>Flow_1njaq8x</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="P03_fin" name="Servicio listo para liquidación">
+      <bpmn:documentation>Fuente: U1. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:incoming>P03_cuenta_next</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="P03_f1" sourceRef="P03_s" targetRef="P03_menu"/>
+    <bpmn:sequenceFlow id="P03_f2" sourceRef="P03_menu" targetRef="P03_g"/>
+    <bpmn:sequenceFlow id="P03_f4" name="Sí" sourceRef="P03_g" targetRef="P03_consult">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">Sí</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="P03_f5" sourceRef="P03_consult" targetRef="P03_join"/>
+    <bpmn:sequenceFlow id="P03_f3" name="No" sourceRef="P03_g" targetRef="P03_join">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">No</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="P03_f6" sourceRef="P03_join" targetRef="P03_pedido"/>
+    <bpmn:sequenceFlow id="Flow_0f3m2yj" sourceRef="P03_pedido" targetRef="Activity_0dgzw3u"/>
+    <bpmn:sequenceFlow id="Flow_1njaq8x" sourceRef="Activity_0dgzw3u" targetRef="P03_cuenta"/>
+  <bpmn:subProcess id="P03_group_can_esc" name="Cancelación por faltante escalado" triggeredByEvent="true">
+      <bpmn:task id="P03_cant_esc" name="Ajustar cuenta a lo consumido">
+        <bpmn:documentation>Fuente: U1;U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+        <bpmn:incoming>Flow_1q4fuan_esc</bpmn:incoming>
+        <bpmn:outgoing>P03_f16_esc</bpmn:outgoing>
+      </bpmn:task>
+      <bpmn:endEvent id="P03_cane_esc" name="Servicio cancelado; consumo conservado">
+        <bpmn:documentation>Fuente: U1;U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+        <bpmn:incoming>P03_f17_esc</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:task id="P03_cann_esc" name="Comunicar cancelación a las áreas">
+        <bpmn:documentation>Fuente: U2-4. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+        <bpmn:incoming>P03_f16_esc</bpmn:incoming>
+        <bpmn:outgoing>P03_f17_esc</bpmn:outgoing>
+      </bpmn:task>
+      <bpmn:sequenceFlow id="P03_f16_esc" sourceRef="P03_cant_esc" targetRef="P03_cann_esc"/>
+      <bpmn:sequenceFlow id="P03_f17_esc" sourceRef="P03_cann_esc" targetRef="P03_cane_esc"/>
+      <bpmn:sequenceFlow id="Flow_1q4fuan_esc" sourceRef="P03_escs_esc" targetRef="P03_cant_esc"/>
+      <bpmn:startEvent id="P03_escs_esc" name="Cancelación total desde una alternativa rechazada">
+        <bpmn:documentation>Fuente: U1;U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+        <bpmn:outgoing>Flow_1q4fuan_esc</bpmn:outgoing>
+        <bpmn:escalationEventDefinition escalationRef="Esc_Cancelacion"/></bpmn:startEvent>
+    </bpmn:subProcess>
+    <bpmn:receiveTask id="P03_cuenta" name="Esperar solicitud de cuenta"><bpmn:incoming>Flow_1njaq8x</bpmn:incoming><bpmn:outgoing>P03_cuenta_next</bpmn:outgoing></bpmn:receiveTask><bpmn:sequenceFlow id="P03_cuenta_next" sourceRef="P03_cuenta" targetRef="P03_fin"/></bpmn:process>
+  <bpmn:collaboration id="P03_collab">
+    <bpmn:participant id="P03_restaurant" name="Restaurante Maderos" processRef="P03"/>
+    <bpmn:participant id="P03_client" name="Cliente / comensal"/>
+    <bpmn:messageFlow id="P03_msg_1" name="Pedido adicional" sourceRef="P03_client" targetRef="P03_ads"/>
+    <bpmn:messageFlow id="P03_msg_2" name="Reporte de inconformidad" sourceRef="P03_client" targetRef="P03_incs"/>
+    <bpmn:messageFlow id="P03_msg_3" name="Cancelación total" sourceRef="P03_client" targetRef="P03_cans"/>
+  <bpmn:messageFlow id="P03_solicitud_msg" name="Solicitud de cuenta" sourceRef="P03_client" targetRef="P03_cuenta"/></bpmn:collaboration>
+  <bpmndi:BPMNDiagram id="P03_diagram" name="03 · Atención en mesa y solicitudes concurrentes">
+    <bpmndi:BPMNPlane id="P03_plane" bpmnElement="P03_collab">
+      <bpmndi:BPMNShape id="P03_restaurant_di" bpmnElement="P03_restaurant" isHorizontal="true">
+        <dc:Bounds x="160" y="630" width="3385.0" height="720"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P03_lane_0_di" bpmnElement="P03_lane_0" isHorizontal="true">
+        <dc:Bounds x="190" y="630" width="3355.0" height="720"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P03_s_di" bpmnElement="P03_s">
+        <dc:Bounds x="320" y="710" width="40" height="40"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="302" y="795" width="76" height="27"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P03_menu_di" bpmnElement="P03_menu">
+        <dc:Bounds x="435" y="685" width="190" height="90"/>
+        <bpmndi:BPMNLabel/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P03_consult_di" bpmnElement="P03_consult">
+        <dc:Bounds x="835" y="805" width="190" height="90"/>
+        <bpmndi:BPMNLabel/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P03_join_di" bpmnElement="P03_join" isMarkerVisible="true">
+        <dc:Bounds x="1120" y="705" width="50" height="50"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1094" y="673" width="93" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P03_g_di" bpmnElement="P03_g" isMarkerVisible="true">
+        <dc:Bounds x="698" y="705" width="50" height="50"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="677" y="681" width="82" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P03_pedido_di" bpmnElement="P03_pedido">
+        <dc:Bounds x="1375" y="685" width="190" height="90"/>
+        <bpmndi:BPMNLabel/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0dgzw3u_di" bpmnElement="Activity_0dgzw3u">
+        <dc:Bounds x="1910" y="690" width="100" height="80"/>
+        <bpmndi:BPMNLabel/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P03_fin_di" bpmnElement="P03_fin">
+        <dc:Bounds x="2210" y="710" width="40" height="40"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2159" y="686" width="142" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P03_group_ad_di" bpmnElement="P03_group_ad" isExpanded="true">
+        <dc:Bounds x="220" y="940" width="670" height="335"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P03_ads_di" bpmnElement="P03_ads">
+        <dc:Bounds x="300" y="1090" width="40" height="40"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="275" y="1066" width="89" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P03_adt_di" bpmnElement="P03_adt">
+        <dc:Bounds x="435" y="1065" width="190" height="90"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P03_ade_di" bpmnElement="P03_ade">
+        <dc:Bounds x="750" y="1090" width="40" height="40"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="683" y="1175" width="174" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="P03_f9_di" bpmnElement="P03_f9">
+        <di:waypoint x="340" y="1110"/>
+        <di:waypoint x="435" y="1110"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="P03_f10_di" bpmnElement="P03_f10">
+        <di:waypoint x="625" y="1105"/>
+        <di:waypoint x="751" y="1105"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="P03_group_inc_di" bpmnElement="P03_group_inc" isExpanded="true">
+        <dc:Bounds x="940" y="940" width="650" height="335"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P03_incs_di" bpmnElement="P03_incs">
+        <dc:Bounds x="1040" y="1075" width="40" height="40"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="978" y="1051" width="163" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P03_inct_di" bpmnElement="P03_inct">
+        <dc:Bounds x="1165" y="1055" width="190" height="90"/>
+        <bpmndi:BPMNLabel/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P03_ince_di" bpmnElement="P03_ince">
+        <dc:Bounds x="1460" y="1075" width="40" height="40"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1403" y="1135" width="174" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="P03_f11_di" bpmnElement="P03_f11">
+        <di:waypoint x="1080" y="1095"/>
+        <di:waypoint x="1165" y="1095"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="P03_f12_di" bpmnElement="P03_f12">
+        <di:waypoint x="1355" y="1095"/>
+        <di:waypoint x="1460" y="1095"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="P03_group_can_di" bpmnElement="P03_group_can" isExpanded="true">
+        <dc:Bounds x="1630" y="940" width="890" height="335"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P03_cant_di" bpmnElement="P03_cant">
+        <dc:Bounds x="1850" y="1055" width="190" height="90"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P03_cane_di" bpmnElement="P03_cane">
+        <dc:Bounds x="2410" y="1075" width="40" height="40"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2378" y="1160" width="105" height="27"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P03_cann_di" bpmnElement="P03_cann">
+        <dc:Bounds x="2090" y="1055" width="190" height="90"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P03_cans_di" bpmnElement="P03_cans">
+        <dc:Bounds x="1680" y="1020" width="40" height="40"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1635" y="960" width="119" height="40"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="P03_f15_di" bpmnElement="P03_f15">
+        <di:waypoint x="1720" y="1040"/>
+        <di:waypoint x="1780" y="1040"/>
+        <di:waypoint x="1780" y="1100"/>
+        <di:waypoint x="1850" y="1100"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="P03_f16_di" bpmnElement="P03_f16">
+        <di:waypoint x="2040" y="1095"/>
+        <di:waypoint x="2090" y="1095"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="P03_f17_di" bpmnElement="P03_f17">
+        <di:waypoint x="2280" y="1095"/>
+        <di:waypoint x="2410" y="1095"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="P03_f1_di" bpmnElement="P03_f1">
+        <di:waypoint x="360" y="730"/>
+        <di:waypoint x="435" y="730"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="P03_f2_di" bpmnElement="P03_f2">
+        <di:waypoint x="625" y="725"/>
+        <di:waypoint x="703" y="725"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="P03_f4_di" bpmnElement="P03_f4">
+        <di:waypoint x="718" y="750"/>
+        <di:waypoint x="718" y="850"/>
+        <di:waypoint x="835" y="850"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="730" y="794" width="11" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="P03_f5_di" bpmnElement="P03_f5">
+        <di:waypoint x="1025" y="845"/>
+        <di:waypoint x="1145" y="845"/>
+        <di:waypoint x="1145" y="755"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="P03_f3_di" bpmnElement="P03_f3">
+        <di:waypoint x="743" y="725"/>
+        <di:waypoint x="1125" y="725"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="927" y="700" width="15" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="P03_f6_di" bpmnElement="P03_f6">
+        <di:waypoint x="1165" y="725"/>
+        <di:waypoint x="1375" y="725"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0f3m2yj_di" bpmnElement="Flow_0f3m2yj">
+        <di:waypoint x="1565" y="730"/>
+        <di:waypoint x="1910" y="730"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="P03_client_di" bpmnElement="P03_client" isHorizontal="true">
+        <dc:Bounds x="160" y="1420" width="3385.0" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="P03_msg_1_di" bpmnElement="P03_msg_1">
+        <di:waypoint x="320" y="1420"/>
+        <di:waypoint x="320" y="1130"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="359" y="1385" width="81" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="P03_msg_2_di" bpmnElement="P03_msg_2">
+        <di:waypoint x="1060" y="1420"/>
+        <di:waypoint x="1060" y="1115"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1076" y="1387" width="127" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_P03_msg_3" bpmnElement="P03_msg_3"><di:waypoint x="1700.0" y="1420.0"/><di:waypoint x="1700.0" y="1060.0"/></bpmndi:BPMNEdge>
+    <bpmndi:BPMNShape id="P03_group_can_di_esc" bpmnElement="P03_group_can_esc" isExpanded="true">
+        <dc:Bounds x="2630.0" y="940" width="890" height="335"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P03_cant_di_esc" bpmnElement="P03_cant_esc">
+        <dc:Bounds x="2850.0" y="1055" width="190" height="90"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P03_cane_di_esc" bpmnElement="P03_cane_esc">
+        <dc:Bounds x="3410.0" y="1075" width="40" height="40"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="3378.0" y="1160" width="105" height="27"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P03_cann_di_esc" bpmnElement="P03_cann_esc">
+        <dc:Bounds x="3090.0" y="1055" width="190" height="90"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_026hnkb_di_esc" bpmnElement="P03_escs_esc">
+        <dc:Bounds x="2692.0" y="1177" width="36" height="36"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2656.0" y="1241" width="128" height="27"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1q4fuan_di_esc" bpmnElement="Flow_1q4fuan_esc">
+        <di:waypoint x="2728.0" y="1195"/>
+        <di:waypoint x="2784.0" y="1195"/>
+        <di:waypoint x="2784.0" y="1100"/>
+        <di:waypoint x="2850.0" y="1100"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="P03_f16_di_esc" bpmnElement="P03_f16_esc">
+        <di:waypoint x="3040.0" y="1095"/>
+        <di:waypoint x="3090.0" y="1095"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="P03_f17_di_esc" bpmnElement="P03_f17_esc">
+        <di:waypoint x="3280.0" y="1095"/>
+        <di:waypoint x="3410.0" y="1095"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="DI_P03_cuenta" bpmnElement="P03_cuenta"><dc:Bounds x="2050.0" y="697.5" width="120" height="65"/></bpmndi:BPMNShape><bpmndi:BPMNEdge id="DI_Flow_1njaq8x" bpmnElement="Flow_1njaq8x"><di:waypoint x="2010.0" y="730.0"/><di:waypoint x="2050.0" y="730.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_P03_cuenta_next" bpmnElement="P03_cuenta_next"><di:waypoint x="2170.0" y="730.0"/><di:waypoint x="2210.0" y="730.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_P03_solicitud_msg" bpmnElement="P03_solicitud_msg"><di:waypoint x="2110.0" y="1420.0"/><di:waypoint x="2110.0" y="762.5"/></bpmndi:BPMNEdge></bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

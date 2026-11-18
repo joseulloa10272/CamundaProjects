@@ -1,0 +1,250 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_Maderos" targetNamespace="https://maderos.example/bpmn/PR-SERV-001" exporter="Camunda Web Modeler" exporterVersion="27cc6be" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.9.0">
+  <bpmn:message id="Msg_P06_decision" name="Decisión del cliente"/><bpmn:message id="Msg_P03_cans" name="Cancelación total comunicada por el cliente"/>
+  <bpmn:message id="Msg_P03_incs" name="Inconformidad durante el servicio"/>
+  <bpmn:message id="Msg_P03_ads" name="Solicitud adicional"/>
+  <bpmn:message id="Msg_P03_cuenta" name="Solicitud de cuenta recibida"/>
+  <bpmn:message id="Msg_P02_ret" name="Cliente comunica retiro"/>
+  <bpmn:escalation id="Esc_Cancelacion" name="Cancelación total" escalationCode="CANCELAR_SERVICIO"/>
+  <bpmn:process id="P06" name="06 · Faltante y elección del cliente" isExecutable="false">
+    <bpmn:documentation>Las modificaciones se anotan en papel y se llevan a cocina. No se actualiza un POS ni se imprime una comanda. La cancelación total conserva el consumo realizado. Estado: revisión, pendiente de validación con persona del proceso.</bpmn:documentation>
+    <bpmn:laneSet id="P06_lanes">
+      <bpmn:lane id="P06_lane_0" name="Personal de cocina">
+        <bpmn:flowNodeRef>P06_s</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>P06_inf</bpmn:flowNodeRef>
+        <bpmn:childLaneSet id="LaneSet_0ljy5mp"/>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_0jjul0o" name="Salonero">
+        <bpmn:flowNodeRef>P06_alt</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>P06_g</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_0ic4szm</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>P06_del</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>P06_fe</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>P06_can</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_18iwp8k</bpmn:flowNodeRef>
+      <bpmn:flowNodeRef>P06_upd</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>P06_llevar</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>P06_fin</bpmn:flowNodeRef>
+        </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:sequenceFlow id="P06_f1" sourceRef="P06_s" targetRef="P06_inf"/>
+    <bpmn:sequenceFlow id="P06_f2" sourceRef="P06_inf" targetRef="P06_alt"/>
+    <bpmn:sequenceFlow id="P06_f3" sourceRef="P06_alt" targetRef="Event_18iwp8k"/>
+    <bpmn:startEvent id="P06_s" name="Producto no disponible identificado">
+      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U2-4;U2-5. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:outgoing>P06_f1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="P06_inf" name="Informar al salonero cuando un producto no esté disponible">
+      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U2-4;U2-5. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:incoming>P06_f1</bpmn:incoming>
+      <bpmn:outgoing>P06_f2</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="P06_alt" name="Solicitar al cliente una alternativa para el producto faltante">
+      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U2-4;U2-5. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:incoming>P06_f2</bpmn:incoming>
+      <bpmn:outgoing>P06_f3</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="P06_g" name="¿Qué decide el cliente?">
+      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U2-4;U2-5. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:incoming>Flow_0jksfvb</bpmn:incoming>
+      <bpmn:outgoing>P06_f4</bpmn:outgoing>
+      <bpmn:outgoing>P06_f7</bpmn:outgoing>
+      <bpmn:outgoing>P06_f9</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="Activity_0ic4szm" name="Registrar la cancelación del pedido">
+      <bpmn:incoming>P06_f9</bpmn:incoming>
+      <bpmn:outgoing>Flow_0anikju</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="P06_del" name="Eliminar producto del pedido escrito">
+      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U2-4;U2-5. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:incoming>P06_f7</bpmn:incoming>
+      <bpmn:outgoing>P06_f8</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="P06_upd" name="Actualizar el pedido escrito">
+      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U2-4;U2-5. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:incoming>P06_f4</bpmn:incoming>
+      <bpmn:outgoing>P06_f5</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="P06_llevar" name="Llevar el pedido modificado a cocina">
+      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U2-4;U2-5. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:incoming>P06_f5</bpmn:incoming>
+      <bpmn:outgoing>P06_f6</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="P06_fin" name="Pedido actualizado">
+      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U2-4;U2-5. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:incoming>P06_f6</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:endEvent id="P06_fe" name="Producto eliminado">
+      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U2-4;U2-5. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:incoming>P06_f8</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:endEvent id="P06_can" name="Cancelación total solicitada">
+      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U2-4;U2-5. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:incoming>Flow_0anikju</bpmn:incoming>
+      <bpmn:escalationEventDefinition escalationRef="Esc_Cancelacion"/>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="P06_f4" name="Sustituir producto" sourceRef="P06_g" targetRef="P06_upd">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">Sustituir</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="P06_f7" name="Eliminar producto" sourceRef="P06_g" targetRef="P06_del">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">Eliminar producto</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="P06_f9" name="Cancelar todo" sourceRef="P06_g" targetRef="Activity_0ic4szm">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">Cancelar todo</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_0anikju" sourceRef="Activity_0ic4szm" targetRef="P06_can"/>
+    <bpmn:sequenceFlow id="P06_f8" sourceRef="P06_del" targetRef="P06_fe"/>
+    <bpmn:sequenceFlow id="P06_f5" sourceRef="P06_upd" targetRef="P06_llevar"/>
+    <bpmn:sequenceFlow id="P06_f6" sourceRef="P06_llevar" targetRef="P06_fin"/>
+    <bpmn:sequenceFlow id="Flow_0jksfvb" sourceRef="Event_18iwp8k" targetRef="P06_g"/>
+    <bpmn:intermediateCatchEvent id="Event_18iwp8k" name="Decisión del cliente recibida">
+      <bpmn:incoming>P06_f3</bpmn:incoming>
+      <bpmn:outgoing>Flow_0jksfvb</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_0bzq4op" messageRef="Msg_P06_decision"/>
+    </bpmn:intermediateCatchEvent>
+  </bpmn:process>
+  <bpmn:collaboration id="P06_collab">
+    <bpmn:participant id="P06_restaurant" name="Restaurante Maderos" processRef="P06"/>
+    <bpmn:participant id="P06_client" name="Cliente / comensal"/>
+    <bpmn:messageFlow id="P06_msg_0" name="Solicitud de alternativa" sourceRef="P06_alt" targetRef="P06_client"/>
+  <bpmn:messageFlow id="P06_decision_msg" name="Decisión del cliente" sourceRef="P06_client" targetRef="Event_18iwp8k"/></bpmn:collaboration>
+  <bpmndi:BPMNDiagram id="P06_diagram" name="06 · Faltante y elección del cliente">
+    <bpmndi:BPMNPlane id="P06_plane" bpmnElement="P06_collab">
+      <bpmndi:BPMNShape id="P06_restaurant_di" bpmnElement="P06_restaurant" isHorizontal="true">
+        <dc:Bounds x="160" y="100" width="1780" height="780"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P06_lane_0_di" bpmnElement="P06_lane_0" isHorizontal="true">
+        <dc:Bounds x="190" y="100" width="1750" height="370"/>
+        <bpmndi:BPMNLabel/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_0jjul0o_di" bpmnElement="Lane_0jjul0o" isHorizontal="true">
+        <dc:Bounds x="190" y="470" width="1750" height="410"/>
+        <bpmndi:BPMNLabel/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P06_s_di" bpmnElement="P06_s">
+        <dc:Bounds x="320" y="230" width="40" height="40"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="295" y="300" width="90" height="40"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P06_inf_di" bpmnElement="P06_inf">
+        <dc:Bounds x="470" y="210" width="190" height="90"/>
+        <bpmndi:BPMNLabel/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P06_alt_di" bpmnElement="P06_alt">
+        <dc:Bounds x="470" y="515" width="190" height="90"/>
+        <bpmndi:BPMNLabel/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P06_g_di" bpmnElement="P06_g" isMarkerVisible="true">
+        <dc:Bounds x="1035" y="535" width="50" height="50"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="937" y="588" width="116" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0ic4szm_di" bpmnElement="Activity_0ic4szm">
+        <dc:Bounds x="1420" y="700" width="100" height="80"/>
+        <bpmndi:BPMNLabel/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P06_del_di" bpmnElement="P06_del">
+        <dc:Bounds x="1365" y="515" width="190" height="90"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P06_upd_di" bpmnElement="P06_upd">
+        <dc:Bounds x="1295" y="470.0" width="190" height="90"/>
+        <bpmndi:BPMNLabel/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P06_llevar_di" bpmnElement="P06_llevar">
+        <dc:Bounds x="1535" y="470.0" width="190" height="90"/>
+        <bpmndi:BPMNLabel/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P06_fin_di" bpmnElement="P06_fin">
+        <dc:Bounds x="1855" y="490.0" width="40" height="40"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1829" y="340" width="93" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P06_fe_di" bpmnElement="P06_fe">
+        <dc:Bounds x="1830" y="535" width="40" height="40"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1803" y="620" width="95" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P06_can_di" bpmnElement="P06_can">
+        <dc:Bounds x="1650" y="720" width="40" height="40"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1603" y="696" width="134" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1sk63zs_di" bpmnElement="Event_18iwp8k">
+        <dc:Bounds x="792" y="537" width="36" height="36"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="780" y="580" width="60" height="27"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="P06_f1_di" bpmnElement="P06_f1">
+        <di:waypoint x="360" y="250"/>
+        <di:waypoint x="470" y="250"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="P06_f2_di" bpmnElement="P06_f2">
+        <di:waypoint x="565" y="300"/>
+        <di:waypoint x="565" y="515"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="P06_f3_di" bpmnElement="P06_f3">
+        <di:waypoint x="660" y="555"/>
+        <di:waypoint x="792" y="555"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="P06_f4_di" bpmnElement="P06_f4">
+        <di:waypoint x="1055" y="540"/>
+        <di:waypoint x="1055" y="515.0"/>
+        <di:waypoint x="1295" y="515.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1157" y="255" width="86" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="P06_f7_di" bpmnElement="P06_f7">
+        <di:waypoint x="1080" y="555"/>
+        <di:waypoint x="1365" y="555"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1168" y="518" width="86" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="P06_f9_di" bpmnElement="P06_f9">
+        <di:waypoint x="1060" y="585"/>
+        <di:waypoint x="1060" y="740"/>
+        <di:waypoint x="1420" y="740"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1176" y="696" width="69" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0anikju_di" bpmnElement="Flow_0anikju">
+        <di:waypoint x="1520" y="740"/>
+        <di:waypoint x="1650" y="740"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="P06_f8_di" bpmnElement="P06_f8">
+        <di:waypoint x="1555" y="555"/>
+        <di:waypoint x="1830" y="555"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="P06_f5_di" bpmnElement="P06_f5">
+        <di:waypoint x="1485" y="510.0"/>
+        <di:waypoint x="1535" y="510.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="P06_f6_di" bpmnElement="P06_f6">
+        <di:waypoint x="1725" y="510.0"/>
+        <di:waypoint x="1855" y="510.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0jksfvb_di" bpmnElement="Flow_0jksfvb">
+        <di:waypoint x="828" y="555"/>
+        <di:waypoint x="1040" y="555"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="P06_client_di" bpmnElement="P06_client" isHorizontal="true">
+        <dc:Bounds x="160" y="950" width="1780" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="P06_msg_0_di" bpmnElement="P06_msg_0">
+        <di:waypoint x="570" y="605"/>
+        <di:waypoint x="570" y="950"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="584" y="913" width="111" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="DI_P06_decision_msg" bpmnElement="P06_decision_msg"><di:waypoint x="810.0" y="950.0"/><di:waypoint x="810.0" y="573.0"/></bpmndi:BPMNEdge></bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

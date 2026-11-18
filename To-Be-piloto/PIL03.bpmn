@@ -1,0 +1,274 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" id="Defs_PIL03" targetNamespace="https://maderos.example/bpmn/piloto">
+  <bpmn:process id="PIL03" name="Agotados, cambios y correcciones" isExecutable="false">
+    <bpmn:documentation>Separar el acuse de información de la autorización tras iniciar preparación. Mantener motivo de registro, comunicación, preparación o cambio del cliente, pendiente de revisión y confirmado. Si no hay acuse crítico, verificar el estado y activar PIL04 cuando corresponda.</bpmn:documentation>
+    <bpmn:laneSet id="PIL03_roles">
+      <bpmn:lane id="PIL03_rol0" name="Salonero">
+        <bpmn:flowNodeRef>PIL03_s</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL03_type</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL03_extra</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL03_extraend</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL03_opt</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL03_rec</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL03_reject</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL03_approve</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL03_e</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="PIL03_rol1" name="Aplicación de comandas">
+        <bpmn:flowNodeRef>PIL03_send</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="PIL03_rol2" name="Recepción, estación y pase">
+        <bpmn:flowNodeRef>PIL03_ack</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL03_init</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL03_dec</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL03_accepted</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="PIL03_rol3" name="Capitán y Gerencia">
+        <bpmn:flowNodeRef>PIL03_reconcile</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="PIL03_s" name="Incidencia o solicitud recibida">
+      <bpmn:outgoing>PIL03_f0</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:exclusiveGateway id="PIL03_type" name="¿Es un adicional?" default="PIL03_f3">
+      <bpmn:incoming>PIL03_f0</bpmn:incoming>
+      <bpmn:outgoing>PIL03_f1</bpmn:outgoing>
+      <bpmn:outgoing>PIL03_f3</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="PIL03_extra" name="Crear nuevo pedido e ítems vinculados al servicio">
+      <bpmn:incoming>PIL03_f1</bpmn:incoming>
+      <bpmn:outgoing>PIL03_f2</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="PIL03_extraend" name="Iniciar PIL01 sin sobrescribir T3/T5 originales">
+      <bpmn:incoming>PIL03_f2</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:userTask id="PIL03_opt" name="Acordar sustitución, cambio o anulación con cliente">
+      <bpmn:incoming>PIL03_f3</bpmn:incoming>
+      <bpmn:outgoing>PIL03_f4</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="PIL03_rec" name="Vincular ítem original, motivo e historial y reconfirmar">
+      <bpmn:incoming>PIL03_f4</bpmn:incoming>
+      <bpmn:outgoing>PIL03_f5</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="PIL03_send" name="Transmitir propuesta versionada">
+      <bpmn:incoming>PIL03_f5</bpmn:incoming>
+      <bpmn:outgoing>PIL03_f6</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:userTask id="PIL03_ack" name="Registrar acuse de cocina">
+      <bpmn:incoming>PIL03_f6</bpmn:incoming>
+      <bpmn:outgoing>PIL03_f7</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="PIL03_init" name="¿Preparación ya iniciada?" default="PIL03_f9">
+      <bpmn:incoming>PIL03_f7</bpmn:incoming>
+      <bpmn:outgoing>PIL03_f8</bpmn:outgoing>
+      <bpmn:outgoing>PIL03_f9</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="PIL03_dec" name="Registrar aceptación o rechazo y corrección requerida">
+      <bpmn:incoming>PIL03_f8</bpmn:incoming>
+      <bpmn:outgoing>PIL03_f10</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="PIL03_accepted" name="¿Cambio aceptado?" default="PIL03_f12">
+      <bpmn:incoming>PIL03_f10</bpmn:incoming>
+      <bpmn:outgoing>PIL03_f11</bpmn:outgoing>
+      <bpmn:outgoing>PIL03_f12</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="PIL03_reject" name="Comunicar y acordar resolución manteniendo historial">
+      <bpmn:incoming>PIL03_f12</bpmn:incoming>
+      <bpmn:outgoing>PIL03_f13</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="PIL03_approve" name="Registrar versión vigente o anulación y resolución">
+      <bpmn:incoming>PIL03_f9</bpmn:incoming>
+      <bpmn:incoming>PIL03_f11</bpmn:incoming>
+      <bpmn:incoming>PIL03_f13</bpmn:incoming>
+      <bpmn:outgoing>PIL03_f14</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="PIL03_reconcile" name="Conciliar motivo del rehecho, contar el servicio una vez">
+      <bpmn:incoming>PIL03_f14</bpmn:incoming>
+      <bpmn:outgoing>PIL03_f15</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="PIL03_e" name="Resultado e historial disponibles">
+      <bpmn:incoming>PIL03_f15</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="PIL03_f0" sourceRef="PIL03_s" targetRef="PIL03_type"/>
+    <bpmn:sequenceFlow id="PIL03_f1" sourceRef="PIL03_type" targetRef="PIL03_extra" name="Sí">
+      <bpmn:conditionExpression>Sí</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="PIL03_f2" sourceRef="PIL03_extra" targetRef="PIL03_extraend"/>
+    <bpmn:sequenceFlow id="PIL03_f3" sourceRef="PIL03_type" targetRef="PIL03_opt" name="No"/>
+    <bpmn:sequenceFlow id="PIL03_f4" sourceRef="PIL03_opt" targetRef="PIL03_rec"/>
+    <bpmn:sequenceFlow id="PIL03_f5" sourceRef="PIL03_rec" targetRef="PIL03_send"/>
+    <bpmn:sequenceFlow id="PIL03_f6" sourceRef="PIL03_send" targetRef="PIL03_ack"/>
+    <bpmn:sequenceFlow id="PIL03_f7" sourceRef="PIL03_ack" targetRef="PIL03_init"/>
+    <bpmn:sequenceFlow id="PIL03_f8" sourceRef="PIL03_init" targetRef="PIL03_dec" name="Sí">
+      <bpmn:conditionExpression>Sí</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="PIL03_f9" sourceRef="PIL03_init" targetRef="PIL03_approve" name="No"/>
+    <bpmn:sequenceFlow id="PIL03_f10" sourceRef="PIL03_dec" targetRef="PIL03_accepted"/>
+    <bpmn:sequenceFlow id="PIL03_f11" sourceRef="PIL03_accepted" targetRef="PIL03_approve" name="Sí">
+      <bpmn:conditionExpression>Sí</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="PIL03_f12" sourceRef="PIL03_accepted" targetRef="PIL03_reject" name="No"/>
+    <bpmn:sequenceFlow id="PIL03_f13" sourceRef="PIL03_reject" targetRef="PIL03_approve"/>
+    <bpmn:sequenceFlow id="PIL03_f14" sourceRef="PIL03_approve" targetRef="PIL03_reconcile"/>
+    <bpmn:sequenceFlow id="PIL03_f15" sourceRef="PIL03_reconcile" targetRef="PIL03_e"/>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="DG_PIL03">
+    <bpmndi:BPMNPlane id="PL_PIL03" bpmnElement="PIL03">
+      <bpmndi:BPMNShape id="DI_PIL03_rol0" bpmnElement="PIL03_rol0" isHorizontal="true">
+        <dc:Bounds x="30" y="40" width="3255" height="150"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL03_rol1" bpmnElement="PIL03_rol1" isHorizontal="true">
+        <dc:Bounds x="30" y="190" width="3255" height="150"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL03_rol2" bpmnElement="PIL03_rol2" isHorizontal="true">
+        <dc:Bounds x="30" y="340" width="3255" height="150"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL03_rol3" bpmnElement="PIL03_rol3" isHorizontal="true">
+        <dc:Bounds x="30" y="490" width="3255" height="150"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL03_s" bpmnElement="PIL03_s">
+        <dc:Bounds x="122.0" y="95.0" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL03_type" bpmnElement="PIL03_type">
+        <dc:Bounds x="330.0" y="88.0" width="50" height="50"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL03_extra" bpmnElement="PIL03_extra">
+        <dc:Bounds x="482.5" y="76.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL03_extraend" bpmnElement="PIL03_extraend">
+        <dc:Bounds x="767.0" y="95.0" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL03_opt" bpmnElement="PIL03_opt">
+        <dc:Bounds x="912.5" y="76.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL03_rec" bpmnElement="PIL03_rec">
+        <dc:Bounds x="1127.5" y="76.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL03_send" bpmnElement="PIL03_send">
+        <dc:Bounds x="1342.5" y="226.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL03_ack" bpmnElement="PIL03_ack">
+        <dc:Bounds x="1557.5" y="376.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL03_init" bpmnElement="PIL03_init">
+        <dc:Bounds x="1835.0" y="388.0" width="50" height="50"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL03_dec" bpmnElement="PIL03_dec">
+        <dc:Bounds x="1987.5" y="376.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL03_accepted" bpmnElement="PIL03_accepted">
+        <dc:Bounds x="2265.0" y="388.0" width="50" height="50"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL03_reject" bpmnElement="PIL03_reject">
+        <dc:Bounds x="2417.5" y="76.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL03_approve" bpmnElement="PIL03_approve">
+        <dc:Bounds x="2632.5" y="76.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL03_reconcile" bpmnElement="PIL03_reconcile">
+        <dc:Bounds x="2847.5" y="526.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL03_e" bpmnElement="PIL03_e">
+        <dc:Bounds x="3132.0" y="95.0" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="DI_PIL03_f0" bpmnElement="PIL03_f0">
+        <di:waypoint x="158.0" y="113"/>
+        <di:waypoint x="330.0" y="113"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL03_f1" bpmnElement="PIL03_f1">
+        <di:waypoint x="380.0" y="113"/>
+        <di:waypoint x="482.5" y="113"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="413.25" y="93.0" width="36" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL03_f2" bpmnElement="PIL03_f2">
+        <di:waypoint x="657.5" y="113"/>
+        <di:waypoint x="767.0" y="113"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL03_f3" bpmnElement="PIL03_f3">
+        <di:waypoint x="355" y="88.0"/>
+        <di:waypoint x="355" y="50"/>
+        <di:waypoint x="1000" y="50"/>
+        <di:waypoint x="1000" y="76.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="337.0" y="49.0" width="36" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL03_f4" bpmnElement="PIL03_f4">
+        <di:waypoint x="1087.5" y="113"/>
+        <di:waypoint x="1127.5" y="113"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL03_f5" bpmnElement="PIL03_f5">
+        <di:waypoint x="1302.5" y="113"/>
+        <di:waypoint x="1322.5" y="113"/>
+        <di:waypoint x="1322.5" y="263"/>
+        <di:waypoint x="1342.5" y="263"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL03_f6" bpmnElement="PIL03_f6">
+        <di:waypoint x="1517.5" y="263"/>
+        <di:waypoint x="1537.5" y="263"/>
+        <di:waypoint x="1537.5" y="413"/>
+        <di:waypoint x="1557.5" y="413"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL03_f7" bpmnElement="PIL03_f7">
+        <di:waypoint x="1732.5" y="413"/>
+        <di:waypoint x="1835.0" y="413"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL03_f8" bpmnElement="PIL03_f8">
+        <di:waypoint x="1885.0" y="413"/>
+        <di:waypoint x="1987.5" y="413"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1918.25" y="393.0" width="36" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL03_f9" bpmnElement="PIL03_f9">
+        <di:waypoint x="1885.0" y="413"/>
+        <di:waypoint x="2258.75" y="413"/>
+        <di:waypoint x="2258.75" y="113"/>
+        <di:waypoint x="2632.5" y="113"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2053.875" y="393.0" width="36" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL03_f10" bpmnElement="PIL03_f10">
+        <di:waypoint x="2162.5" y="413"/>
+        <di:waypoint x="2265.0" y="413"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL03_f11" bpmnElement="PIL03_f11">
+        <di:waypoint x="2315.0" y="413"/>
+        <di:waypoint x="2473.75" y="413"/>
+        <di:waypoint x="2473.75" y="113"/>
+        <di:waypoint x="2632.5" y="113"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2376.375" y="393.0" width="36" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL03_f12" bpmnElement="PIL03_f12">
+        <di:waypoint x="2315.0" y="413"/>
+        <di:waypoint x="2366.25" y="413"/>
+        <di:waypoint x="2366.25" y="113"/>
+        <di:waypoint x="2417.5" y="113"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2322.625" y="393.0" width="36" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL03_f13" bpmnElement="PIL03_f13">
+        <di:waypoint x="2592.5" y="113"/>
+        <di:waypoint x="2632.5" y="113"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL03_f14" bpmnElement="PIL03_f14">
+        <di:waypoint x="2807.5" y="113"/>
+        <di:waypoint x="2827.5" y="113"/>
+        <di:waypoint x="2827.5" y="563"/>
+        <di:waypoint x="2847.5" y="563"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL03_f15" bpmnElement="PIL03_f15">
+        <di:waypoint x="3022.5" y="563"/>
+        <di:waypoint x="3077.25" y="563"/>
+        <di:waypoint x="3077.25" y="113"/>
+        <di:waypoint x="3132.0" y="113"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

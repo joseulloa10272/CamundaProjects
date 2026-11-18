@@ -1,0 +1,262 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" id="Definitions_Maderos" targetNamespace="https://maderos.example/bpmn/PR-SERV-001" exporter="Camunda Web Modeler" exporterVersion="27cc6be" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.9.0">
+  <bpmn:message id="Msg_P03_cans" name="Cancelación total comunicada por el cliente"/>
+  <bpmn:message id="Msg_P03_incs" name="Inconformidad durante el servicio"/>
+  <bpmn:message id="Msg_P03_ads" name="Solicitud adicional"/>
+  <bpmn:message id="Msg_P03_cuenta" name="Solicitud de cuenta recibida"/>
+  <bpmn:message id="Msg_P02_ret" name="Cliente comunica retiro"/>
+  <bpmn:escalation id="Esc_Cancelacion" name="Cancelación total" escalationCode="CANCELAR_SERVICIO"/>
+  <bpmn:process id="P07" name="07 · Correcciones e inconformidades" isExecutable="false">
+    <bpmn:documentation>El salonero resuelve primero con el cliente. Solo se escala a gerencia cuando no logra resolverlo. Una corrección normal no requiere autorización; el acuerdo gerencial puede incluir descuento, cortesía o exención. Estado: revisión, pendiente de validación con persona del proceso.</bpmn:documentation>
+    <bpmn:laneSet id="P07_lanes">
+      <bpmn:lane id="P07_lane_1" name="Gerente">
+        <bpmn:flowNodeRef>P07_ger</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="P07_lane_0" name="Salonero">
+        <bpmn:flowNodeRef>P07_g</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>P07_aten</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>P07_s</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>P07_cambio</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>P07_join</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>P07_merge_explicit</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>P07_upd</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>P07_llevar</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>P07_prep</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>P07_fin</bpmn:flowNodeRef>
+      <bpmn:flowNodeRef>Activity_1usrpcw</bpmn:flowNodeRef>
+        </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:exclusiveGateway id="P07_g" name="¿La inconformidad se resuelve por el salonero?">
+      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U1-14;U2-5;U2-6. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:incoming>P07_f2</bpmn:incoming>
+      <bpmn:outgoing>P07_f3</bpmn:outgoing>
+      <bpmn:outgoing>P07_f4</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="P07_aten" name="Recibir reportes de errores o inconformidades">
+      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U1-14;U2-5;U2-6. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:incoming>P07_f1</bpmn:incoming>
+      <bpmn:outgoing>P07_f2</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:startEvent id="P07_s" name="Inconformidad recibida">
+      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U1-14;U2-5;U2-6. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:outgoing>P07_f1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:exclusiveGateway id="P07_cambio" name="¿La solución requiere corregir el pedido?">
+      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U1-14;U2-5;U2-6. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:incoming>P07_f6</bpmn:incoming>
+      <bpmn:outgoing>P07_f8</bpmn:outgoing>
+      <bpmn:outgoing>P07_f7</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="P07_f2" sourceRef="P07_aten" targetRef="P07_g"/>
+    <bpmn:sequenceFlow id="P07_f3" name="Sí" sourceRef="P07_g" targetRef="P07_join">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">Sí</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="P07_f4" name="No" sourceRef="P07_g" targetRef="Activity_1usrpcw">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">No</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="P07_f1" sourceRef="P07_s" targetRef="P07_aten"/>
+    <bpmn:sequenceFlow id="P07_f5" sourceRef="P07_ger" targetRef="P07_join"/>
+    <bpmn:sequenceFlow id="P07_f6" sourceRef="P07_join" targetRef="P07_cambio"/>
+    <bpmn:sequenceFlow id="P07_f8" name="Sí" sourceRef="P07_cambio" targetRef="P07_upd">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">Sí</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="P07_f9" sourceRef="P07_upd" targetRef="P07_llevar"/>
+    <bpmn:sequenceFlow id="P07_f10" sourceRef="P07_llevar" targetRef="P07_prep"/>
+    <bpmn:sequenceFlow id="P07_f11" sourceRef="P07_prep" targetRef="P07_merge_explicit"/>
+    <bpmn:sequenceFlow id="P07_f7" name="No" sourceRef="P07_cambio" targetRef="P07_merge_explicit">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">No</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="P07_f12" sourceRef="P07_merge_explicit" targetRef="P07_fin"/>
+    <bpmn:task id="Activity_1usrpcw" name="Escalar la inconformidad al gerente">
+      <bpmn:incoming>P07_f4</bpmn:incoming>
+      <bpmn:outgoing>Flow_1ipgrrh</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_1ipgrrh" sourceRef="Activity_1usrpcw" targetRef="P07_ger"/>
+    <bpmn:exclusiveGateway id="P07_join">
+      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U1-14;U2-5;U2-6. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:incoming>P07_f3</bpmn:incoming>
+      <bpmn:incoming>P07_f5</bpmn:incoming>
+      <bpmn:outgoing>P07_f6</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:exclusiveGateway id="P07_merge_explicit" name="Continuar recorrido">
+      <bpmn:documentation>Fuente: Normalización BPMN de rutas exclusivas confirmadas. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:incoming>P07_f11</bpmn:incoming>
+      <bpmn:incoming>P07_f7</bpmn:incoming>
+      <bpmn:outgoing>P07_f12</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="P07_upd" name="Anotar corrección en papel">
+      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U1-14;U2-5;U2-6. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:incoming>P07_f8</bpmn:incoming>
+      <bpmn:outgoing>P07_f9</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="P07_llevar" name="Llevar corrección a cocina">
+      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U1-14;U2-5;U2-6. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:incoming>P07_f9</bpmn:incoming>
+      <bpmn:outgoing>P07_f10</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:callActivity id="P07_prep" name="Preparar y entregar productos" calledElement="P05">
+      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U1-14;U2-5;U2-6. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:extensionElements>
+        <zeebe:calledElement processId="P05"/>
+      </bpmn:extensionElements>
+      <bpmn:incoming>P07_f10</bpmn:incoming>
+      <bpmn:outgoing>P07_f11</bpmn:outgoing>
+      <bpmn:multiInstanceLoopCharacteristics>
+        <bpmn:documentation>Una instancia por lote de entrega real, sin imponer tamaño ni espera conjunta de toda la mesa. Abstracción descriptiva pendiente de revisión operacional.</bpmn:documentation>
+      </bpmn:multiInstanceLoopCharacteristics>
+    </bpmn:callActivity>
+    <bpmn:endEvent id="P07_fin" name="Inconformidad atendida">
+      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U1-14;U2-5;U2-6. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:incoming>P07_f12</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:task id="P07_ger" name="Acordar una solución con el cliente">
+      <bpmn:documentation>Fuente: Aclaración manual 04/10/2026;U1-14;U2-5;U2-6. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:incoming>Flow_1ipgrrh</bpmn:incoming>
+      <bpmn:outgoing>P07_f5</bpmn:outgoing>
+    </bpmn:task>
+  </bpmn:process>
+  <bpmn:collaboration id="P07_collab">
+    <bpmn:participant id="P07_restaurant" name="Restaurante Maderos" processRef="P07"/>
+  </bpmn:collaboration>
+  <bpmndi:BPMNDiagram id="P07_diagram" name="07 · Correcciones e inconformidades">
+    <bpmndi:BPMNPlane id="P07_plane" bpmnElement="P07_collab">
+      <bpmndi:BPMNShape id="P07_restaurant_di" bpmnElement="P07_restaurant" isHorizontal="true">
+        <dc:Bounds x="160" y="100" width="2145" height="790"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P07_lane_0_di" bpmnElement="P07_lane_0" isHorizontal="true">
+        <dc:Bounds x="190" y="100" width="2115" height="520"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P07_lane_1_di" bpmnElement="P07_lane_1" isHorizontal="true">
+        <dc:Bounds x="190" y="620" width="2115" height="270"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P07_g_di" bpmnElement="P07_g" isMarkerVisible="true">
+        <dc:Bounds x="775" y="275" width="50" height="50"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="736" y="226" width="128" height="27"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P07_aten_di" bpmnElement="P07_aten">
+        <dc:Bounds x="455" y="255" width="190" height="90"/>
+        <bpmndi:BPMNLabel/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P07_s_di" bpmnElement="P07_s">
+        <dc:Bounds x="295" y="275" width="40" height="40"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="259" y="360" width="112" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P07_cambio_di" bpmnElement="P07_cambio" isMarkerVisible="true">
+        <dc:Bounds x="1295" y="270" width="50" height="50"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1145" y="226" width="150" height="27"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1usrpcw_di" bpmnElement="Activity_1usrpcw">
+        <dc:Bounds x="745" y="405.0" width="100" height="80"/>
+        <bpmndi:BPMNLabel/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P07_join_di" bpmnElement="P07_join" isMarkerVisible="true">
+        <dc:Bounds x="1045" y="375" width="50" height="50"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="938" y="443" width="124" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P07_merge_explicit_di" bpmnElement="P07_merge_explicit" isMarkerVisible="true">
+        <dc:Bounds x="2075" y="365" width="50" height="50"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2032" y="425" width="95" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P07_upd_di" bpmnElement="P07_upd">
+        <dc:Bounds x="1385" y="165" width="190" height="90"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P07_llevar_di" bpmnElement="P07_llevar">
+        <dc:Bounds x="1615" y="165" width="190" height="90"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P07_prep_di" bpmnElement="P07_prep">
+        <dc:Bounds x="1845" y="165" width="190" height="90"/>
+        <bpmndi:BPMNLabel/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P07_fin_di" bpmnElement="P07_fin">
+        <dc:Bounds x="2200" y="370" width="40" height="40"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2152" y="438" width="115" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P07_ger_di" bpmnElement="P07_ger">
+        <dc:Bounds x="975" y="705" width="190" height="90"/>
+        <bpmndi:BPMNLabel/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="P07_f2_di" bpmnElement="P07_f2">
+        <di:waypoint x="645" y="295"/>
+        <di:waypoint x="775" y="295"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="P07_f3_di" bpmnElement="P07_f3">
+        <di:waypoint x="820" y="295"/>
+        <di:waypoint x="1070" y="295"/>
+        <di:waypoint x="1070" y="375"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="842" y="274" width="16" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="P07_f4_di" bpmnElement="P07_f4">
+        <di:waypoint x="795" y="320"/>
+        <di:waypoint x="745.0" y="445.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="762" y="343" width="15" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="P07_f1_di" bpmnElement="P07_f1">
+        <di:waypoint x="335" y="295"/>
+        <di:waypoint x="455" y="295"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="P07_f5_di" bpmnElement="P07_f5">
+        <di:waypoint x="1070" y="705"/>
+        <di:waypoint x="1070" y="425"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="P07_f6_di" bpmnElement="P07_f6">
+        <di:waypoint x="1090" y="395"/>
+        <di:waypoint x="1230" y="395"/>
+        <di:waypoint x="1230" y="290"/>
+        <di:waypoint x="1300" y="290"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="P07_f8_di" bpmnElement="P07_f8">
+        <di:waypoint x="1320" y="270"/>
+        <di:waypoint x="1320" y="190"/>
+        <di:waypoint x="1385" y="190"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1349" y="169" width="11" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="P07_f9_di" bpmnElement="P07_f9">
+        <di:waypoint x="1575" y="210"/>
+        <di:waypoint x="1615" y="210"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="P07_f10_di" bpmnElement="P07_f10">
+        <di:waypoint x="1805" y="210"/>
+        <di:waypoint x="1845" y="210"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="P07_f11_di" bpmnElement="P07_f11">
+        <di:waypoint x="2040" y="210"/>
+        <di:waypoint x="2100" y="210"/>
+        <di:waypoint x="2100" y="365"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="P07_f7_di" bpmnElement="P07_f7">
+        <di:waypoint x="1320" y="320"/>
+        <di:waypoint x="1320" y="390"/>
+        <di:waypoint x="2070" y="390"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1345" y="358" width="20" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="P07_f12_di" bpmnElement="P07_f12">
+        <di:waypoint x="2125" y="390"/>
+        <di:waypoint x="2200" y="390"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1ipgrrh_di" bpmnElement="Flow_1ipgrrh">
+        <di:waypoint x="845.0" y="445.0"/>
+        <di:waypoint x="975" y="750"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

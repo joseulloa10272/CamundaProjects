@@ -1,0 +1,192 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_Maderos" targetNamespace="https://maderos.example/bpmn/PR-SERV-001" exporter="Camunda Web Modeler" exporterVersion="27cc6be" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.9.0">
+  <bpmn:message id="Msg_P03_cans" name="Cancelación total comunicada por el cliente"/>
+  <bpmn:message id="Msg_P03_incs" name="Inconformidad durante el servicio"/>
+  <bpmn:message id="Msg_P03_ads" name="Solicitud adicional"/>
+  <bpmn:message id="Msg_P03_cuenta" name="Solicitud de cuenta recibida"/>
+  <bpmn:message id="Msg_P02_ret" name="Cliente comunica retiro"/>
+  <bpmn:escalation id="Esc_Cancelacion" name="Cancelación total" escalationCode="CANCELAR_SERVICIO"/>
+  <bpmn:process id="P09" name="Procesar pago y medios alternativos" isExecutable="false">
+    <bpmn:documentation>El cliente permanece hasta completar el pago. Se admiten alternativas como SINPE, efectivo o tarjeta. Una cuenta pendiente no produce cierre exitoso ni emisión anticipada de factura. Estado: revisión, pendiente de validación con persona del proceso.</bpmn:documentation>
+    <bpmn:laneSet id="P09_lanes">
+      <bpmn:lane id="P09_lane_0" name="Personal de caja">
+        <bpmn:flowNodeRef>P09_s</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>P09_medio</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>P09_pagar</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>P09_merge_explicit</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>P09_g</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>P09_alt</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>P09_fin</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>P09_info</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="P09_s" name="Saldo por cobrar">
+      <bpmn:documentation>Fuente: U2-8;U4. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:outgoing>P09_f1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:receiveTask id="P09_medio" name="Recibir medio de pago">
+      <bpmn:documentation>Fuente: U2-8;U4. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:incoming>P09_f1</bpmn:incoming>
+      <bpmn:outgoing>P09_f2</bpmn:outgoing>
+    </bpmn:receiveTask>
+    <bpmn:task id="P09_pagar" name="Procesar pago">
+      <bpmn:documentation>Fuente: U2-8;U4. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:incoming>P09_f9</bpmn:incoming>
+      <bpmn:outgoing>P09_f3</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="P09_merge_explicit" name="Continuar recorrido">
+      <bpmn:documentation>Fuente: Normalización BPMN de rutas exclusivas confirmadas. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:incoming>P09_f2</bpmn:incoming>
+      <bpmn:incoming>P09_f8</bpmn:incoming>
+      <bpmn:outgoing>P09_f9</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:exclusiveGateway id="P09_g" name="¿Pago completado?">
+      <bpmn:documentation>Fuente: U2-8;U4. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:incoming>P09_f3</bpmn:incoming>
+      <bpmn:outgoing>P09_f4</bpmn:outgoing>
+      <bpmn:outgoing>P09_f6</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:receiveTask id="P09_alt" name="Recibir otro intento o medio alternativo">
+      <bpmn:documentation>Fuente: U2-8;U4. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:incoming>P09_f7</bpmn:incoming>
+      <bpmn:outgoing>P09_f8</bpmn:outgoing>
+    </bpmn:receiveTask>
+    <bpmn:sequenceFlow id="P09_f1" sourceRef="P09_s" targetRef="P09_medio"/>
+    <bpmn:sequenceFlow id="P09_f2" sourceRef="P09_medio" targetRef="P09_merge_explicit"/>
+    <bpmn:sequenceFlow id="P09_f9" sourceRef="P09_merge_explicit" targetRef="P09_pagar"/>
+    <bpmn:sequenceFlow id="P09_f3" sourceRef="P09_pagar" targetRef="P09_g"/>
+    <bpmn:sequenceFlow id="P09_f8" sourceRef="P09_alt" targetRef="P09_merge_explicit"/>
+    <bpmn:sequenceFlow id="P09_f4" name="Sí" sourceRef="P09_g" targetRef="P09_fin">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">Sí</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="P09_f6" name="No" sourceRef="P09_g" targetRef="P09_info">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">No</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="P09_f7" sourceRef="P09_info" targetRef="P09_alt"/>
+    <bpmn:endEvent id="P09_fin" name="Pago confirmado">
+      <bpmn:documentation>Fuente: U2-8;U4. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:incoming>P09_f4</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sendTask id="P09_info" name="Informar pago rechazado">
+      <bpmn:documentation>Fuente: U2-8;U4. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:incoming>P09_f6</bpmn:incoming>
+      <bpmn:outgoing>P09_f7</bpmn:outgoing>
+    </bpmn:sendTask>
+  </bpmn:process>
+  <bpmn:collaboration id="P09_collab">
+    <bpmn:participant id="P09_restaurant" name="Restaurante Maderos" processRef="P09"/>
+    <bpmn:participant id="P09_client" name="Cliente / comensal"/>
+    <bpmn:messageFlow id="P09_msg_0" name="Medio de pago propocionado" sourceRef="P09_client" targetRef="P09_medio"/>
+    <bpmn:messageFlow id="P09_msg_1" name="Nuevo intento o alternativa" sourceRef="P09_client" targetRef="P09_alt"/>
+    <bpmn:messageFlow id="Flow_0adgbdg" name="Notificación de pago rechazado" sourceRef="P09_info" targetRef="P09_client"/>
+  </bpmn:collaboration>
+  <bpmndi:BPMNDiagram id="P09_diagram" name="09 · Pago y alternativas">
+    <bpmndi:BPMNPlane id="P09_plane" bpmnElement="P09_collab">
+      <bpmndi:BPMNShape id="P09_restaurant_di" bpmnElement="P09_restaurant" isHorizontal="true">
+        <dc:Bounds x="160" y="100" width="1410" height="570"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P09_lane_0_di" bpmnElement="P09_lane_0" isHorizontal="true">
+        <dc:Bounds x="190" y="100" width="1380" height="570"/>
+        <bpmndi:BPMNLabel/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P09_s_di" bpmnElement="P09_s">
+        <dc:Bounds x="310" y="200" width="40" height="40"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="289" y="285" width="82" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P09_medio_di" bpmnElement="P09_medio">
+        <dc:Bounds x="470" y="180" width="190" height="90"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P09_pagar_di" bpmnElement="P09_pagar">
+        <dc:Bounds x="950" y="180" width="190" height="90"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P09_merge_explicit_di" bpmnElement="P09_merge_explicit" isMarkerVisible="true">
+        <dc:Bounds x="790" y="200" width="50" height="50"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="782" y="143" width="95" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P09_g_di" bpmnElement="P09_g" isMarkerVisible="true">
+        <dc:Bounds x="1245" y="195" width="50" height="50"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1216" y="163" width="99" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P09_alt_di" bpmnElement="P09_alt">
+        <dc:Bounds x="715" y="380" width="190" height="90"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P09_fin_di" bpmnElement="P09_fin">
+        <dc:Bounds x="1473" y="195" width="40" height="40"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1451" y="280" width="84" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1uefns6_di" bpmnElement="P09_info">
+        <dc:Bounds x="1220" y="385" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="P09_f1_di" bpmnElement="P09_f1">
+        <di:waypoint x="350" y="220"/>
+        <di:waypoint x="470" y="220"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="P09_f2_di" bpmnElement="P09_f2">
+        <di:waypoint x="660" y="220"/>
+        <di:waypoint x="790" y="220"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="P09_f9_di" bpmnElement="P09_f9">
+        <di:waypoint x="840" y="220"/>
+        <di:waypoint x="950" y="220"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="P09_f3_di" bpmnElement="P09_f3">
+        <di:waypoint x="1140" y="220"/>
+        <di:waypoint x="1245" y="220"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="P09_f8_di" bpmnElement="P09_f8">
+        <di:waypoint x="815" y="380"/>
+        <di:waypoint x="815" y="250"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="P09_f4_di" bpmnElement="P09_f4">
+        <di:waypoint x="1290" y="215"/>
+        <di:waypoint x="1473" y="215"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1321" y="189" width="11" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="P09_f6_di" bpmnElement="P09_f6">
+        <di:waypoint x="1270" y="245"/>
+        <di:waypoint x="1270" y="385"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1283" y="305" width="15" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="P09_f7_di" bpmnElement="P09_f7">
+        <di:waypoint x="1220" y="430"/>
+        <di:waypoint x="905" y="430"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="P09_client_di" bpmnElement="P09_client" isHorizontal="true">
+        <dc:Bounds x="160" y="740" width="1410" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="P09_msg_0_di" bpmnElement="P09_msg_0">
+        <di:waypoint x="570" y="740"/>
+        <di:waypoint x="570" y="270"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="604" y="695" width="73" height="27"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="P09_msg_1_di" bpmnElement="P09_msg_1">
+        <di:waypoint x="810" y="740"/>
+        <di:waypoint x="810" y="470"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="834" y="696" width="131" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0adgbdg_di" bpmnElement="Flow_0adgbdg">
+        <di:waypoint x="1270" y="465"/>
+        <di:waypoint x="1270" y="740"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1170" y="689.5" width="79" height="27"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

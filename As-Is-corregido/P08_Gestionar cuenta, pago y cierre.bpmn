@@ -1,0 +1,221 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_Maderos" targetNamespace="https://maderos.example/bpmn/PR-SERV-001" exporter="Camunda Web Modeler" exporterVersion="27cc6be" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.9.0">
+  <bpmn:message id="Msg_P03_cans" name="Cancelación total comunicada por el cliente"/>
+  <bpmn:message id="Msg_P03_incs" name="Inconformidad durante el servicio"/>
+  <bpmn:message id="Msg_P03_ads" name="Solicitud adicional"/>
+  <bpmn:message id="Msg_P03_cuenta" name="Solicitud de cuenta recibida"/>
+  <bpmn:message id="Msg_P02_ret" name="Cliente comunica retiro"/>
+  <bpmn:escalation id="Esc_Cancelacion" name="Cancelación total" escalationCode="CANCELAR_SERVICIO"/>
+  <bpmn:process id="P08" name="08 · Revisión de cuenta, factura y cierre" isExecutable="false">
+    <bpmn:documentation>El salonero genera previamente la cuenta. Caja corrige diferencias con respaldo de la información de cocina. La factura se emite en SuFacturaFácil después de completar el pago; no se presume integración con Aldelo. Estado: revisión, pendiente de validación con persona del proceso.</bpmn:documentation>
+    <bpmn:laneSet id="P08_lanes">
+      <bpmn:lane id="P08_lane_0" name="Personal de caja">
+        <bpmn:flowNodeRef>P08_s</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>P08_rev</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_1wz7tyu</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>P08_corr</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>P08_g</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>P08_pago</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>P08_fact</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_0qhyoc3</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>P08_close</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_14bt4lz</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>P08_fin</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="P08_s" name="Solicitud de cuenta recibida">
+      <bpmn:documentation>Fuente: U1-16;U2-6;U4. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:outgoing>P08_f1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="P08_f3" name="Sí" sourceRef="P08_g" targetRef="P08_corr">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">Sí</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_12ioj8t" sourceRef="Activity_1wz7tyu" targetRef="P08_g"/>
+    <bpmn:sequenceFlow id="Flow_0rzhugl" sourceRef="P08_g" targetRef="P08_pago" name="No"/>
+    <bpmn:sequenceFlow id="P08_f2" sourceRef="P08_rev" targetRef="Activity_1wz7tyu"/>
+    <bpmn:sequenceFlow id="P08_f1" sourceRef="P08_s" targetRef="P08_rev"/>
+    <bpmn:sequenceFlow id="P08_f8" sourceRef="P08_pago" targetRef="P08_fact"/>
+    <bpmn:sequenceFlow id="P08_f9" sourceRef="P08_fact" targetRef="Activity_0qhyoc3"/>
+    <bpmn:sequenceFlow id="Flow_1rijcr1" sourceRef="Activity_0qhyoc3" targetRef="P08_close"/>
+    <bpmn:sequenceFlow id="Flow_03dfylq" sourceRef="P08_close" targetRef="Activity_14bt4lz"/>
+    <bpmn:sequenceFlow id="Flow_0a8q3hv" sourceRef="Activity_14bt4lz" targetRef="P08_fin"/>
+    <bpmn:sequenceFlow id="Flow_0bi9vhe" sourceRef="P08_corr" targetRef="P08_pago"/>
+    <bpmn:task id="P08_rev" name="Preparar y verificar la cuenta según los productos consumidos">
+      <bpmn:documentation>Fuente: U1-16;U2-6;U4. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:incoming>P08_f1</bpmn:incoming>
+      <bpmn:outgoing>P08_f2</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Activity_1wz7tyu" name="Presentar la cuenta al cliente">
+      <bpmn:incoming>P08_f2</bpmn:incoming>
+      <bpmn:outgoing>Flow_12ioj8t</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="P08_corr" name="Corregir cuenta según consumo">
+      <bpmn:documentation>Fuente: U1-16;U2-6;U4. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:incoming>P08_f3</bpmn:incoming>
+      <bpmn:outgoing>Flow_0bi9vhe</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="P08_g" name="¿Hay diferencias en la cuenta?" default="Flow_0rzhugl">
+      <bpmn:documentation>Fuente: U1-16;U2-6;U4. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:incoming>Flow_12ioj8t</bpmn:incoming>
+      <bpmn:outgoing>P08_f3</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0rzhugl</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:callActivity id="P08_pago" name="Procesar pago y medios alternativos" calledElement="P09">
+      <bpmn:documentation>Fuente: U1-16;U2-6;U4. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:incoming>Flow_0rzhugl</bpmn:incoming>
+      <bpmn:incoming>Flow_0bi9vhe</bpmn:incoming>
+      <bpmn:outgoing>P08_f8</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:task id="P08_fact" name="Emitir factura en SuFacturaFácil">
+      <bpmn:documentation>Fuente: U1-16;U2-6;U4. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:incoming>P08_f8</bpmn:incoming>
+      <bpmn:outgoing>P08_f9</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Activity_0qhyoc3" name="Entregar comprobante al cliente">
+      <bpmn:incoming>P08_f9</bpmn:incoming>
+      <bpmn:outgoing>Flow_1rijcr1</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="P08_close" name="Cerrar cuenta">
+      <bpmn:documentation>Fuente: U1-16;U2-6;U4. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:incoming>Flow_1rijcr1</bpmn:incoming>
+      <bpmn:outgoing>Flow_03dfylq</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Activity_14bt4lz" name="Despedir al cliente">
+      <bpmn:incoming>Flow_03dfylq</bpmn:incoming>
+      <bpmn:outgoing>Flow_0a8q3hv</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="P08_fin" name="Cuenta liquidada">
+      <bpmn:documentation>Fuente: U1-16;U2-6;U4. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:incoming>Flow_0a8q3hv</bpmn:incoming>
+    </bpmn:endEvent>
+  </bpmn:process>
+  <bpmn:collaboration id="P08_collab">
+    <bpmn:participant id="P08_restaurant" name="Restaurante Maderos" processRef="P08"/>
+    <bpmn:participant id="P08_client" name="Cliente / comensal"/>
+    <bpmn:messageFlow id="P08_msg_0" name="Cuenta presentada al cliente" sourceRef="P08_client" targetRef="Activity_1wz7tyu"/>
+    <bpmn:messageFlow id="Flow_1d04kws" name="Comprobante entregado al cliente" sourceRef="Activity_0qhyoc3" targetRef="P08_client"/>
+  </bpmn:collaboration>
+  <bpmndi:BPMNDiagram id="P08_diagram" name="08 · Revisión de cuenta, factura y cierre">
+    <bpmndi:BPMNPlane id="P08_plane" bpmnElement="P08_collab">
+      <bpmndi:BPMNShape id="P08_restaurant_di" bpmnElement="P08_restaurant" isHorizontal="true">
+        <dc:Bounds x="160" y="80" width="2180" height="580"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P08_lane_0_di" bpmnElement="P08_lane_0" isHorizontal="true">
+        <dc:Bounds x="190" y="80" width="2150" height="580"/>
+        <bpmndi:BPMNLabel/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P08_s_di" bpmnElement="P08_s">
+        <dc:Bounds x="300" y="325" width="40" height="40"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="274" y="410" width="93" height="27"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P08_rev_di" bpmnElement="P08_rev">
+        <dc:Bounds x="405" y="305" width="190" height="90"/>
+        <bpmndi:BPMNLabel/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1wz7tyu_di" bpmnElement="Activity_1wz7tyu">
+        <dc:Bounds x="670" y="305" width="100" height="80"/>
+        <bpmndi:BPMNLabel/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P08_corr_di" bpmnElement="P08_corr">
+        <dc:Bounds x="825" y="460" width="190" height="90"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P08_g_di" bpmnElement="P08_g" isMarkerVisible="true">
+        <dc:Bounds x="895" y="315" width="50" height="50"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="849" y="283" width="152" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P08_pago_di" bpmnElement="P08_pago">
+        <dc:Bounds x="1105" y="307" width="190" height="90"/>
+        <bpmndi:BPMNLabel/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P08_fact_di" bpmnElement="P08_fact">
+        <dc:Bounds x="1385" y="307" width="190" height="90"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0qhyoc3_di" bpmnElement="Activity_0qhyoc3">
+        <dc:Bounds x="1660" y="312" width="100" height="80"/>
+        <bpmndi:BPMNLabel/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P08_close_di" bpmnElement="P08_close">
+        <dc:Bounds x="1825" y="307" width="190" height="90"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_14bt4lz_di" bpmnElement="Activity_14bt4lz">
+        <dc:Bounds x="2070" y="312" width="100" height="80"/>
+        <bpmndi:BPMNLabel/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P08_fin_di" bpmnElement="P08_fin">
+        <dc:Bounds x="2250" y="332" width="40" height="40"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2229" y="417" width="83" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="P08_f3_di" bpmnElement="P08_f3">
+        <di:waypoint x="920" y="365"/>
+        <di:waypoint x="920" y="460"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="929" y="420" width="11" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_12ioj8t_di" bpmnElement="Flow_12ioj8t">
+        <di:waypoint x="770" y="340"/>
+        <di:waypoint x="895" y="340"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0rzhugl_di" bpmnElement="Flow_0rzhugl">
+        <di:waypoint x="945" y="340"/>
+        <di:waypoint x="1105" y="340"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="P08_f2_di" bpmnElement="P08_f2">
+        <di:waypoint x="595" y="345"/>
+        <di:waypoint x="670" y="345"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="P08_f1_di" bpmnElement="P08_f1">
+        <di:waypoint x="340" y="345"/>
+        <di:waypoint x="405" y="345"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="P08_f8_di" bpmnElement="P08_f8">
+        <di:waypoint x="1295" y="347"/>
+        <di:waypoint x="1385" y="347"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="P08_f9_di" bpmnElement="P08_f9">
+        <di:waypoint x="1575" y="347"/>
+        <di:waypoint x="1660" y="347"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1rijcr1_di" bpmnElement="Flow_1rijcr1">
+        <di:waypoint x="1760" y="352"/>
+        <di:waypoint x="1825" y="352"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_03dfylq_di" bpmnElement="Flow_03dfylq">
+        <di:waypoint x="2015" y="352"/>
+        <di:waypoint x="2070" y="352"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0a8q3hv_di" bpmnElement="Flow_0a8q3hv">
+        <di:waypoint x="2170" y="352"/>
+        <di:waypoint x="2250" y="352"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0bi9vhe_di" bpmnElement="Flow_0bi9vhe">
+        <di:waypoint x="1015" y="505"/>
+        <di:waypoint x="1210" y="505"/>
+        <di:waypoint x="1210" y="397"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="P08_client_di" bpmnElement="P08_client" isHorizontal="true">
+        <dc:Bounds x="160" y="770" width="2180" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="P08_msg_0_di" bpmnElement="P08_msg_0">
+        <di:waypoint x="720" y="770"/>
+        <di:waypoint x="720" y="385"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="727" y="730" width="106" height="27"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1d04kws_di" bpmnElement="Flow_1d04kws">
+        <di:waypoint x="1710" y="392"/>
+        <di:waypoint x="1710" y="770"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1746" y="700" width="67" height="40"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

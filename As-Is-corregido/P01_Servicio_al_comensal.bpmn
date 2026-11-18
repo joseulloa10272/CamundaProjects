@@ -1,0 +1,150 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" id="Definitions_Maderos" targetNamespace="https://maderos.example/bpmn/PR-SERV-001" exporter="Camunda Web Modeler" exporterVersion="27cc6be" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.9.0">
+  <bpmn:message id="Msg_P03_cans" name="Cancelación total comunicada por el cliente"/>
+  <bpmn:message id="Msg_P03_incs" name="Inconformidad durante el servicio"/>
+  <bpmn:message id="Msg_P03_ads" name="Solicitud adicional"/>
+  <bpmn:message id="Msg_P03_cuenta" name="Solicitud de cuenta recibida"/>
+  <bpmn:message id="Msg_P02_ret" name="Cliente comunica retiro"/>
+  <bpmn:escalation id="Esc_Cancelacion" name="Cancelación total" escalationCode="CANCELAR_SERVICIO"/>
+  <bpmn:process id="P01" name="01 · Servicio al comensal · Vista general" isExecutable="false">
+    <bpmn:documentation>Una instancia corresponde a la visita de un grupo. Los detalles de cada actividad llamada se desarrollan en las láminas 02-10. Modelo descriptivo no ejecutable; versión de revisión v0.3. Estado: revisión, pendiente de validación con persona del proceso.</bpmn:documentation>
+    <bpmn:startEvent id="P01_s" name="Cliente llega">
+      <bpmn:documentation>Fuente: U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:outgoing>P01_f1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:callActivity id="P01_r" name="Recibir y ubicar al cliente" calledElement="P02">
+      <bpmn:documentation>Fuente: U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:extensionElements>
+        <zeebe:calledElement processId="P02"/>
+      </bpmn:extensionElements>
+      <bpmn:incoming>P01_f1</bpmn:incoming>
+      <bpmn:outgoing>P01_f2</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:exclusiveGateway id="P01_g" name="¿Cliente ubicado?">
+      <bpmn:documentation>Fuente: U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:incoming>P01_f2</bpmn:incoming>
+      <bpmn:outgoing>P01_f3</bpmn:outgoing>
+      <bpmn:outgoing>P01_f4</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:callActivity id="P01_svc" name="Atender servicio en mesa" calledElement="P03">
+      <bpmn:documentation>Fuente: U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:extensionElements>
+        <zeebe:calledElement processId="P03"/>
+      </bpmn:extensionElements>
+      <bpmn:incoming>P01_f3</bpmn:incoming>
+      <bpmn:outgoing>P01_f5</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:callActivity id="P01_caja" name="Gestionar cuenta, pago y cierre" calledElement="P08">
+      <bpmn:documentation>Fuente: U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:extensionElements>
+        <zeebe:calledElement processId="P08"/>
+      </bpmn:extensionElements>
+      <bpmn:incoming>P01_f5</bpmn:incoming>
+      <bpmn:outgoing>P01_f7</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:callActivity id="P01_mesa" name="Acondicionar mesa" calledElement="P10">
+      <bpmn:documentation>Fuente: U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:extensionElements>
+        <zeebe:calledElement processId="P10"/>
+      </bpmn:extensionElements>
+      <bpmn:incoming>P01_verificar_retiro_next</bpmn:incoming>
+      <bpmn:outgoing>P01_f9</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:endEvent id="P01_fin" name="Servicio finalizado; mesa preparada">
+      <bpmn:documentation>Fuente: U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:incoming>P01_f9</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="P01_f1" sourceRef="P01_s" targetRef="P01_r"/>
+    <bpmn:sequenceFlow id="P01_f2" sourceRef="P01_r" targetRef="P01_g"/>
+    <bpmn:sequenceFlow id="P01_f3" name="Sí" sourceRef="P01_g" targetRef="P01_svc">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">Sí</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="P01_f4" name="No" sourceRef="P01_g" targetRef="P01_retiro">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">No</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="P01_f5" sourceRef="P01_svc" targetRef="P01_caja"/>
+    <bpmn:sequenceFlow id="P01_f7" sourceRef="P01_caja" targetRef="P01_verificar_retiro"/>
+    <bpmn:sequenceFlow id="P01_f9" sourceRef="P01_mesa" targetRef="P01_fin"/>
+    <bpmn:endEvent id="P01_retiro" name="Cliente retirado durante la espera">
+      <bpmn:documentation>Fuente: U2. Información aportada por usuario o perfil; validación final del conjunto pendiente.</bpmn:documentation>
+      <bpmn:incoming>P01_f4</bpmn:incoming>
+    </bpmn:endEvent>
+  <bpmn:task id="P01_verificar_retiro" name="Verificar que el cliente se retiró"><bpmn:incoming>P01_f7</bpmn:incoming><bpmn:outgoing>P01_verificar_retiro_next</bpmn:outgoing></bpmn:task><bpmn:sequenceFlow id="P01_verificar_retiro_next" sourceRef="P01_verificar_retiro" targetRef="P01_mesa"/></bpmn:process>
+  <bpmn:collaboration id="P01_collab">
+    <bpmn:participant id="P01_restaurant" name="Restaurante Maderos" processRef="P01"/>
+  </bpmn:collaboration>
+  <bpmndi:BPMNDiagram id="P01_diagram" name="01 · Servicio al comensal · Vista general">
+    <bpmndi:BPMNPlane id="P01_plane" bpmnElement="P01_collab">
+      <bpmndi:BPMNShape id="P01_restaurant_di" bpmnElement="P01_restaurant" isHorizontal="true">
+        <dc:Bounds x="160" y="200" width="2145.0" height="410"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P01_s_di" bpmnElement="P01_s">
+        <dc:Bounds x="310" y="295" width="40" height="40"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="300" y="368" width="61" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P01_r_di" bpmnElement="P01_r">
+        <dc:Bounds x="470" y="275" width="190" height="90"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P01_g_di" bpmnElement="P01_g" isMarkerVisible="true">
+        <dc:Bounds x="790" y="295" width="50" height="50"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="766" y="248" width="89" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P01_svc_di" bpmnElement="P01_svc">
+        <dc:Bounds x="950" y="275" width="190" height="90"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P01_caja_di" bpmnElement="P01_caja">
+        <dc:Bounds x="1275" y="275" width="190" height="90"/>
+        <bpmndi:BPMNLabel/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P01_mesa_di" bpmnElement="P01_mesa">
+        <dc:Bounds x="1760.0" y="275" width="190" height="90"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P01_fin_di" bpmnElement="P01_fin">
+        <dc:Bounds x="2135.0" y="295" width="40" height="40"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2068.0" y="380" width="175" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P01_retiro_di" bpmnElement="P01_retiro">
+        <dc:Bounds x="795" y="480" width="40" height="40"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="733" y="565" width="164" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="P01_f1_di" bpmnElement="P01_f1">
+        <di:waypoint x="350" y="315"/>
+        <di:waypoint x="470" y="315"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="P01_f2_di" bpmnElement="P01_f2">
+        <di:waypoint x="660" y="315"/>
+        <di:waypoint x="790" y="315"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="P01_f3_di" bpmnElement="P01_f3">
+        <di:waypoint x="840" y="315"/>
+        <di:waypoint x="950" y="315"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="890" y="290" width="11" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="P01_f4_di" bpmnElement="P01_f4">
+        <di:waypoint x="815" y="345"/>
+        <di:waypoint x="815" y="480"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="822" y="406" width="15" height="14"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="P01_f5_di" bpmnElement="P01_f5">
+        <di:waypoint x="1140" y="315"/>
+        <di:waypoint x="1275" y="315"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="P01_f9_di" bpmnElement="P01_f9">
+        <di:waypoint x="1950.0" y="315"/>
+        <di:waypoint x="2135.0" y="315"/>
+      </bpmndi:BPMNEdge>
+    <bpmndi:BPMNShape id="DI_P01_verificar_retiro" bpmnElement="P01_verificar_retiro"><dc:Bounds x="1552.5" y="282.5" width="120" height="65"/></bpmndi:BPMNShape><bpmndi:BPMNEdge id="DI_P01_f7" bpmnElement="P01_f7"><di:waypoint x="1465.0" y="315.0"/><di:waypoint x="1552.5" y="315.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="DI_P01_verificar_retiro_next" bpmnElement="P01_verificar_retiro_next"><di:waypoint x="1672.5" y="315.0"/><di:waypoint x="1760.0" y="315.0"/></bpmndi:BPMNEdge></bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
