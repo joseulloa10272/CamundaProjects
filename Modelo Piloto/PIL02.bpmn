@@ -1,0 +1,412 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" id="Defs_PIL02" targetNamespace="https://maderos.example/bpmn/piloto">
+  <bpmn:process id="PIL02" name="Preparar y entregar ítems de la comanda" isExecutable="false">
+    <bpmn:documentation>Abrir una instancia por ítem con ID de servicio, pedido e ítem. El lote solo agrupa ítems listos que se trasladan juntos y conserva sus IDs. Un ítem listo puede formar un lote individual sin esperar otras preparaciones. Respetar orden de recepción salvo excepción registrada por chef. La alerta de 15 minutos desde T3 orienta revisión. El registro se realiza al ocurrir cada transición. Los cambios durante preparación se tramitan con PIL03.</bpmn:documentation>
+    <bpmn:laneSet id="PIL02_roles">
+      <bpmn:lane id="PIL02_rol0" name="Salonero">
+        <bpmn:flowNodeRef>PIL02_change</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL02_keep</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL02_closed</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL02_verify</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL02_match</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL02_lot</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL02_pickup</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL02_serve</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL02_e</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="PIL02_rol1" name="Aplicación de comandas">
+        <bpmn:flowNodeRef>PIL02_notify</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="PIL02_rol2" name="Recepción, estación y pase">
+        <bpmn:flowNodeRef>PIL02_s</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL02_stock</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL02_avail</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL02_kind</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL02_start</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL02_cook</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL02_ready</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="PIL02_rol3" name="Capitán y Gerencia">
+        <bpmn:flowNodeRef>PIL02_fix</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL02_retry</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL02_stop</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="PIL02_rol5" name="Encargado de bebidas">
+        <bpmn:flowNodeRef>PIL02_drinkack</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL02_drink</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL02_drinkready</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="PIL02_s" name="Versión vigente recibida">
+      <bpmn:outgoing>PIL02_f0</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:userTask id="PIL02_stock" name="Revisar disponibilidad del ítem">
+      <bpmn:incoming>PIL02_f0</bpmn:incoming>
+      <bpmn:incoming>PIL02_f5</bpmn:incoming>
+      <bpmn:incoming>PIL02_f21</bpmn:incoming>
+      <bpmn:outgoing>PIL02_f1</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="PIL02_avail" name="¿Ítem disponible?" default="PIL02_f3">
+      <bpmn:incoming>PIL02_f1</bpmn:incoming>
+      <bpmn:outgoing>PIL02_f2</bpmn:outgoing>
+      <bpmn:outgoing>PIL02_f3</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:callActivity id="PIL02_change" name="Resolver agotado, cambio, anulación o corrección" calledElement="PIL03">
+      <bpmn:extensionElements>
+        <zeebe:calledElement processId="PIL03"/>
+      </bpmn:extensionElements>
+      <bpmn:incoming>PIL02_f3</bpmn:incoming>
+      <bpmn:outgoing>PIL02_f4</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:exclusiveGateway id="PIL02_keep" name="¿Ítem confirmado y vigente?" default="PIL02_f6">
+      <bpmn:incoming>PIL02_f4</bpmn:incoming>
+      <bpmn:outgoing>PIL02_f5</bpmn:outgoing>
+      <bpmn:outgoing>PIL02_f6</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="PIL02_closed" name="Ítem resuelto sin preparar">
+      <bpmn:incoming>PIL02_f6</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:exclusiveGateway id="PIL02_kind" name="¿Es bebida?" default="PIL02_f8">
+      <bpmn:incoming>PIL02_f2</bpmn:incoming>
+      <bpmn:outgoing>PIL02_f7</bpmn:outgoing>
+      <bpmn:outgoing>PIL02_f8</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="PIL02_start" name="Marcar inicio efectivo del alimento">
+      <bpmn:incoming>PIL02_f8</bpmn:incoming>
+      <bpmn:outgoing>PIL02_f12</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:manualTask id="PIL02_cook" name="Preparar alimento">
+      <bpmn:incoming>PIL02_f12</bpmn:incoming>
+      <bpmn:outgoing>PIL02_f13</bpmn:outgoing>
+    </bpmn:manualTask>
+    <bpmn:userTask id="PIL02_drinkack" name="Acusar recepción y marcar inicio de la bebida">
+      <bpmn:incoming>PIL02_f7</bpmn:incoming>
+      <bpmn:outgoing>PIL02_f9</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:manualTask id="PIL02_drink" name="Preparar bebida">
+      <bpmn:incoming>PIL02_f9</bpmn:incoming>
+      <bpmn:outgoing>PIL02_f10</bpmn:outgoing>
+    </bpmn:manualTask>
+    <bpmn:userTask id="PIL02_drinkready" name="Verificar y marcar bebida lista">
+      <bpmn:incoming>PIL02_f10</bpmn:incoming>
+      <bpmn:outgoing>PIL02_f11</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="PIL02_ready" name="Verificar y marcar alimento listo en pase">
+      <bpmn:incoming>PIL02_f13</bpmn:incoming>
+      <bpmn:outgoing>PIL02_f14</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="PIL02_notify" name="Enviar aviso independiente por ítem listo">
+      <bpmn:incoming>PIL02_f11</bpmn:incoming>
+      <bpmn:incoming>PIL02_f14</bpmn:incoming>
+      <bpmn:outgoing>PIL02_f15</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:userTask id="PIL02_verify" name="Acusar aviso y verificar producto y versión vigente">
+      <bpmn:incoming>PIL02_f15</bpmn:incoming>
+      <bpmn:outgoing>PIL02_f16</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="PIL02_match" name="¿Corresponde al pedido?" default="PIL02_f19">
+      <bpmn:incoming>PIL02_f16</bpmn:incoming>
+      <bpmn:outgoing>PIL02_f17</bpmn:outgoing>
+      <bpmn:outgoing>PIL02_f19</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:callActivity id="PIL02_fix" name="Registrar y conciliar corrección" calledElement="PIL03">
+      <bpmn:extensionElements>
+        <zeebe:calledElement processId="PIL03"/>
+      </bpmn:extensionElements>
+      <bpmn:incoming>PIL02_f19</bpmn:incoming>
+      <bpmn:outgoing>PIL02_f20</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:exclusiveGateway id="PIL02_retry" name="¿Requiere nueva preparación vigente?" default="PIL02_f22">
+      <bpmn:incoming>PIL02_f20</bpmn:incoming>
+      <bpmn:outgoing>PIL02_f21</bpmn:outgoing>
+      <bpmn:outgoing>PIL02_f22</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="PIL02_stop" name="Incidencia resuelta sin reentrega">
+      <bpmn:incoming>PIL02_f22</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:userTask id="PIL02_lot" name="Asignar lote de retiro a ítems listos que se entregan juntos">
+      <bpmn:incoming>PIL02_f17</bpmn:incoming>
+      <bpmn:outgoing>PIL02_f18</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="PIL02_pickup" name="Registrar retiro por lote e ítem y trasladar">
+      <bpmn:incoming>PIL02_f18</bpmn:incoming>
+      <bpmn:outgoing>PIL02_f23</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="PIL02_serve" name="Servir y registrar entrega · T5 del principal de referencia">
+      <bpmn:incoming>PIL02_f23</bpmn:incoming>
+      <bpmn:outgoing>PIL02_f24</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="PIL02_e" name="Ítem entregado">
+      <bpmn:incoming>PIL02_f24</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="PIL02_f0" sourceRef="PIL02_s" targetRef="PIL02_stock"/>
+    <bpmn:sequenceFlow id="PIL02_f1" sourceRef="PIL02_stock" targetRef="PIL02_avail"/>
+    <bpmn:sequenceFlow id="PIL02_f2" sourceRef="PIL02_avail" targetRef="PIL02_kind" name="Sí">
+      <bpmn:conditionExpression>Sí</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="PIL02_f3" sourceRef="PIL02_avail" targetRef="PIL02_change" name="No"/>
+    <bpmn:sequenceFlow id="PIL02_f4" sourceRef="PIL02_change" targetRef="PIL02_keep"/>
+    <bpmn:sequenceFlow id="PIL02_f5" sourceRef="PIL02_keep" targetRef="PIL02_stock" name="Sí">
+      <bpmn:conditionExpression>Sí</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="PIL02_f6" sourceRef="PIL02_keep" targetRef="PIL02_closed" name="No"/>
+    <bpmn:sequenceFlow id="PIL02_f7" sourceRef="PIL02_kind" targetRef="PIL02_drinkack" name="Sí">
+      <bpmn:conditionExpression>Sí</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="PIL02_f8" sourceRef="PIL02_kind" targetRef="PIL02_start" name="No"/>
+    <bpmn:sequenceFlow id="PIL02_f9" sourceRef="PIL02_drinkack" targetRef="PIL02_drink"/>
+    <bpmn:sequenceFlow id="PIL02_f10" sourceRef="PIL02_drink" targetRef="PIL02_drinkready"/>
+    <bpmn:sequenceFlow id="PIL02_f11" sourceRef="PIL02_drinkready" targetRef="PIL02_notify"/>
+    <bpmn:sequenceFlow id="PIL02_f12" sourceRef="PIL02_start" targetRef="PIL02_cook"/>
+    <bpmn:sequenceFlow id="PIL02_f13" sourceRef="PIL02_cook" targetRef="PIL02_ready"/>
+    <bpmn:sequenceFlow id="PIL02_f14" sourceRef="PIL02_ready" targetRef="PIL02_notify"/>
+    <bpmn:sequenceFlow id="PIL02_f15" sourceRef="PIL02_notify" targetRef="PIL02_verify"/>
+    <bpmn:sequenceFlow id="PIL02_f16" sourceRef="PIL02_verify" targetRef="PIL02_match"/>
+    <bpmn:sequenceFlow id="PIL02_f17" sourceRef="PIL02_match" targetRef="PIL02_lot" name="Sí">
+      <bpmn:conditionExpression>Sí</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="PIL02_f18" sourceRef="PIL02_lot" targetRef="PIL02_pickup"/>
+    <bpmn:sequenceFlow id="PIL02_f19" sourceRef="PIL02_match" targetRef="PIL02_fix" name="No"/>
+    <bpmn:sequenceFlow id="PIL02_f20" sourceRef="PIL02_fix" targetRef="PIL02_retry"/>
+    <bpmn:sequenceFlow id="PIL02_f21" sourceRef="PIL02_retry" targetRef="PIL02_stock" name="Sí">
+      <bpmn:conditionExpression>Sí</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="PIL02_f22" sourceRef="PIL02_retry" targetRef="PIL02_stop" name="No"/>
+    <bpmn:sequenceFlow id="PIL02_f23" sourceRef="PIL02_pickup" targetRef="PIL02_serve"/>
+    <bpmn:sequenceFlow id="PIL02_f24" sourceRef="PIL02_serve" targetRef="PIL02_e"/>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="DG_PIL02">
+    <bpmndi:BPMNPlane id="PL_PIL02" bpmnElement="PIL02">
+      <bpmndi:BPMNShape id="DI_PIL02_rol0" bpmnElement="PIL02_rol0" isHorizontal="true">
+        <dc:Bounds x="30" y="40" width="3255" height="150"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL02_rol1" bpmnElement="PIL02_rol1" isHorizontal="true">
+        <dc:Bounds x="30" y="190" width="3255" height="150"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL02_rol2" bpmnElement="PIL02_rol2" isHorizontal="true">
+        <dc:Bounds x="30" y="340" width="3255" height="150"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL02_rol3" bpmnElement="PIL02_rol3" isHorizontal="true">
+        <dc:Bounds x="30" y="490" width="3255" height="150"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL02_rol5" bpmnElement="PIL02_rol5" isHorizontal="true">
+        <dc:Bounds x="30" y="640" width="3255" height="150"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL02_s" bpmnElement="PIL02_s">
+        <dc:Bounds x="122.0" y="395.0" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL02_stock" bpmnElement="PIL02_stock">
+        <dc:Bounds x="267.5" y="376.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL02_avail" bpmnElement="PIL02_avail">
+        <dc:Bounds x="545.0" y="388.0" width="50" height="50"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL02_change" bpmnElement="PIL02_change">
+        <dc:Bounds x="697.5" y="76.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL02_keep" bpmnElement="PIL02_keep">
+        <dc:Bounds x="975.0" y="88.0" width="50" height="50"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL02_closed" bpmnElement="PIL02_closed">
+        <dc:Bounds x="1197.0" y="95.0" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL02_kind" bpmnElement="PIL02_kind">
+        <dc:Bounds x="1190.0" y="388.0" width="50" height="50"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL02_start" bpmnElement="PIL02_start">
+        <dc:Bounds x="1342.5" y="376.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL02_cook" bpmnElement="PIL02_cook">
+        <dc:Bounds x="1557.5" y="376.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL02_drinkack" bpmnElement="PIL02_drinkack">
+        <dc:Bounds x="1342.5" y="676.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL02_drink" bpmnElement="PIL02_drink">
+        <dc:Bounds x="1557.5" y="676.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL02_drinkready" bpmnElement="PIL02_drinkready">
+        <dc:Bounds x="1772.5" y="676.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL02_ready" bpmnElement="PIL02_ready">
+        <dc:Bounds x="1772.5" y="376.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL02_notify" bpmnElement="PIL02_notify">
+        <dc:Bounds x="1987.5" y="226.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL02_verify" bpmnElement="PIL02_verify">
+        <dc:Bounds x="1987.5" y="76.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL02_match" bpmnElement="PIL02_match">
+        <dc:Bounds x="2265.0" y="88.0" width="50" height="50"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL02_fix" bpmnElement="PIL02_fix">
+        <dc:Bounds x="2417.5" y="526.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL02_retry" bpmnElement="PIL02_retry">
+        <dc:Bounds x="2695.0" y="538.0" width="50" height="50"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL02_stop" bpmnElement="PIL02_stop">
+        <dc:Bounds x="2917.0" y="545.0" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL02_lot" bpmnElement="PIL02_lot">
+        <dc:Bounds x="2417.5" y="76.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL02_pickup" bpmnElement="PIL02_pickup">
+        <dc:Bounds x="2632.5" y="76.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL02_serve" bpmnElement="PIL02_serve">
+        <dc:Bounds x="2847.5" y="76.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL02_e" bpmnElement="PIL02_e">
+        <dc:Bounds x="3132.0" y="95.0" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="DI_PIL02_f0" bpmnElement="PIL02_f0">
+        <di:waypoint x="158.0" y="413"/>
+        <di:waypoint x="267.5" y="413"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL02_f1" bpmnElement="PIL02_f1">
+        <di:waypoint x="442.5" y="413"/>
+        <di:waypoint x="545.0" y="413"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL02_f2" bpmnElement="PIL02_f2">
+        <di:waypoint x="570" y="388.0"/>
+        <di:waypoint x="570" y="357"/>
+        <di:waypoint x="1215" y="357"/>
+        <di:waypoint x="1215" y="388.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="552.0" y="352.5" width="36" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL02_f3" bpmnElement="PIL02_f3">
+        <di:waypoint x="595.0" y="413"/>
+        <di:waypoint x="646.25" y="413"/>
+        <di:waypoint x="646.25" y="113"/>
+        <di:waypoint x="697.5" y="113"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="602.625" y="393.0" width="36" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL02_f4" bpmnElement="PIL02_f4">
+        <di:waypoint x="872.5" y="113"/>
+        <di:waypoint x="975.0" y="113"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL02_f5" bpmnElement="PIL02_f5">
+        <di:waypoint x="1000" y="88.0"/>
+        <di:waypoint x="1000" y="45"/>
+        <di:waypoint x="355" y="45"/>
+        <di:waypoint x="355" y="376.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="982.0" y="46.5" width="36" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL02_f6" bpmnElement="PIL02_f6">
+        <di:waypoint x="1025.0" y="113"/>
+        <di:waypoint x="1197.0" y="113"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1093.0" y="93.0" width="36" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL02_f7" bpmnElement="PIL02_f7">
+        <di:waypoint x="1240.0" y="413"/>
+        <di:waypoint x="1291.25" y="413"/>
+        <di:waypoint x="1291.25" y="713"/>
+        <di:waypoint x="1342.5" y="713"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1247.625" y="393.0" width="36" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL02_f8" bpmnElement="PIL02_f8">
+        <di:waypoint x="1240.0" y="413"/>
+        <di:waypoint x="1342.5" y="413"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1273.25" y="393.0" width="36" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL02_f9" bpmnElement="PIL02_f9">
+        <di:waypoint x="1517.5" y="713"/>
+        <di:waypoint x="1557.5" y="713"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL02_f10" bpmnElement="PIL02_f10">
+        <di:waypoint x="1732.5" y="713"/>
+        <di:waypoint x="1772.5" y="713"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL02_f11" bpmnElement="PIL02_f11">
+        <di:waypoint x="1947.5" y="713"/>
+        <di:waypoint x="1967.5" y="713"/>
+        <di:waypoint x="1967.5" y="263"/>
+        <di:waypoint x="1987.5" y="263"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL02_f12" bpmnElement="PIL02_f12">
+        <di:waypoint x="1517.5" y="413"/>
+        <di:waypoint x="1557.5" y="413"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL02_f13" bpmnElement="PIL02_f13">
+        <di:waypoint x="1732.5" y="413"/>
+        <di:waypoint x="1772.5" y="413"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL02_f14" bpmnElement="PIL02_f14">
+        <di:waypoint x="1947.5" y="413"/>
+        <di:waypoint x="1967.5" y="413"/>
+        <di:waypoint x="1967.5" y="263"/>
+        <di:waypoint x="1987.5" y="263"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL02_f15" bpmnElement="PIL02_f15">
+        <di:waypoint x="2075" y="226.0"/>
+        <di:waypoint x="2075" y="150.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL02_f16" bpmnElement="PIL02_f16">
+        <di:waypoint x="2162.5" y="113"/>
+        <di:waypoint x="2265.0" y="113"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL02_f17" bpmnElement="PIL02_f17">
+        <di:waypoint x="2315.0" y="113"/>
+        <di:waypoint x="2417.5" y="113"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2348.25" y="93.0" width="36" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL02_f18" bpmnElement="PIL02_f18">
+        <di:waypoint x="2592.5" y="113"/>
+        <di:waypoint x="2632.5" y="113"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL02_f19" bpmnElement="PIL02_f19">
+        <di:waypoint x="2315.0" y="113"/>
+        <di:waypoint x="2366.25" y="113"/>
+        <di:waypoint x="2366.25" y="563"/>
+        <di:waypoint x="2417.5" y="563"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2322.625" y="93.0" width="36" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL02_f20" bpmnElement="PIL02_f20">
+        <di:waypoint x="2592.5" y="563"/>
+        <di:waypoint x="2695.0" y="563"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL02_f21" bpmnElement="PIL02_f21">
+        <di:waypoint x="2720" y="538.0"/>
+        <di:waypoint x="2720" y="345"/>
+        <di:waypoint x="355" y="345"/>
+        <di:waypoint x="355" y="376.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2702.0" y="421.5" width="36" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL02_f22" bpmnElement="PIL02_f22">
+        <di:waypoint x="2745.0" y="563"/>
+        <di:waypoint x="2917.0" y="563"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2813.0" y="543.0" width="36" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL02_f23" bpmnElement="PIL02_f23">
+        <di:waypoint x="2807.5" y="113"/>
+        <di:waypoint x="2847.5" y="113"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL02_f24" bpmnElement="PIL02_f24">
+        <di:waypoint x="3022.5" y="113"/>
+        <di:waypoint x="3132.0" y="113"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

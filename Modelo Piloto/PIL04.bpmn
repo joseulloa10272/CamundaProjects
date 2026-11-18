@@ -1,0 +1,216 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" id="Defs_PIL04" targetNamespace="https://maderos.example/bpmn/piloto">
+  <bpmn:process id="PIL04" name="Contingencia y recuperación de la comanda" isExecutable="false">
+    <bpmn:documentation>Activar ante falla de red o dispositivo, pérdida o duplicación no conciliada o cambio crítico sin acuse. Conservar servicios afectados en el balance e informar tiempos sin evidencia.</bpmn:documentation>
+    <bpmn:laneSet id="PIL04_roles">
+      <bpmn:lane id="PIL04_rol0" name="Salonero">
+        <bpmn:flowNodeRef>PIL04_paper</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL04_deliver</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL04_load</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="PIL04_rol1" name="Aplicación de comandas">
+        <bpmn:flowNodeRef>PIL04_test</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="PIL04_rol2" name="Recepción, estación y pase">
+        <bpmn:flowNodeRef>PIL04_oral</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="PIL04_rol3" name="Capitán y Gerencia">
+        <bpmn:flowNodeRef>PIL04_s</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL04_pause</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL04_balance</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL04_ready</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL04_continue</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL04_enable</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL04_e</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="PIL04_s" name="Canal digital no verificable">
+      <bpmn:outgoing>PIL04_f0</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:userTask id="PIL04_pause" name="Suspender canal afectado y coordinar respaldo">
+      <bpmn:incoming>PIL04_f0</bpmn:incoming>
+      <bpmn:outgoing>PIL04_f1</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="PIL04_paper" name="Registrar servicio, pedido, ítem y horas originales en papel">
+      <bpmn:incoming>PIL04_f1</bpmn:incoming>
+      <bpmn:outgoing>PIL04_f2</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:manualTask id="PIL04_oral" name="Confirmar verbalmente pedido y cambios con cocina">
+      <bpmn:incoming>PIL04_f2</bpmn:incoming>
+      <bpmn:outgoing>PIL04_f3</bpmn:outgoing>
+    </bpmn:manualTask>
+    <bpmn:manualTask id="PIL04_deliver" name="Preparar, verificar y entregar con trazabilidad en papel">
+      <bpmn:incoming>PIL04_f3</bpmn:incoming>
+      <bpmn:outgoing>PIL04_f4</bpmn:outgoing>
+    </bpmn:manualTask>
+    <bpmn:userTask id="PIL04_balance" name="Conciliar pendientes, pérdidas y duplicados">
+      <bpmn:incoming>PIL04_f4</bpmn:incoming>
+      <bpmn:incoming>PIL04_f8</bpmn:incoming>
+      <bpmn:outgoing>PIL04_f5</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="PIL04_test" name="Probar envío y verificar recepción">
+      <bpmn:incoming>PIL04_f5</bpmn:incoming>
+      <bpmn:outgoing>PIL04_f6</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="PIL04_ready" name="¿Conciliación y prueba conformes?" default="PIL04_f7">
+      <bpmn:incoming>PIL04_f6</bpmn:incoming>
+      <bpmn:outgoing>PIL04_f7</bpmn:outgoing>
+      <bpmn:outgoing>PIL04_f9</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="PIL04_continue" name="Mantener contingencia y resolver incidencia">
+      <bpmn:incoming>PIL04_f7</bpmn:incoming>
+      <bpmn:outgoing>PIL04_f8</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="PIL04_enable" name="Autorizar reinicio por Gerencia">
+      <bpmn:incoming>PIL04_f9</bpmn:incoming>
+      <bpmn:outgoing>PIL04_f10</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="PIL04_load" name="Cargar registros con hora original, hora de carga y origen papel">
+      <bpmn:incoming>PIL04_f10</bpmn:incoming>
+      <bpmn:outgoing>PIL04_f11</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="PIL04_e" name="Canal recuperado y registros conciliados">
+      <bpmn:incoming>PIL04_f11</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="PIL04_f0" sourceRef="PIL04_s" targetRef="PIL04_pause"/>
+    <bpmn:sequenceFlow id="PIL04_f1" sourceRef="PIL04_pause" targetRef="PIL04_paper"/>
+    <bpmn:sequenceFlow id="PIL04_f2" sourceRef="PIL04_paper" targetRef="PIL04_oral"/>
+    <bpmn:sequenceFlow id="PIL04_f3" sourceRef="PIL04_oral" targetRef="PIL04_deliver"/>
+    <bpmn:sequenceFlow id="PIL04_f4" sourceRef="PIL04_deliver" targetRef="PIL04_balance"/>
+    <bpmn:sequenceFlow id="PIL04_f5" sourceRef="PIL04_balance" targetRef="PIL04_test"/>
+    <bpmn:sequenceFlow id="PIL04_f6" sourceRef="PIL04_test" targetRef="PIL04_ready"/>
+    <bpmn:sequenceFlow id="PIL04_f7" sourceRef="PIL04_ready" targetRef="PIL04_continue" name="No"/>
+    <bpmn:sequenceFlow id="PIL04_f8" sourceRef="PIL04_continue" targetRef="PIL04_balance"/>
+    <bpmn:sequenceFlow id="PIL04_f9" sourceRef="PIL04_ready" targetRef="PIL04_enable" name="Sí">
+      <bpmn:conditionExpression>Sí</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="PIL04_f10" sourceRef="PIL04_enable" targetRef="PIL04_load"/>
+    <bpmn:sequenceFlow id="PIL04_f11" sourceRef="PIL04_load" targetRef="PIL04_e"/>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="DG_PIL04">
+    <bpmndi:BPMNPlane id="PL_PIL04" bpmnElement="PIL04">
+      <bpmndi:BPMNShape id="DI_PIL04_rol0" bpmnElement="PIL04_rol0" isHorizontal="true">
+        <dc:Bounds x="30" y="40" width="2610" height="150"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL04_rol1" bpmnElement="PIL04_rol1" isHorizontal="true">
+        <dc:Bounds x="30" y="190" width="2610" height="150"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL04_rol2" bpmnElement="PIL04_rol2" isHorizontal="true">
+        <dc:Bounds x="30" y="340" width="2610" height="150"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL04_rol3" bpmnElement="PIL04_rol3" isHorizontal="true">
+        <dc:Bounds x="30" y="490" width="2610" height="150"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL04_s" bpmnElement="PIL04_s">
+        <dc:Bounds x="122.0" y="545.0" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL04_pause" bpmnElement="PIL04_pause">
+        <dc:Bounds x="267.5" y="526.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL04_paper" bpmnElement="PIL04_paper">
+        <dc:Bounds x="482.5" y="76.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL04_oral" bpmnElement="PIL04_oral">
+        <dc:Bounds x="697.5" y="376.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL04_deliver" bpmnElement="PIL04_deliver">
+        <dc:Bounds x="912.5" y="76.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL04_balance" bpmnElement="PIL04_balance">
+        <dc:Bounds x="1127.5" y="526.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL04_test" bpmnElement="PIL04_test">
+        <dc:Bounds x="1342.5" y="226.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL04_ready" bpmnElement="PIL04_ready">
+        <dc:Bounds x="1620.0" y="538.0" width="50" height="50"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL04_continue" bpmnElement="PIL04_continue">
+        <dc:Bounds x="1772.5" y="526.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL04_enable" bpmnElement="PIL04_enable">
+        <dc:Bounds x="1987.5" y="526.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL04_load" bpmnElement="PIL04_load">
+        <dc:Bounds x="2202.5" y="76.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL04_e" bpmnElement="PIL04_e">
+        <dc:Bounds x="2487.0" y="545.0" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="DI_PIL04_f0" bpmnElement="PIL04_f0">
+        <di:waypoint x="158.0" y="563"/>
+        <di:waypoint x="267.5" y="563"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL04_f1" bpmnElement="PIL04_f1">
+        <di:waypoint x="442.5" y="563"/>
+        <di:waypoint x="462.5" y="563"/>
+        <di:waypoint x="462.5" y="113"/>
+        <di:waypoint x="482.5" y="113"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL04_f2" bpmnElement="PIL04_f2">
+        <di:waypoint x="657.5" y="113"/>
+        <di:waypoint x="677.5" y="113"/>
+        <di:waypoint x="677.5" y="413"/>
+        <di:waypoint x="697.5" y="413"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL04_f3" bpmnElement="PIL04_f3">
+        <di:waypoint x="872.5" y="413"/>
+        <di:waypoint x="892.5" y="413"/>
+        <di:waypoint x="892.5" y="113"/>
+        <di:waypoint x="912.5" y="113"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL04_f4" bpmnElement="PIL04_f4">
+        <di:waypoint x="1087.5" y="113"/>
+        <di:waypoint x="1107.5" y="113"/>
+        <di:waypoint x="1107.5" y="563"/>
+        <di:waypoint x="1127.5" y="563"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL04_f5" bpmnElement="PIL04_f5">
+        <di:waypoint x="1302.5" y="563"/>
+        <di:waypoint x="1322.5" y="563"/>
+        <di:waypoint x="1322.5" y="263"/>
+        <di:waypoint x="1342.5" y="263"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL04_f6" bpmnElement="PIL04_f6">
+        <di:waypoint x="1517.5" y="263"/>
+        <di:waypoint x="1568.75" y="263"/>
+        <di:waypoint x="1568.75" y="563"/>
+        <di:waypoint x="1620.0" y="563"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL04_f7" bpmnElement="PIL04_f7">
+        <di:waypoint x="1670.0" y="563"/>
+        <di:waypoint x="1772.5" y="563"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1703.25" y="543.0" width="36" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL04_f8" bpmnElement="PIL04_f8">
+        <di:waypoint x="1860" y="526.0"/>
+        <di:waypoint x="1860" y="501"/>
+        <di:waypoint x="1215" y="501"/>
+        <di:waypoint x="1215" y="526.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL04_f9" bpmnElement="PIL04_f9">
+        <di:waypoint x="1645" y="538.0"/>
+        <di:waypoint x="1645" y="500"/>
+        <di:waypoint x="2075" y="500"/>
+        <di:waypoint x="2075" y="526.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1627.0" y="499.0" width="36" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL04_f10" bpmnElement="PIL04_f10">
+        <di:waypoint x="2162.5" y="563"/>
+        <di:waypoint x="2182.5" y="563"/>
+        <di:waypoint x="2182.5" y="113"/>
+        <di:waypoint x="2202.5" y="113"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL04_f11" bpmnElement="PIL04_f11">
+        <di:waypoint x="2377.5" y="113"/>
+        <di:waypoint x="2432.25" y="113"/>
+        <di:waypoint x="2432.25" y="563"/>
+        <di:waypoint x="2487.0" y="563"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

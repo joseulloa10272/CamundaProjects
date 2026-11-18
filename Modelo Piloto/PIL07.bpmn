@@ -1,0 +1,154 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" id="Defs_PIL07" targetNamespace="https://maderos.example/bpmn/piloto">
+  <bpmn:process id="PIL07" name="Recibir y ubicar al cliente" isExecutable="false">
+    <bpmn:documentation>La disponibilidad y la lista de espera conservan el funcionamiento actual. Resultados: cliente ubicado o retiro sin ocupar mesa.</bpmn:documentation>
+    <bpmn:laneSet id="PIL07_roles">
+      <bpmn:lane id="PIL07_rol0" name="Recepción">
+        <bpmn:flowNodeRef>PIL07_s</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL07_ask</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL07_available</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL07_queue</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL07_wait</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL07_present</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL07_leave</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL07_seat</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL07_e</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="PIL07_s" name="Cliente llega">
+      <bpmn:outgoing>PIL07_f0</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:userTask id="PIL07_ask" name="Recibir cliente y consultar tamaño del grupo">
+      <bpmn:incoming>PIL07_f0</bpmn:incoming>
+      <bpmn:outgoing>PIL07_f1</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="PIL07_available" name="¿Hay mesa disponible?" default="PIL07_f2">
+      <bpmn:incoming>PIL07_f1</bpmn:incoming>
+      <bpmn:outgoing>PIL07_f2</bpmn:outgoing>
+      <bpmn:outgoing>PIL07_f3</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="PIL07_queue" name="Registrar una vez en lista de espera">
+      <bpmn:incoming>PIL07_f2</bpmn:incoming>
+      <bpmn:outgoing>PIL07_f4</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="PIL07_wait" name="Esperar mesa disponible o retiro del cliente">
+      <bpmn:incoming>PIL07_f4</bpmn:incoming>
+      <bpmn:outgoing>PIL07_f5</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="PIL07_present" name="¿Cliente presente al liberarse la mesa?" default="PIL07_f7">
+      <bpmn:incoming>PIL07_f5</bpmn:incoming>
+      <bpmn:outgoing>PIL07_f6</bpmn:outgoing>
+      <bpmn:outgoing>PIL07_f7</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="PIL07_leave" name="Cliente se retira sin ocupar mesa">
+      <bpmn:incoming>PIL07_f7</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:userTask id="PIL07_seat" name="Asignar mesa y acompañar al cliente">
+      <bpmn:incoming>PIL07_f3</bpmn:incoming>
+      <bpmn:incoming>PIL07_f6</bpmn:incoming>
+      <bpmn:outgoing>PIL07_f8</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="PIL07_e" name="Cliente ubicado">
+      <bpmn:incoming>PIL07_f8</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="PIL07_f0" sourceRef="PIL07_s" targetRef="PIL07_ask"/>
+    <bpmn:sequenceFlow id="PIL07_f1" sourceRef="PIL07_ask" targetRef="PIL07_available"/>
+    <bpmn:sequenceFlow id="PIL07_f2" sourceRef="PIL07_available" targetRef="PIL07_queue" name="No"/>
+    <bpmn:sequenceFlow id="PIL07_f3" sourceRef="PIL07_available" targetRef="PIL07_seat" name="Sí">
+      <bpmn:conditionExpression>Sí</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="PIL07_f4" sourceRef="PIL07_queue" targetRef="PIL07_wait"/>
+    <bpmn:sequenceFlow id="PIL07_f5" sourceRef="PIL07_wait" targetRef="PIL07_present"/>
+    <bpmn:sequenceFlow id="PIL07_f6" sourceRef="PIL07_present" targetRef="PIL07_seat" name="Sí">
+      <bpmn:conditionExpression>Sí</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="PIL07_f7" sourceRef="PIL07_present" targetRef="PIL07_leave" name="No"/>
+    <bpmn:sequenceFlow id="PIL07_f8" sourceRef="PIL07_seat" targetRef="PIL07_e"/>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="DG_PIL07">
+    <bpmndi:BPMNPlane id="PL_PIL07" bpmnElement="PIL07">
+      <bpmndi:BPMNShape id="DI_PIL07_rol0" bpmnElement="PIL07_rol0" isHorizontal="true">
+        <dc:Bounds x="30" y="40" width="1965" height="150"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL07_s" bpmnElement="PIL07_s">
+        <dc:Bounds x="122.0" y="95.0" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL07_ask" bpmnElement="PIL07_ask">
+        <dc:Bounds x="267.5" y="76.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL07_available" bpmnElement="PIL07_available">
+        <dc:Bounds x="545.0" y="88.0" width="50" height="50"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL07_queue" bpmnElement="PIL07_queue">
+        <dc:Bounds x="697.5" y="76.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL07_wait" bpmnElement="PIL07_wait">
+        <dc:Bounds x="912.5" y="76.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL07_present" bpmnElement="PIL07_present">
+        <dc:Bounds x="1190.0" y="88.0" width="50" height="50"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL07_leave" bpmnElement="PIL07_leave">
+        <dc:Bounds x="1412.0" y="95.0" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL07_seat" bpmnElement="PIL07_seat">
+        <dc:Bounds x="1557.5" y="76.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL07_e" bpmnElement="PIL07_e">
+        <dc:Bounds x="1842.0" y="95.0" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="DI_PIL07_f0" bpmnElement="PIL07_f0">
+        <di:waypoint x="158.0" y="113"/>
+        <di:waypoint x="267.5" y="113"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL07_f1" bpmnElement="PIL07_f1">
+        <di:waypoint x="442.5" y="113"/>
+        <di:waypoint x="545.0" y="113"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL07_f2" bpmnElement="PIL07_f2">
+        <di:waypoint x="595.0" y="113"/>
+        <di:waypoint x="697.5" y="113"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="628.25" y="93.0" width="36" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL07_f3" bpmnElement="PIL07_f3">
+        <di:waypoint x="570" y="88.0"/>
+        <di:waypoint x="570" y="50"/>
+        <di:waypoint x="1645" y="50"/>
+        <di:waypoint x="1645" y="76.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="552.0" y="49.0" width="36" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL07_f4" bpmnElement="PIL07_f4">
+        <di:waypoint x="872.5" y="113"/>
+        <di:waypoint x="912.5" y="113"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL07_f5" bpmnElement="PIL07_f5">
+        <di:waypoint x="1087.5" y="113"/>
+        <di:waypoint x="1190.0" y="113"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL07_f6" bpmnElement="PIL07_f6">
+        <di:waypoint x="1215" y="88.0"/>
+        <di:waypoint x="1215" y="57"/>
+        <di:waypoint x="1645" y="57"/>
+        <di:waypoint x="1645" y="76.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1197.0" y="52.5" width="36" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL07_f7" bpmnElement="PIL07_f7">
+        <di:waypoint x="1240.0" y="113"/>
+        <di:waypoint x="1412.0" y="113"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1308.0" y="93.0" width="36" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL07_f8" bpmnElement="PIL07_f8">
+        <di:waypoint x="1732.5" y="113"/>
+        <di:waypoint x="1842.0" y="113"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

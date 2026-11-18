@@ -1,0 +1,21 @@
+Actividad del perfil,As-Is,ID BPMN To-Be,Cambio
+9,P04,PIL01_take,Recibir y vincular al servicio
+10,P04,PIL01_capture,Capturar pedido e ítems digitalmente
+11,P04,PIL01_confirm,Reconfirmar y guardar T3 del principal
+12,P04,PIL01_send,Transmitir digitalmente en operación normal
+13,P04,PIL01_t4 / PIL01_ack,Distinguir recepción técnica T4 y acuse humano
+14,P04,PIL02_stock,Verificar disponibilidad
+15,P06,PIL02_change / PIL03_opt,Tramitar faltante con el salonero
+16,P06,PIL03_opt,Acordar alternativa con el cliente
+17,P06,PIL03_approve / PIL06_Cancel_stop,Versionar o anular y distinguir cancelación total
+18,P05,PIL02_drinkack / PIL02_drink,Registrar inicio y preparar bebidas en su carril
+19,P05,PIL02_start / PIL02_cook,Registrar inicio y preparar alimentos
+20,P05,PIL02_verify,Verificar ítem y versión vigente
+21,P05,PIL02_notify,Avisar por ítem listo
+22,P05,PIL02_lot / PIL02_pickup,Agrupar listos y registrar retiro
+23,P05,PIL02_serve,Entregar y guardar T5 de referencia
+24,P03,PIL06_Extra_work,Tramitar adicional como pedido nuevo concurrente
+25–29,P03 / P07,PIL06_Queja_assess / PIL06_Queja_fix / PIL03_reconcile,Atender y documentar corrección vinculada
+30–34,P08 / P09,PIL06_review / PIL05_manual / PIL05_close,Revisar pendientes y conciliar siempre con el procedimiento vigente
+N1,P04 / P05,PIL01_confirm / PIL01_t4 / PIL02_serve,Registrar hitos e IDs sin sustituir horas originales
+N2,P07,PIL03_rec / PIL03_reconcile,Vincular motivo del reproceso y conciliar clasificación

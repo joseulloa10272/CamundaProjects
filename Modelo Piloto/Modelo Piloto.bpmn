@@ -1,0 +1,155 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" id="Defs_PIL00" targetNamespace="https://maderos.example/bpmn/piloto">
+  <bpmn:process id="PIL00" name="Modelo Piloto" isExecutable="false">
+    <bpmn:documentation>Modelo general To-Be del Restaurante Maderos. PIL06 integra pedidos, acuses, cocina y bebidas, lotes, adicionales, faltantes, inconformidades, cancelación, contingencia y conciliación obligatoria antes del cierre. Se conserva el cobro y la facturación habituales.</bpmn:documentation>
+    <bpmn:laneSet id="PIL00_roles">
+      <bpmn:lane id="PIL00_rol0" name="Recepción">
+        <bpmn:flowNodeRef>PIL00_s</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL00_reception</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL00_seated</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL00_leave</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="PIL00_rol1" name="Salonero">
+        <bpmn:flowNodeRef>PIL00_menu</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL00_pilot</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL00_departure</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="PIL00_rol5" name="Personal de apoyo">
+        <bpmn:flowNodeRef>PIL00_reset</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL00_e</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="PIL00_s" name="Cliente llega">
+      <bpmn:outgoing>PIL00_f0</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:callActivity id="PIL00_reception" name="Recibir y ubicar al cliente" calledElement="PIL07">
+      <bpmn:extensionElements>
+        <zeebe:calledElement processId="PIL07"/>
+      </bpmn:extensionElements>
+      <bpmn:incoming>PIL00_f0</bpmn:incoming>
+      <bpmn:outgoing>PIL00_f1</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:exclusiveGateway id="PIL00_seated" name="¿Cliente ubicado?" default="PIL00_f3">
+      <bpmn:incoming>PIL00_f1</bpmn:incoming>
+      <bpmn:outgoing>PIL00_f2</bpmn:outgoing>
+      <bpmn:outgoing>PIL00_f3</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="PIL00_leave" name="Cliente se retira durante la espera">
+      <bpmn:incoming>PIL00_f3</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:userTask id="PIL00_menu" name="Entregar menú y atender consultas">
+      <bpmn:incoming>PIL00_f2</bpmn:incoming>
+      <bpmn:outgoing>PIL00_f4</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:callActivity id="PIL00_pilot" name="Atender con comanda digital y conciliar cuenta" calledElement="PIL06">
+      <bpmn:extensionElements>
+        <zeebe:calledElement processId="PIL06"/>
+      </bpmn:extensionElements>
+      <bpmn:incoming>PIL00_f4</bpmn:incoming>
+      <bpmn:outgoing>PIL00_f5</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:userTask id="PIL00_departure" name="Verificar retiro del cliente">
+      <bpmn:incoming>PIL00_f5</bpmn:incoming>
+      <bpmn:outgoing>PIL00_f6</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="PIL00_reset" name="Acondicionar mesa para nuevo servicio">
+      <bpmn:incoming>PIL00_f6</bpmn:incoming>
+      <bpmn:outgoing>PIL00_f7</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="PIL00_e" name="Servicio finalizado y mesa disponible">
+      <bpmn:incoming>PIL00_f7</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="PIL00_f0" sourceRef="PIL00_s" targetRef="PIL00_reception"/>
+    <bpmn:sequenceFlow id="PIL00_f1" sourceRef="PIL00_reception" targetRef="PIL00_seated"/>
+    <bpmn:sequenceFlow id="PIL00_f2" sourceRef="PIL00_seated" targetRef="PIL00_menu" name="Sí">
+      <bpmn:conditionExpression>Sí</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="PIL00_f3" sourceRef="PIL00_seated" targetRef="PIL00_leave" name="No"/>
+    <bpmn:sequenceFlow id="PIL00_f4" sourceRef="PIL00_menu" targetRef="PIL00_pilot"/>
+    <bpmn:sequenceFlow id="PIL00_f5" sourceRef="PIL00_pilot" targetRef="PIL00_departure"/>
+    <bpmn:sequenceFlow id="PIL00_f6" sourceRef="PIL00_departure" targetRef="PIL00_reset"/>
+    <bpmn:sequenceFlow id="PIL00_f7" sourceRef="PIL00_reset" targetRef="PIL00_e"/>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="DG_PIL00">
+    <bpmndi:BPMNPlane id="PL_PIL00" bpmnElement="PIL00">
+      <bpmndi:BPMNShape id="DI_PIL00_rol0" bpmnElement="PIL00_rol0" isHorizontal="true">
+        <dc:Bounds x="30" y="40" width="1750" height="150"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL00_rol1" bpmnElement="PIL00_rol1" isHorizontal="true">
+        <dc:Bounds x="30" y="190" width="1750" height="150"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL00_rol5" bpmnElement="PIL00_rol5" isHorizontal="true">
+        <dc:Bounds x="30" y="340" width="1750" height="150"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL00_s" bpmnElement="PIL00_s">
+        <dc:Bounds x="122.0" y="95.0" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL00_reception" bpmnElement="PIL00_reception">
+        <dc:Bounds x="267.5" y="76.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL00_seated" bpmnElement="PIL00_seated">
+        <dc:Bounds x="545.0" y="88.0" width="50" height="50"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL00_leave" bpmnElement="PIL00_leave">
+        <dc:Bounds x="767.0" y="95.0" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL00_menu" bpmnElement="PIL00_menu">
+        <dc:Bounds x="697.5" y="226.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL00_pilot" bpmnElement="PIL00_pilot">
+        <dc:Bounds x="912.5" y="226.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL00_departure" bpmnElement="PIL00_departure">
+        <dc:Bounds x="1127.5" y="226.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL00_reset" bpmnElement="PIL00_reset">
+        <dc:Bounds x="1342.5" y="376.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL00_e" bpmnElement="PIL00_e">
+        <dc:Bounds x="1627.0" y="395.0" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="DI_PIL00_f0" bpmnElement="PIL00_f0">
+        <di:waypoint x="158.0" y="113"/>
+        <di:waypoint x="267.5" y="113"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL00_f1" bpmnElement="PIL00_f1">
+        <di:waypoint x="442.5" y="113"/>
+        <di:waypoint x="545.0" y="113"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL00_f2" bpmnElement="PIL00_f2">
+        <di:waypoint x="595.0" y="113"/>
+        <di:waypoint x="646.25" y="113"/>
+        <di:waypoint x="646.25" y="263"/>
+        <di:waypoint x="697.5" y="263"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="602.625" y="93.0" width="36" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL00_f3" bpmnElement="PIL00_f3">
+        <di:waypoint x="595.0" y="113"/>
+        <di:waypoint x="767.0" y="113"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="663.0" y="93.0" width="36" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL00_f4" bpmnElement="PIL00_f4">
+        <di:waypoint x="872.5" y="263"/>
+        <di:waypoint x="912.5" y="263"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL00_f5" bpmnElement="PIL00_f5">
+        <di:waypoint x="1087.5" y="263"/>
+        <di:waypoint x="1127.5" y="263"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL00_f6" bpmnElement="PIL00_f6">
+        <di:waypoint x="1302.5" y="263"/>
+        <di:waypoint x="1322.5" y="263"/>
+        <di:waypoint x="1322.5" y="413"/>
+        <di:waypoint x="1342.5" y="413"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL00_f7" bpmnElement="PIL00_f7">
+        <di:waypoint x="1517.5" y="413"/>
+        <di:waypoint x="1627.0" y="413"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
