@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" id="Defs_PIL01" targetNamespace="https://maderos.example/bpmn/piloto">
   <bpmn:process id="PIL01" name="Comanda digital · alcance del piloto" isExecutable="false">
-    <bpmn:documentation>PIL-SERV-01. Actividades 9–23; adicionales y correcciones con registro acotado. Designación previa por chef o sous-chef y confirmación del capitán. El origen, IDs, usuario y hora se conservan. El cambio de canal también aplica ante fallas durante el servicio.</bpmn:documentation>
+    <bpmn:documentation>PIL-SERV-01. Actividades 9–23; adicionales y correcciones con registro acotado. Designación previa por chef o sous-chef y confirmación del capitán. El origen, IDs, usuario y hora se conservan. Umbral de 2 minutos propuesto para verificar acuses de pedido o cambio, sujeto a validación antes del piloto. El cambio de canal también aplica ante fallas durante el servicio.</bpmn:documentation>
     <bpmn:laneSet id="PIL01_roles">
       <bpmn:lane id="PIL01_rol0" name="Salonero">
         <bpmn:flowNodeRef>PIL01_s</bpmn:flowNodeRef>
@@ -69,8 +69,8 @@
       <bpmn:outgoing>PIL01_f10</bpmn:outgoing>
       <bpmn:outgoing>PIL01_f11</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:userTask id="PIL01_verify" name="Verificar directamente con cocina sin reenviar como nuevo">
-      <bpmn:incoming>PIL01_f11</bpmn:incoming>
+    <bpmn:userTask id="PIL01_verify" name="Capitán: verificar acuse a los 2 min sin reenviar como nuevo">
+      <bpmn:incoming>PIL01_plazoAcuse_f</bpmn:incoming><bpmn:incoming>PIL01_f11</bpmn:incoming>
       <bpmn:outgoing>PIL01_f12</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:exclusiveGateway id="PIL01_recover" name="¿Estado digital verificable?" default="PIL01_f14">
@@ -85,6 +85,7 @@
       <bpmn:incoming>PIL01_f10</bpmn:incoming>
       <bpmn:incoming>PIL01_f13</bpmn:incoming>
       <bpmn:outgoing>PIL01_f16</bpmn:outgoing>
+      <bpmn:multiInstanceLoopCharacteristics isSequential="false"/>
     </bpmn:callActivity>
     <bpmn:endEvent id="PIL01_e" name="Pedido entregado o resuelto">
       <bpmn:incoming>PIL01_f16</bpmn:incoming>
@@ -123,7 +124,7 @@
     <bpmn:sequenceFlow id="PIL01_f14" sourceRef="PIL01_recover" targetRef="PIL01_paper" name="No"/>
     <bpmn:sequenceFlow id="PIL01_f15" sourceRef="PIL01_paper" targetRef="PIL01_pe"/>
     <bpmn:sequenceFlow id="PIL01_f16" sourceRef="PIL01_work" targetRef="PIL01_e"/>
-  </bpmn:process>
+  <bpmn:boundaryEvent id="PIL01_plazoAcuse" name="2 min sin acuse · umbral propuesto" attachedToRef="PIL01_ack" cancelActivity="true"><bpmn:outgoing>PIL01_plazoAcuse_f</bpmn:outgoing><bpmn:timerEventDefinition><bpmn:timeDuration>PT2M</bpmn:timeDuration></bpmn:timerEventDefinition></bpmn:boundaryEvent><bpmn:sequenceFlow id="PIL01_plazoAcuse_f" sourceRef="PIL01_plazoAcuse" targetRef="PIL01_verify"/></bpmn:process>
   <bpmndi:BPMNDiagram id="DG_PIL01">
     <bpmndi:BPMNPlane id="PL_PIL01" bpmnElement="PIL01">
       <bpmndi:BPMNShape id="DI_PIL01_rol0" bpmnElement="PIL01_rol0" isHorizontal="true">
@@ -292,6 +293,6 @@
         <di:waypoint x="2862.25" y="113"/>
         <di:waypoint x="2917.0" y="113"/>
       </bpmndi:BPMNEdge>
-    </bpmndi:BPMNPlane>
+    <bpmndi:BPMNShape id="DI_PIL01_plazoAcuse" bpmnElement="PIL01_plazoAcuse"><dc:Bounds x="1903.5" y="434.0" width="32" height="32"/></bpmndi:BPMNShape><bpmndi:BPMNEdge id="DI_PIL01_plazoAcuse_f" bpmnElement="PIL01_plazoAcuse_f"><di:waypoint x="1919.5" y="466.0"/><di:waypoint x="1919.5" y="563.0"/><di:waypoint x="2202.5" y="563.0"/></bpmndi:BPMNEdge></bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>

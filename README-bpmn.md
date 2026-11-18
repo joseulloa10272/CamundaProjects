@@ -7,3 +7,7 @@
 Los modelos son descriptivos. El diseño conserva las marcas T3, T4 y T5 con su significado en PIL-SERV-01. Las asignaciones operativas ajustadas, el manejo de pedidos sin productos y la definición del lote deben contrastarse con la encargada antes de certificar el As-Is.
 
 La versión corregida y la propuesta están en carpetas independientes. Para revisar los cambios en Camunda sin mezclar versiones, importar cada carpeta en un proyecto separado.
+
+**Entrada integrada del piloto: PIL06.** PIL01 abre el detalle de la comanda. Los subprocesos de evento de PIL06 permiten atender adicionales e inconformidades sin interrumpir el servicio y tratar por separado la cancelación total. PIL05 concilia el consumo con el procedimiento vigente de caja con o sin consulta digital. La matriz `To-Be-piloto/Trazabilidad.csv` enlaza el perfil con los elementos del modelo.
+
+El umbral de dos minutos sin acuse se propuso para la validación previa al piloto. El As-Is mantiene pendientes de confirmar con la encargada el reparto real de tareas de caja, la agrupación por lote y las responsabilidades corregidas. No se atribuye el registro de consumo a Aldelo sin evidencia documental.

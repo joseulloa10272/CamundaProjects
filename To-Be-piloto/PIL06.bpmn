@@ -1,0 +1,517 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" id="Defs_PIL06" targetNamespace="https://maderos.example/bpmn/piloto">
+  <bpmn:message id="Msg_PIL06_Extra" name="Pedido adicional recibido"/><bpmn:message id="Msg_PIL06_Queja" name="Inconformidad recibida"/><bpmn:message id="Msg_PIL06_Cancel" name="Cancelación total del servicio recibida"/><bpmn:process id="PIL06" name="Servicio en mesa durante el piloto" isExecutable="false">
+    <bpmn:documentation>Entrada integrada del piloto. Los adicionales y las inconformidades siguen activos durante la atención. Tras solicitar cuenta, el cierre requiere resolver operaciones abiertas y acordar con las áreas que no ingresen nuevas preparaciones.</bpmn:documentation>
+    <bpmn:laneSet id="PIL06_roles">
+      <bpmn:lane id="PIL06_rol0" name="Salonero">
+        <bpmn:flowNodeRef>PIL06_s</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL06_take</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL06_wait</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL06_present</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="PIL06_rol3" name="Capitán y Gerencia">
+        <bpmn:flowNodeRef>PIL06_review</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL06_pending</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL06_resolve</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="PIL06_rol4" name="Caja">
+        <bpmn:flowNodeRef>PIL06_close</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL06_e</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="PIL06_s" name="Cliente ubicado">
+      <bpmn:outgoing>PIL06_f0</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:callActivity id="PIL06_take" name="Atender en mesa y gestionar pedido inicial" calledElement="PIL01">
+      <bpmn:extensionElements>
+        <zeebe:calledElement processId="PIL01"/>
+      </bpmn:extensionElements>
+      <bpmn:incoming>PIL06_f0</bpmn:incoming>
+      <bpmn:outgoing>PIL06_f1</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:receiveTask id="PIL06_wait" name="Recibir solicitud de cuenta">
+      <bpmn:incoming>PIL06_f1</bpmn:incoming>
+      <bpmn:outgoing>PIL06_f2</bpmn:outgoing>
+    </bpmn:receiveTask>
+    <bpmn:userTask id="PIL06_present" name="Presentar consumo disponible si corresponde">
+      <bpmn:incoming>PIL06_f2</bpmn:incoming>
+      <bpmn:outgoing>PIL06_f3</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="PIL06_review" name="Revisar pedidos, cambios y correcciones abiertos">
+      <bpmn:incoming>PIL06_f3</bpmn:incoming>
+      <bpmn:incoming>PIL06_f6</bpmn:incoming>
+      <bpmn:outgoing>PIL06_f4</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="PIL06_pending" name="¿Quedan operaciones abiertas?" default="PIL06_f7">
+      <bpmn:incoming>PIL06_f4</bpmn:incoming>
+      <bpmn:outgoing>PIL06_f5</bpmn:outgoing>
+      <bpmn:outgoing>PIL06_f7</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="PIL06_resolve" name="Coordinar resolución y conciliar estados">
+      <bpmn:incoming>PIL06_f5</bpmn:incoming>
+      <bpmn:outgoing>PIL06_f6</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:callActivity id="PIL06_close" name="Conciliar cuenta y cerrar servicio" calledElement="PIL05">
+      <bpmn:extensionElements>
+        <zeebe:calledElement processId="PIL05"/>
+      </bpmn:extensionElements>
+      <bpmn:incoming>PIL06_f7</bpmn:incoming>
+      <bpmn:outgoing>PIL06_f8</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:endEvent id="PIL06_e" name="Servicio cerrado">
+      <bpmn:incoming>PIL06_f8</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="PIL06_f0" sourceRef="PIL06_s" targetRef="PIL06_take"/>
+    <bpmn:sequenceFlow id="PIL06_f1" sourceRef="PIL06_take" targetRef="PIL06_wait"/>
+    <bpmn:sequenceFlow id="PIL06_f2" sourceRef="PIL06_wait" targetRef="PIL06_present"/>
+    <bpmn:sequenceFlow id="PIL06_f3" sourceRef="PIL06_present" targetRef="PIL06_review"/>
+    <bpmn:sequenceFlow id="PIL06_f4" sourceRef="PIL06_review" targetRef="PIL06_pending"/>
+    <bpmn:sequenceFlow id="PIL06_f5" sourceRef="PIL06_pending" targetRef="PIL06_resolve" name="Sí">
+      <bpmn:conditionExpression>Sí</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="PIL06_f6" sourceRef="PIL06_resolve" targetRef="PIL06_review"/>
+    <bpmn:sequenceFlow id="PIL06_f7" sourceRef="PIL06_pending" targetRef="PIL06_close" name="No"/>
+    <bpmn:sequenceFlow id="PIL06_f8" sourceRef="PIL06_close" targetRef="PIL06_e"/>
+  <bpmn:subProcess id="PIL06_Extra" name="Pedido adicional recibido" triggeredByEvent="true"><bpmn:laneSet id="PIL06_Extra_roles">
+      <bpmn:lane id="PIL06_Extra_rol0" name="Salonero">
+        <bpmn:flowNodeRef>PIL06_Extra_s</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL06_Extra_work</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL06_Extra_e</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="PIL06_Extra_s" name="Pedido adicional recibido" isInterrupting="false">
+      <bpmn:outgoing>PIL06_Extra_f0</bpmn:outgoing>
+    <bpmn:messageEventDefinition messageRef="Msg_PIL06_Extra"/></bpmn:startEvent>
+    <bpmn:callActivity id="PIL06_Extra_work" name="Registrar pedido adicional con nuevos IDs y tramitar comanda" calledElement="PIL01">
+      <bpmn:extensionElements>
+        <zeebe:calledElement processId="PIL01"/>
+      </bpmn:extensionElements>
+      <bpmn:incoming>PIL06_Extra_f0</bpmn:incoming>
+      <bpmn:outgoing>PIL06_Extra_f1</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:endEvent id="PIL06_Extra_e" name="Atención complementaria concluida">
+      <bpmn:incoming>PIL06_Extra_f1</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="PIL06_Extra_f0" sourceRef="PIL06_Extra_s" targetRef="PIL06_Extra_work"/>
+    <bpmn:sequenceFlow id="PIL06_Extra_f1" sourceRef="PIL06_Extra_work" targetRef="PIL06_Extra_e"/>
+  </bpmn:subProcess><bpmn:subProcess id="PIL06_Queja" name="Inconformidad recibida" triggeredByEvent="true"><bpmn:laneSet id="PIL06_Queja_roles">
+      <bpmn:lane id="PIL06_Queja_rol0" name="Salonero">
+        <bpmn:flowNodeRef>PIL06_Queja_s</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL06_Queja_assess</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL06_Queja_senior</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL06_Queja_redo</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL06_Queja_fix</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL06_Queja_go</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL06_Queja_e</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="PIL06_Queja_rol2" name="Recepción, estación y pase">
+        <bpmn:flowNodeRef>PIL06_Queja_work</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="PIL06_Queja_rol3" name="Capitán y Gerencia">
+        <bpmn:flowNodeRef>PIL06_Queja_ger</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="PIL06_Queja_s" name="Inconformidad recibida" isInterrupting="false">
+      <bpmn:outgoing>PIL06_Queja_f0</bpmn:outgoing>
+    <bpmn:messageEventDefinition messageRef="Msg_PIL06_Queja"/></bpmn:startEvent>
+    <bpmn:userTask id="PIL06_Queja_assess" name="Atender personalmente y acordar solución">
+      <bpmn:incoming>PIL06_Queja_f0</bpmn:incoming>
+      <bpmn:outgoing>PIL06_Queja_f1</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="PIL06_Queja_senior" name="¿Requiere intervención gerencial?" default="PIL06_Queja_f3">
+      <bpmn:incoming>PIL06_Queja_f1</bpmn:incoming>
+      <bpmn:outgoing>PIL06_Queja_f2</bpmn:outgoing>
+      <bpmn:outgoing>PIL06_Queja_f3</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="PIL06_Queja_ger" name="Resolver con gerencia">
+      <bpmn:incoming>PIL06_Queja_f2</bpmn:incoming>
+      <bpmn:outgoing>PIL06_Queja_f4</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="PIL06_Queja_redo" name="¿Se requiere corrección del pedido?" default="PIL06_Queja_f6">
+      <bpmn:incoming>PIL06_Queja_f3</bpmn:incoming>
+      <bpmn:incoming>PIL06_Queja_f4</bpmn:incoming>
+      <bpmn:outgoing>PIL06_Queja_f5</bpmn:outgoing>
+      <bpmn:outgoing>PIL06_Queja_f6</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:callActivity id="PIL06_Queja_fix" name="Enviar corrección vinculada al ítem original" calledElement="PIL03">
+      <bpmn:extensionElements>
+        <zeebe:calledElement processId="PIL03"/>
+      </bpmn:extensionElements>
+      <bpmn:incoming>PIL06_Queja_f5</bpmn:incoming>
+      <bpmn:outgoing>PIL06_Queja_f7</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:exclusiveGateway id="PIL06_Queja_go" name="¿Nueva preparación confirmada?" default="PIL06_Queja_f9">
+      <bpmn:incoming>PIL06_Queja_f7</bpmn:incoming>
+      <bpmn:outgoing>PIL06_Queja_f8</bpmn:outgoing>
+      <bpmn:outgoing>PIL06_Queja_f9</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:callActivity id="PIL06_Queja_work" name="Preparar y entregar ítem corregido" calledElement="PIL02">
+      <bpmn:extensionElements>
+        <zeebe:calledElement processId="PIL02"/>
+      </bpmn:extensionElements>
+      <bpmn:incoming>PIL06_Queja_f8</bpmn:incoming>
+      <bpmn:outgoing>PIL06_Queja_f10</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:endEvent id="PIL06_Queja_e" name="Atención complementaria concluida">
+      <bpmn:incoming>PIL06_Queja_f6</bpmn:incoming>
+      <bpmn:incoming>PIL06_Queja_f9</bpmn:incoming>
+      <bpmn:incoming>PIL06_Queja_f10</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="PIL06_Queja_f0" sourceRef="PIL06_Queja_s" targetRef="PIL06_Queja_assess"/>
+    <bpmn:sequenceFlow id="PIL06_Queja_f1" sourceRef="PIL06_Queja_assess" targetRef="PIL06_Queja_senior"/>
+    <bpmn:sequenceFlow id="PIL06_Queja_f2" sourceRef="PIL06_Queja_senior" targetRef="PIL06_Queja_ger" name="Sí">
+      <bpmn:conditionExpression>Sí</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="PIL06_Queja_f3" sourceRef="PIL06_Queja_senior" targetRef="PIL06_Queja_redo" name="No"/>
+    <bpmn:sequenceFlow id="PIL06_Queja_f4" sourceRef="PIL06_Queja_ger" targetRef="PIL06_Queja_redo"/>
+    <bpmn:sequenceFlow id="PIL06_Queja_f5" sourceRef="PIL06_Queja_redo" targetRef="PIL06_Queja_fix" name="Sí">
+      <bpmn:conditionExpression>Sí</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="PIL06_Queja_f6" sourceRef="PIL06_Queja_redo" targetRef="PIL06_Queja_e" name="No"/>
+    <bpmn:sequenceFlow id="PIL06_Queja_f7" sourceRef="PIL06_Queja_fix" targetRef="PIL06_Queja_go"/>
+    <bpmn:sequenceFlow id="PIL06_Queja_f8" sourceRef="PIL06_Queja_go" targetRef="PIL06_Queja_work" name="Sí">
+      <bpmn:conditionExpression>Sí</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="PIL06_Queja_f9" sourceRef="PIL06_Queja_go" targetRef="PIL06_Queja_e" name="No"/>
+    <bpmn:sequenceFlow id="PIL06_Queja_f10" sourceRef="PIL06_Queja_work" targetRef="PIL06_Queja_e"/>
+  </bpmn:subProcess><bpmn:subProcess id="PIL06_Cancel" name="Cancelación total del servicio recibida" triggeredByEvent="true"><bpmn:laneSet id="PIL06_Cancel_roles">
+      <bpmn:lane id="PIL06_Cancel_rol0" name="Salonero">
+        <bpmn:flowNodeRef>PIL06_Cancel_s</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL06_Cancel_charged</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL06_Cancel_e</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="PIL06_Cancel_rol1" name="Aplicación de comandas">
+        <bpmn:flowNodeRef>PIL06_Cancel_notice</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="PIL06_Cancel_rol3" name="Capitán y Gerencia">
+        <bpmn:flowNodeRef>PIL06_Cancel_status</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PIL06_Cancel_stop</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="PIL06_Cancel_rol4" name="Caja">
+        <bpmn:flowNodeRef>PIL06_Cancel_close</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="PIL06_Cancel_s" name="Cancelación total del servicio recibida" isInterrupting="true">
+      <bpmn:outgoing>PIL06_Cancel_f0</bpmn:outgoing>
+    <bpmn:messageEventDefinition messageRef="Msg_PIL06_Cancel"/></bpmn:startEvent>
+    <bpmn:serviceTask id="PIL06_Cancel_notice" name="Notificar cancelación a cocina, bebidas, pase y caja">
+      <bpmn:incoming>PIL06_Cancel_f0</bpmn:incoming>
+      <bpmn:outgoing>PIL06_Cancel_f1</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:userTask id="PIL06_Cancel_status" name="Confirmar estado de cada ítem con las áreas">
+      <bpmn:incoming>PIL06_Cancel_f1</bpmn:incoming>
+      <bpmn:outgoing>PIL06_Cancel_f2</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="PIL06_Cancel_stop" name="Detener pendientes y conciliar lo que está en preparación">
+      <bpmn:incoming>PIL06_Cancel_f2</bpmn:incoming>
+      <bpmn:outgoing>PIL06_Cancel_f3</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="PIL06_Cancel_charged" name="Conservar lo consumido y documentar cargos autorizados">
+      <bpmn:incoming>PIL06_Cancel_f3</bpmn:incoming>
+      <bpmn:outgoing>PIL06_Cancel_f4</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:callActivity id="PIL06_Cancel_close" name="Conciliar consumo y tratar saldo pendiente" calledElement="PIL05">
+      <bpmn:extensionElements>
+        <zeebe:calledElement processId="PIL05"/>
+      </bpmn:extensionElements>
+      <bpmn:incoming>PIL06_Cancel_f4</bpmn:incoming>
+      <bpmn:outgoing>PIL06_Cancel_f5</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:endEvent id="PIL06_Cancel_e" name="Servicio cancelado y conciliado">
+      <bpmn:incoming>PIL06_Cancel_f5</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="PIL06_Cancel_f0" sourceRef="PIL06_Cancel_s" targetRef="PIL06_Cancel_notice"/>
+    <bpmn:sequenceFlow id="PIL06_Cancel_f1" sourceRef="PIL06_Cancel_notice" targetRef="PIL06_Cancel_status"/>
+    <bpmn:sequenceFlow id="PIL06_Cancel_f2" sourceRef="PIL06_Cancel_status" targetRef="PIL06_Cancel_stop"/>
+    <bpmn:sequenceFlow id="PIL06_Cancel_f3" sourceRef="PIL06_Cancel_stop" targetRef="PIL06_Cancel_charged"/>
+    <bpmn:sequenceFlow id="PIL06_Cancel_f4" sourceRef="PIL06_Cancel_charged" targetRef="PIL06_Cancel_close"/>
+    <bpmn:sequenceFlow id="PIL06_Cancel_f5" sourceRef="PIL06_Cancel_close" targetRef="PIL06_Cancel_e"/>
+  </bpmn:subProcess></bpmn:process>
+  <bpmndi:BPMNDiagram id="DG_PIL06">
+    <bpmndi:BPMNPlane id="PL_PIL06" bpmnElement="PIL06">
+      <bpmndi:BPMNShape id="DI_PIL06_rol0" bpmnElement="PIL06_rol0" isHorizontal="true">
+        <dc:Bounds x="30" y="40" width="1965" height="150"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL06_rol3" bpmnElement="PIL06_rol3" isHorizontal="true">
+        <dc:Bounds x="30" y="190" width="1965" height="150"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL06_rol4" bpmnElement="PIL06_rol4" isHorizontal="true">
+        <dc:Bounds x="30" y="340" width="1965" height="150"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL06_s" bpmnElement="PIL06_s">
+        <dc:Bounds x="122.0" y="95.0" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL06_take" bpmnElement="PIL06_take">
+        <dc:Bounds x="267.5" y="76.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL06_wait" bpmnElement="PIL06_wait">
+        <dc:Bounds x="482.5" y="76.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL06_present" bpmnElement="PIL06_present">
+        <dc:Bounds x="697.5" y="76.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL06_review" bpmnElement="PIL06_review">
+        <dc:Bounds x="912.5" y="226.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL06_pending" bpmnElement="PIL06_pending">
+        <dc:Bounds x="1190.0" y="238.0" width="50" height="50"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL06_resolve" bpmnElement="PIL06_resolve">
+        <dc:Bounds x="1342.5" y="226.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL06_close" bpmnElement="PIL06_close">
+        <dc:Bounds x="1557.5" y="376.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL06_e" bpmnElement="PIL06_e">
+        <dc:Bounds x="1842.0" y="395.0" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="DI_PIL06_f0" bpmnElement="PIL06_f0">
+        <di:waypoint x="158.0" y="113"/>
+        <di:waypoint x="267.5" y="113"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL06_f1" bpmnElement="PIL06_f1">
+        <di:waypoint x="442.5" y="113"/>
+        <di:waypoint x="482.5" y="113"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL06_f2" bpmnElement="PIL06_f2">
+        <di:waypoint x="657.5" y="113"/>
+        <di:waypoint x="697.5" y="113"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL06_f3" bpmnElement="PIL06_f3">
+        <di:waypoint x="872.5" y="113"/>
+        <di:waypoint x="892.5" y="113"/>
+        <di:waypoint x="892.5" y="263"/>
+        <di:waypoint x="912.5" y="263"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL06_f4" bpmnElement="PIL06_f4">
+        <di:waypoint x="1087.5" y="263"/>
+        <di:waypoint x="1190.0" y="263"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL06_f5" bpmnElement="PIL06_f5">
+        <di:waypoint x="1240.0" y="263"/>
+        <di:waypoint x="1342.5" y="263"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1273.25" y="243.0" width="36" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL06_f6" bpmnElement="PIL06_f6">
+        <di:waypoint x="1430" y="226.0"/>
+        <di:waypoint x="1430" y="201"/>
+        <di:waypoint x="1000" y="201"/>
+        <di:waypoint x="1000" y="226.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL06_f7" bpmnElement="PIL06_f7">
+        <di:waypoint x="1240.0" y="263"/>
+        <di:waypoint x="1398.75" y="263"/>
+        <di:waypoint x="1398.75" y="413"/>
+        <di:waypoint x="1557.5" y="413"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1301.375" y="243.0" width="36" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL06_f8" bpmnElement="PIL06_f8">
+        <di:waypoint x="1732.5" y="413"/>
+        <di:waypoint x="1842.0" y="413"/>
+      </bpmndi:BPMNEdge>
+    <bpmndi:BPMNShape id="DI_PIL06_Extra" bpmnElement="PIL06_Extra" isExpanded="true"><dc:Bounds x="10" y="540" width="730.0" height="215.0"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_PIL06_Extra_rol0" bpmnElement="PIL06_Extra_rol0" isHorizontal="true">
+        <dc:Bounds x="30" y="580.0" width="675" height="150"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL06_Extra_s" bpmnElement="PIL06_Extra_s">
+        <dc:Bounds x="122.0" y="635.0" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL06_Extra_work" bpmnElement="PIL06_Extra_work">
+        <dc:Bounds x="267.5" y="616.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL06_Extra_e" bpmnElement="PIL06_Extra_e">
+        <dc:Bounds x="552.0" y="635.0" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="DI_PIL06_Extra_f0" bpmnElement="PIL06_Extra_f0">
+        <di:waypoint x="158.0" y="653.0"/>
+        <di:waypoint x="267.5" y="653.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL06_Extra_f1" bpmnElement="PIL06_Extra_f1">
+        <di:waypoint x="442.5" y="653.0"/>
+        <di:waypoint x="552.0" y="653.0"/>
+      </bpmndi:BPMNEdge>
+    <bpmndi:BPMNShape id="DI_PIL06_Queja" bpmnElement="PIL06_Queja" isExpanded="true"><dc:Bounds x="10" y="795.0" width="2020.0" height="515.0"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_PIL06_Queja_rol0" bpmnElement="PIL06_Queja_rol0" isHorizontal="true">
+        <dc:Bounds x="30" y="835.0" width="1965" height="150"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL06_Queja_rol2" bpmnElement="PIL06_Queja_rol2" isHorizontal="true">
+        <dc:Bounds x="30" y="985.0" width="1965" height="150"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL06_Queja_rol3" bpmnElement="PIL06_Queja_rol3" isHorizontal="true">
+        <dc:Bounds x="30" y="1135.0" width="1965" height="150"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL06_Queja_s" bpmnElement="PIL06_Queja_s">
+        <dc:Bounds x="122.0" y="890.0" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL06_Queja_assess" bpmnElement="PIL06_Queja_assess">
+        <dc:Bounds x="267.5" y="871.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL06_Queja_senior" bpmnElement="PIL06_Queja_senior">
+        <dc:Bounds x="545.0" y="883.0" width="50" height="50"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL06_Queja_ger" bpmnElement="PIL06_Queja_ger">
+        <dc:Bounds x="697.5" y="1171.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL06_Queja_redo" bpmnElement="PIL06_Queja_redo">
+        <dc:Bounds x="975.0" y="883.0" width="50" height="50"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL06_Queja_fix" bpmnElement="PIL06_Queja_fix">
+        <dc:Bounds x="1127.5" y="871.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL06_Queja_go" bpmnElement="PIL06_Queja_go">
+        <dc:Bounds x="1405.0" y="883.0" width="50" height="50"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL06_Queja_work" bpmnElement="PIL06_Queja_work">
+        <dc:Bounds x="1557.5" y="1021.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL06_Queja_e" bpmnElement="PIL06_Queja_e">
+        <dc:Bounds x="1842.0" y="890.0" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="DI_PIL06_Queja_f0" bpmnElement="PIL06_Queja_f0">
+        <di:waypoint x="158.0" y="908.0"/>
+        <di:waypoint x="267.5" y="908.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL06_Queja_f1" bpmnElement="PIL06_Queja_f1">
+        <di:waypoint x="442.5" y="908.0"/>
+        <di:waypoint x="545.0" y="908.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL06_Queja_f2" bpmnElement="PIL06_Queja_f2">
+        <di:waypoint x="595.0" y="908.0"/>
+        <di:waypoint x="646.25" y="908.0"/>
+        <di:waypoint x="646.25" y="1208.0"/>
+        <di:waypoint x="697.5" y="1208.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="602.625" y="888.0" width="36" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL06_Queja_f3" bpmnElement="PIL06_Queja_f3">
+        <di:waypoint x="570" y="883.0"/>
+        <di:waypoint x="570" y="845.0"/>
+        <di:waypoint x="1000" y="845.0"/>
+        <di:waypoint x="1000" y="883.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="552.0" y="844.0" width="36" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL06_Queja_f4" bpmnElement="PIL06_Queja_f4">
+        <di:waypoint x="872.5" y="1208.0"/>
+        <di:waypoint x="923.75" y="1208.0"/>
+        <di:waypoint x="923.75" y="908.0"/>
+        <di:waypoint x="975.0" y="908.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL06_Queja_f5" bpmnElement="PIL06_Queja_f5">
+        <di:waypoint x="1025.0" y="908.0"/>
+        <di:waypoint x="1127.5" y="908.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1058.25" y="888.0" width="36" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL06_Queja_f6" bpmnElement="PIL06_Queja_f6">
+        <di:waypoint x="1000" y="883.0"/>
+        <di:waypoint x="1000" y="852.0"/>
+        <di:waypoint x="1860" y="852.0"/>
+        <di:waypoint x="1860" y="890.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="982.0" y="847.5" width="36" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL06_Queja_f7" bpmnElement="PIL06_Queja_f7">
+        <di:waypoint x="1302.5" y="908.0"/>
+        <di:waypoint x="1405.0" y="908.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL06_Queja_f8" bpmnElement="PIL06_Queja_f8">
+        <di:waypoint x="1455.0" y="908.0"/>
+        <di:waypoint x="1506.25" y="908.0"/>
+        <di:waypoint x="1506.25" y="1058.0"/>
+        <di:waypoint x="1557.5" y="1058.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1462.625" y="888.0" width="36" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL06_Queja_f9" bpmnElement="PIL06_Queja_f9">
+        <di:waypoint x="1430" y="883.0"/>
+        <di:waypoint x="1430" y="845.0"/>
+        <di:waypoint x="1860" y="845.0"/>
+        <di:waypoint x="1860" y="890.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1412.0" y="844.0" width="36" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL06_Queja_f10" bpmnElement="PIL06_Queja_f10">
+        <di:waypoint x="1732.5" y="1058.0"/>
+        <di:waypoint x="1787.25" y="1058.0"/>
+        <di:waypoint x="1787.25" y="908.0"/>
+        <di:waypoint x="1842.0" y="908.0"/>
+      </bpmndi:BPMNEdge>
+    <bpmndi:BPMNShape id="DI_PIL06_Cancel" bpmnElement="PIL06_Cancel" isExpanded="true"><dc:Bounds x="10" y="1350.0" width="1590.0" height="665.0"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="DI_PIL06_Cancel_rol0" bpmnElement="PIL06_Cancel_rol0" isHorizontal="true">
+        <dc:Bounds x="30" y="1390.0" width="1535" height="150"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL06_Cancel_rol1" bpmnElement="PIL06_Cancel_rol1" isHorizontal="true">
+        <dc:Bounds x="30" y="1540.0" width="1535" height="150"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL06_Cancel_rol3" bpmnElement="PIL06_Cancel_rol3" isHorizontal="true">
+        <dc:Bounds x="30" y="1690.0" width="1535" height="150"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL06_Cancel_rol4" bpmnElement="PIL06_Cancel_rol4" isHorizontal="true">
+        <dc:Bounds x="30" y="1840.0" width="1535" height="150"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL06_Cancel_s" bpmnElement="PIL06_Cancel_s">
+        <dc:Bounds x="122.0" y="1445.0" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL06_Cancel_notice" bpmnElement="PIL06_Cancel_notice">
+        <dc:Bounds x="267.5" y="1576.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL06_Cancel_status" bpmnElement="PIL06_Cancel_status">
+        <dc:Bounds x="482.5" y="1726.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL06_Cancel_stop" bpmnElement="PIL06_Cancel_stop">
+        <dc:Bounds x="697.5" y="1726.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL06_Cancel_charged" bpmnElement="PIL06_Cancel_charged">
+        <dc:Bounds x="912.5" y="1426.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL06_Cancel_close" bpmnElement="PIL06_Cancel_close">
+        <dc:Bounds x="1127.5" y="1876.0" width="175" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DI_PIL06_Cancel_e" bpmnElement="PIL06_Cancel_e">
+        <dc:Bounds x="1412.0" y="1445.0" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="DI_PIL06_Cancel_f0" bpmnElement="PIL06_Cancel_f0">
+        <di:waypoint x="158.0" y="1463.0"/>
+        <di:waypoint x="212.75" y="1463.0"/>
+        <di:waypoint x="212.75" y="1613.0"/>
+        <di:waypoint x="267.5" y="1613.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL06_Cancel_f1" bpmnElement="PIL06_Cancel_f1">
+        <di:waypoint x="442.5" y="1613.0"/>
+        <di:waypoint x="462.5" y="1613.0"/>
+        <di:waypoint x="462.5" y="1763.0"/>
+        <di:waypoint x="482.5" y="1763.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL06_Cancel_f2" bpmnElement="PIL06_Cancel_f2">
+        <di:waypoint x="657.5" y="1763.0"/>
+        <di:waypoint x="697.5" y="1763.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL06_Cancel_f3" bpmnElement="PIL06_Cancel_f3">
+        <di:waypoint x="872.5" y="1763.0"/>
+        <di:waypoint x="892.5" y="1763.0"/>
+        <di:waypoint x="892.5" y="1463.0"/>
+        <di:waypoint x="912.5" y="1463.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL06_Cancel_f4" bpmnElement="PIL06_Cancel_f4">
+        <di:waypoint x="1087.5" y="1463.0"/>
+        <di:waypoint x="1107.5" y="1463.0"/>
+        <di:waypoint x="1107.5" y="1913.0"/>
+        <di:waypoint x="1127.5" y="1913.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DI_PIL06_Cancel_f5" bpmnElement="PIL06_Cancel_f5">
+        <di:waypoint x="1302.5" y="1913.0"/>
+        <di:waypoint x="1357.25" y="1913.0"/>
+        <di:waypoint x="1357.25" y="1463.0"/>
+        <di:waypoint x="1412.0" y="1463.0"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
